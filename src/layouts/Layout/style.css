@@ -15,7 +15,45 @@
     padding: 10px;
 }
 
-#top-bar .my-content{
+#top-bar .nav-right-content{
     display: flex;
     gap: 10px;
+}
+
+#top-bar .nav-logo{
+    width: 40px;
+    cursor: pointer;
+}
+
+#top-bar .login{
+    border-radius: 10px;
+    background-color: black;
+    width: 80px;
+    color: white;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+}
+
+#top-bar .my-content {
+    position: relative;
+  
+    width: 32px;
+    height: 32px;
+  
+    background-image: url('/src/assets/images/user-profile.png');
+    background-size: 100% 100%;
+  
+    cursor: pointer;
+  }
+
+#top-bar .my-content-list {
+    position: absolute;
+    top: 36px;
+    right: 0;
+
+    box-sizing: border-box;
+    border-radius: 6px;
+    width: 90px;
+    border: 1px solid black;
 }
