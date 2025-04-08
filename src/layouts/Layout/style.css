@@ -1,0 +1,21 @@
+#top-bar{
+    z-index: 99;
+    width: 100%;
+    position: fixed;
+    background-color: aqua;
+}
+
+#top-bar .map-logo{
+    cursor: pointer;
+}
+
+#top-bar .navigation-list {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#top-bar .my-content{
+    display: flex;
+    gap: 10px;
+}
