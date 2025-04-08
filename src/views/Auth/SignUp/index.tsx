@@ -3,6 +3,8 @@ import './style.css';
 
 export default function SignUp() {
   return (
-    <div>회원가입 페이지</div>
+    <div>
+        <h1>회원가입</h1>
+    </div>
   )
 }

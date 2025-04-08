@@ -3,6 +3,7 @@ export const ROOT_PATH = '/';
 export const AUTH_PATH = 'auth';
 export const MAIN_PATH = 'main';
 export const MAP_PATH = 'map';
+export const OTHERS_PATH = '*';
 
 // variable: 절대 path 상수 //
 export const ROOT_ABSOLUTE_PATH = ROOT_PATH;

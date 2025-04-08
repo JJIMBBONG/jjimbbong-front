@@ -3,7 +3,7 @@ import {Outlet, useNavigate} from 'react-router';
 import NavLogo from 'src/assets/images/small_logo.png'
 
 import './style.css';
-import { MAIN_ABSOLUTE_PATH } from 'src/constants';
+import { AUTH_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH } from 'src/constants';
 
 // component : 공통 레이아웃 컴포넌트 //
 export default function Layout() {
@@ -21,10 +21,30 @@ export default function Layout() {
         navigator(MAIN_ABSOLUTE_PATH);
     };
 
+    // event handler : 지도 클릭 이벤트 처리 //
+    const onMapClickHandler = () => {
+        navigator(MAP_ABSOLUTE_PATH);
+    }
+
     // event handler: My Content 클릭 이벤트 처리 //
     const onMyContentClickHandler = () => {
         setShowMyContent(!showMyContent);
     };
+
+    // event handler : 마이페이지 클릭 이벤트 처리 //
+    const onMyPageClickHandler = () => {
+        alert('비밀번호를 입력해야합니다!');
+    }
+
+    // event handler : 로그아웃 클릭 이벤트 처리 //
+    const onSignOutClickHandler = () => {
+        setLogin(false);
+    }
+
+    // event handler : 로그인 이벤트 처리 //
+    const onSignInClickHandler = () => {
+        navigator(AUTH_ABSOLUTE_PATH);
+    }
 
     // state: My Content List 요소 참조 //
     const myContentListRef = useRef<HTMLDivElement | null>(null);
@@ -38,12 +58,12 @@ export default function Layout() {
                     
                             { login ? 
                                 <div className='nav-right-content'>
-                                    <div className='map-logo'>지도</div>
+                                    <div className='map-logo' onClick={onMapClickHandler}>지도</div>
                                     <div className='my-content' onClick={onMyContentClickHandler}>
                                     {showMyContent &&
                                         <div ref={myContentListRef} className='my-content-list'>
-                                            <div className='my-content-item'>마이페이지</div>
-                                            <div className='my-content-item'>로그아웃</div>
+                                            <div className='my-content-item' onClick={onMyPageClickHandler}>마이페이지</div>
+                                            <div className='my-content-item' onClick={onSignOutClickHandler}>로그아웃</div>
                                         </div>
                                     }
                                     </div>
@@ -51,8 +71,8 @@ export default function Layout() {
                                 </div>
                                 :
                                 <div className='nav-right-content'>
-                                    <div className='map-logo'>지도</div>
-                                    <div className='login'>Login</div>
+                                    <div className='map-logo' onClick={onMapClickHandler}>지도</div>
+                                    <div className='login' onClick={onSignInClickHandler}>Login</div>
                                 </div>
                         }
                 </div>
