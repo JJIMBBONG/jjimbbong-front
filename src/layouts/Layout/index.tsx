@@ -3,14 +3,14 @@ import {Outlet, useNavigate} from 'react-router';
 import NavLogo from 'src/assets/images/small_logo.png'
 
 import './style.css';
-import { AUTH_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH } from 'src/constants';
+import { AUTH_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH } from 'src/constants';
 
 // component : 공통 레이아웃 컴포넌트 //
 export default function Layout() {
 
     const navigator = useNavigate();
 
-    // state : 로그인 상태
+    // state : 로그인 상태 //
     const [login, setLogin] = useState<boolean>(true);
 
     // state: My Content 드롭다운 상태 //
@@ -33,7 +33,8 @@ export default function Layout() {
 
     // event handler : 마이페이지 클릭 이벤트 처리 //
     const onMyPageClickHandler = () => {
-        alert('비밀번호를 입력해야합니다!');
+        // 비밀번호 입력 란이 먼저 나옴 //
+        navigator(MY_PAGE_ABSOLUTE_PATH);
     }
 
     // event handler : 로그아웃 클릭 이벤트 처리 //
