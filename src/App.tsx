@@ -3,7 +3,7 @@ import './App.css';
 import { Route, Routes } from 'react-router';
 import Layout from './layouts/Layout';
 import Main from './views/Main';
-import NaverMap from './components/NaverMap';
+import NaverMap from './map/NaverMap';
 
 function App() {
   return (
