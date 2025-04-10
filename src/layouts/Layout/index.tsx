@@ -59,7 +59,9 @@ export default function Layout() {
                     
                             { login ? 
                                 <div className='nav-right-content'>
-                                    <div className='map-logo' onClick={onMapClickHandler}>지도</div>
+                                    <div className='map-logo' onClick={onMapClickHandler}>Map</div>
+
+
                                     <div className='my-content' onClick={onMyContentClickHandler}>
                                     {showMyContent &&
                                         <div ref={myContentListRef} className='my-content-list'>
@@ -72,8 +74,10 @@ export default function Layout() {
                                 </div>
                                 :
                                 <div className='nav-right-content'>
-                                    <div className='map-logo' onClick={onMapClickHandler}>지도</div>
+
+                                    <div className='map-logo' onClick={onMapClickHandler}>Map</div>
                                     <div className='login' onClick={onSignInClickHandler}>Login</div>
+
                                 </div>
                         }
                 </div>
