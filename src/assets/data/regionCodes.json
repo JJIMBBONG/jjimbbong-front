@@ -1,0 +1,102 @@
+[
+  {
+    "regionName": "종로구",
+    "areaCode": 1,
+    "sigunguCode": 1
+  },
+  {
+    "regionName": "중구",
+    "areaCode": 1,
+    "sigunguCode": 2
+  },
+  {
+    "regionName": "용산구",
+    "areaCode": 1,
+    "sigunguCode": 3
+  },
+  {
+    "regionName": "성동구",
+    "areaCode": 1,
+    "sigunguCode": 4
+  },
+  {
+    "regionName": "광진구",
+    "areaCode": 1,
+    "sigunguCode": 5
+  },
+  {
+    "regionName": "부산진구",
+    "areaCode": 6,
+    "sigunguCode": 4
+  },
+  {
+    "regionName": "해운대구",
+    "areaCode": 6,
+    "sigunguCode": 2
+  },
+  {
+    "regionName": "수영구",
+    "areaCode": 6,
+    "sigunguCode": 3
+  },
+  {
+    "regionName": "동래구",
+    "areaCode": 6,
+    "sigunguCode": 5
+  },
+  {
+    "regionName": "연제구",
+    "areaCode": 6,
+    "sigunguCode": 6
+  },
+  {
+    "regionName": "기장군",
+    "areaCode": 6,
+    "sigunguCode": 11
+  },
+  {
+    "regionName": "수원시 장안구",
+    "areaCode": 31,
+    "sigunguCode": 1
+  },
+  {
+    "regionName": "수원시 권선구",
+    "areaCode": 31,
+    "sigunguCode": 2
+  },
+  {
+    "regionName": "수원시 팔달구",
+    "areaCode": 31,
+    "sigunguCode": 3
+  },
+  {
+    "regionName": "수원시 영통구",
+    "areaCode": 31,
+    "sigunguCode": 4
+  },
+  {
+    "regionName": "춘천시",
+    "areaCode": 32,
+    "sigunguCode": 1
+  },
+  {
+    "regionName": "원주시",
+    "areaCode": 32,
+    "sigunguCode": 2
+  },
+  {
+    "regionName": "강릉시",
+    "areaCode": 32,
+    "sigunguCode": 3
+  },
+  {
+    "regionName": "제주시",
+    "areaCode": 39,
+    "sigunguCode": 1
+  },
+  {
+    "regionName": "서귀포시",
+    "areaCode": 39,
+    "sigunguCode": 2
+  }
+]

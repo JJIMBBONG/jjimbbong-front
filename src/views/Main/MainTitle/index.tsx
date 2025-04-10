@@ -1,34 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import TitleLogo from 'src/assets/images/white_rough_logo.png';
 
 import './style.css'
+import AddressCategory from 'src/components/AddressCategory';
+import DetailCatebory from 'src/components/DetailCategory';
+import { getFillterdBoardRequest } from 'src/apis';
 
 export default function MainTitle() {
+
+  const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
+  const [selectedDetail, setSelectedDetail] = useState<string>('');
+
+  const handleSearch = async () => {
+    const response = await getFillterdBoardRequest(selectedRegion, selectedDetail);
+    console.log(response);
+  };
   return (
     <div id='wrapper-title'>
         <div className='title-box'>
             <div className='title'>찜뽕</div>
             <img className='title-logo' src={TitleLogo}/>
         </div>
-        <div>
-          <label htmlFor="">지역</label>
-          <select name="" id="">
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-          </select>
+        <div className='category'>
+          <div className='category-select'>
+          <div>
+            <AddressCategory onSelect={setSelectedRegion}/>
+          </div>
+          <div>
+            <DetailCatebory onSelect={setSelectedDetail}/>
+          </div>
+          </div>
+          <div className='category-search-button' onClick={handleSearch}>검색하기</div>
         </div>
-        <div>
-          <label htmlFor="">분야</label>
-          <select name="" id="">
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-          </select>
-        </div>
+        
     </div>
   )
 }
