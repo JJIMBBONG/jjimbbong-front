@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import {Outlet, useNavigate} from 'react-router-dom';
+import {Outlet, useNavigate} from 'react-router';
 import NavLogo from 'src/assets/images/small_logo.png'
 
 import './style.css';
