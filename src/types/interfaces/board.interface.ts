@@ -1,3 +1,15 @@
+
+export default interface Board {
+  boardNumber: number;
+  boardWriteDate: string;
+  boardTitle: string;
+  boardContent: string;
+  boardAddressCategory: string;
+  boardDetailCategory: string;
+  boardAddress: string;
+  boardViewCount: number;
+  boardImage: string | null;
+
 export default interface RecommandBoard {
     boardNumber : number;
     addressCategory : string;
@@ -9,6 +21,3 @@ export default interface RecommandBoard {
     image : string;
 }
 
-export default interface Board {
-    
-}
