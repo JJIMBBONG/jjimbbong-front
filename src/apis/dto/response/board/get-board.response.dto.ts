@@ -6,4 +6,5 @@ export default interface GetBoardResponseDto extends ResponseDto {
     title: string;
     content: string;
     writerId: string;
+    writerNickname : string;
 }

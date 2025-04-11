@@ -16,6 +16,7 @@ export default function MainTitle() {
     const response = await getFillterdBoardRequest(selectedRegion, selectedDetail);
     console.log(response);
   };
+  
   return (
     <div id='wrapper-title'>
         <div className='title-box'>

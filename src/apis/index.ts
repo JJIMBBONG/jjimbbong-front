@@ -15,6 +15,8 @@ const BOARD_MODULE_URL = `${API_DOMAIN}/api/v1/board`;
 const GET_FILLTERD_BOARD_URL = `${BOARD_MODULE_URL}`;
 const POST_BOARD_URL = `${BOARD_MODULE_URL}`;
 
+const MAIN_MODULE_URL = `${API_DOMAIN}/api/v1/main`;
+const GET_RECOMMAND_BOARD_URL = `${MAIN_MODULE_URL}`;
 
 // function: Authorization Bearer 헤더 //
 const bearerAuthorization = (accessToken: string) => ({ headers: { 'Authorization': `Bearer ${accessToken}` } })
@@ -42,6 +44,14 @@ export const getFillterdBoardRequest = async (areaCategoryCode?: number | null, 
         .catch(responseErrorHandler)
     return responseBody;
 };
+
+// function : get recommand board API 요청 함수 //
+export const getRecommandBoardRequest = async () => {
+    const responseBody = await axios.get(GET_RECOMMAND_BOARD_URL)
+        .then(responseSuccessHandler<GetBoardResponseDto>)
+        .catch(responseErrorHandler)
+    return responseBody;
+}
 
 
 
