@@ -1,6 +1,8 @@
 import { ResponseDto } from "./dto/response";
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import GetBoardResponseDto from "./dto/response/board/get-board.response.dto";
+import { PasswordReCheckRequestDto } from "./dto/request/mypage";
+import { GetMyPageBoardResponseDto } from "./dto/response/mypage";
 
 // variable: URL 상수 //
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
@@ -17,6 +19,10 @@ const POST_BOARD_URL = `${BOARD_MODULE_URL}`;
 
 const MAIN_MODULE_URL = `${API_DOMAIN}/api/v1/main`;
 const GET_RECOMMAND_BOARD_URL = `${MAIN_MODULE_URL}`;
+
+const MY_PAGE_MODULE_URL = `${API_DOMAIN}/api/v1/my-page`;
+const PASSWORD_RECHECK_URL = `${MY_PAGE_MODULE_URL}`;
+const GET_MY_PAGE_BOARD_URL = `${MY_PAGE_MODULE_URL}/my-main`;
 
 // function: Authorization Bearer 헤더 //
 const bearerAuthorization = (accessToken: string) => ({ headers: { 'Authorization': `Bearer ${accessToken}` } })
@@ -53,6 +59,20 @@ export const getRecommandBoardRequest = async () => {
     return responseBody;
 }
 
+// function: password recheck API 요청 함수 //
+export const passwordReCheckRequest = async (requestBody: PasswordReCheckRequestDto) => {
+    const responseBody = await axios.post(PASSWORD_RECHECK_URL, requestBody)
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
 
+// function: get my page board API 요청 함수 //
+// export const getMyPageBoardRequest = async (accessToken: string) => {
+//     const responseBody = await axios.get(GET_MY_PAGE_BOARD_URL, bearerAuthorization(accessToken))
+//         .then(responseSuccessHandler<GetMyPageBoardResponseDto>)
+//         .catch(responseErrorHandler);
+//     return responseBody;
+// };
 
 export {}
