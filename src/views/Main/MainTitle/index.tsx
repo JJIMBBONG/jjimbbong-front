@@ -20,7 +20,7 @@ export default function MainTitle() {
   return (
     <div id='wrapper-title'>
         <div className='title-box'>
-            <div className='title'>찜뽕</div>
+            <div className='title'>찜뽕!</div>
             <img className='title-logo' src={TitleLogo}/>
         </div>
         <div className='category'>
