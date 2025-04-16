@@ -99,7 +99,7 @@ function NaverMap() {
             const filteredFestivals = festivals.filter(f => f.address?.includes(cleanName) || f.address?.includes(name));
 
             // 팝업정보 추후 데이터베이스 연결
-            const popupRes = await fetch(`/api/popups?region=${encodeURI(name)}`);
+            const popupRes = await fetch(`http://localhost:4000/popup-stores?region=${encodeURI(name)}`);
             const popups = await popupRes.json();
 
             const matchedPopups = popups.filter(p => 
@@ -107,10 +107,10 @@ function NaverMap() {
             );
 
             // 맛집
-            const restaurantRes = await fetch(`/api/restaurants?region=${encodeURI(name)}`);
-            const allRestarant = await restaurantRes.json();
+            const restaurantRes = await fetch(`http://localhost:4000/restaurants?region=${encodeURI(name)}`);
+            const restaurants = await restaurantRes.json();
 
-            const matchedRestarant = allRestarant.filter(r => 
+            const matchedRestarant = restaurants.filter(r => 
               r.region === name || name.includes(r.region) || r.region.includes(name));
 
             // 지역 관련 관광정보 불러오기
@@ -171,10 +171,10 @@ function NaverMap() {
                 {regionData.popups?.length > 0 ? (
                   regionData.popups.map((p, i) => (
                     <li key={i}>
-                      <p>{p.title}</p>
+                      <p>{p.popupTitle}</p>
                       <p>{p.region}</p>
-                      <p>{p.date}</p>
-                      {p.image && <img src={p.image} alt={p.title} style={{ width: "100px"}} />}
+                      <p>{p.popupDate}</p>
+                      {p.popupImage && <img src={p.popupImage} alt={p.popupTitle} style={{ width: "100px"}} />}
                     </li>
                   ))
                 ) : (
@@ -189,9 +189,9 @@ function NaverMap() {
                   {regionData.restaurants?.length > 0 ? (
                     regionData.restaurants.map((r, i) => (
                       <li key={i}>
-                        <p>{r.title}</p>
+                        <p>{r.restaurantTitle}</p>
                         <p>{r.region}</p>
-                        <p>{r.address}</p>
+                        <p>{r.restaurantAddress}</p>
                       </li>
                     ))
                   ) : (
