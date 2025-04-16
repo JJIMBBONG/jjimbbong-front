@@ -1,8 +1,9 @@
-import { ResponseDto } from "./dto/response";
+import { ResponseDto } from './dto/response';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import GetBoardResponseDto from "./dto/response/board/get-board.response.dto";
-import { PasswordReCheckRequestDto } from "./dto/request/mypage";
-import { GetMyPageBoardResponseDto } from "./dto/response/mypage";
+import GetBoardResponseDto from './dto/response/board/get-board.response.dto';
+import { PasswordReCheckRequestDto, PatchSignInUserRequestDto } from './dto/request/mypage';
+import { GetMyPageBoardResponseDto } from './dto/response/mypage';
+import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto';
 
 // variable: URL 상수 //
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
@@ -23,6 +24,14 @@ const GET_RECOMMAND_BOARD_URL = `${MAIN_MODULE_URL}`;
 const MY_PAGE_MODULE_URL = `${API_DOMAIN}/api/v1/my-page`;
 const PASSWORD_RECHECK_URL = `${MY_PAGE_MODULE_URL}`;
 const GET_MY_PAGE_BOARD_URL = `${MY_PAGE_MODULE_URL}/my-main`;
+const GET_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main`
+const PATCH_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main`
+
+const FILE_UPLOAD_URL = `${API_DOMAIN}/file/upload`;
+
+// variable: //
+const multipartFormData = { headers: { 'Content-Type': 'multipart/form-data' } };
+
 
 // function: Authorization Bearer 헤더 //
 const bearerAuthorization = (accessToken: string) => ({ headers: { 'Authorization': `Bearer ${accessToken}` } })
@@ -67,7 +76,7 @@ export const passwordReCheckRequest = async (requestBody: PasswordReCheckRequest
     return responseBody;
 };
 
-// function: get my page board API 요청 함수 //
+// function : get my page board API 요청 함수 //
 // export const getMyPageBoardRequest = async (accessToken: string) => {
 //     const responseBody = await axios.get(GET_MY_PAGE_BOARD_URL, bearerAuthorization(accessToken))
 //         .then(responseSuccessHandler<GetMyPageBoardResponseDto>)
@@ -75,4 +84,26 @@ export const passwordReCheckRequest = async (requestBody: PasswordReCheckRequest
 //     return responseBody;
 // };
 
-export {}
+// function: get sign in user API 요청 함수 //
+export const getSignInUserRequest = (accessToken: string) => {
+    const responseBody = axios.get(GET_SIGN_IN_USER_URL, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler<GetSignInUserResponseDto>)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: patch user API 요청 함수 //
+export const patchSignInUserRequest = async (requestBody: PatchSignInUserRequestDto, accessToken: string) => {
+    const responseBody = await axios.patch(PATCH_SIGN_IN_USER_URL, requestBody, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: file upload 요청 함수 //
+export const filerUploadRequest = async (requestBody: FormData) => {
+    const responseBody = await axios.post(FILE_UPLOAD_URL, requestBody, multipartFormData)
+        .then(responseSuccessHandler<string>)
+        .catch(error => null);
+    return responseBody;
+};

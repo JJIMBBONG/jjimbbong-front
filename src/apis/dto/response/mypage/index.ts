@@ -1,5 +1,7 @@
 import GetMyPageBoardResponseDto from './get-mypage-board.response.dto';
+import GetSignInUserResponseDto from './get-sign.in.user.response.dto';
 
 export type {
-  GetMyPageBoardResponseDto
+  GetMyPageBoardResponseDto,
+  GetSignInUserResponseDto
 }
