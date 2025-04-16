@@ -99,15 +99,15 @@ function NaverMap() {
             const filteredFestivals = festivals.filter(f => f.address?.includes(cleanName) || f.address?.includes(name));
 
             // 팝업정보 추후 데이터베이스 연결
-            const popupRes = await fetch("/data/popup.json");
-            const allPopups = await popupRes.json();
+            const popupRes = await fetch(`/api/popups?region=${encodeURI(name)}`);
+            const popups = await popupRes.json();
 
-            const matchedPopups = allPopups.filter(p => 
+            const matchedPopups = popups.filter(p => 
               p.region === name || name.includes(p.region) || p.region.includes(name)
             );
 
             // 맛집
-            const restaurantRes = await fetch("/data/restauran.json");
+            const restaurantRes = await fetch(`/api/restaurants?region=${encodeURI(name)}`);
             const allRestarant = await restaurantRes.json();
 
             const matchedRestarant = allRestarant.filter(r => 
