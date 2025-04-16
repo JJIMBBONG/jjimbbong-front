@@ -5,8 +5,6 @@
 
   margin: 0 auto;
   padding-top: 52px;
-
-  min-width: 1180px;
 }
 
 #mypage-main-wrapper .user-container {
@@ -22,9 +20,9 @@
   width: 200px;
   height: 160px;
   
-  position: relative;
-  top: 30px;
-  left: 65%;
+  position: fixed;
+  top: 80px;
+  right: 30px;
 }
 
 #mypage-main-wrapper .user-box {
@@ -41,15 +39,12 @@
   width: 40px;
   height: 40px;
 
-  background-color: brown;
-}
-
-#mypage-main-wrapper .user-box>.user-level:hover {
   cursor: pointer;
 }
 
 #mypage-main-wrapper .user-box>.user-nickname {
-  font-size: 16px;
+  flex: 1;
+  font-size: 20px;
   font-weight: 500;
 }
 
@@ -78,6 +73,7 @@
 
   font-size: 16px;
   font-weight: 500;
+  line-height: 175%;
 }
 
 #mypage-main-wrapper .button-box>.button:hover {
@@ -116,8 +112,8 @@
 }
 
 #mypage-main-wrapper .board-box>.board-image {
-  width: 160px;
-  height: 160px;
+  width: 150px;
+  height: 150px;
 
   background-color: antiquewhite;
 }
@@ -168,3 +164,7 @@
   background-image: url(src/assets/images/comment.png);
 }
 
+#mypage-main-wrapper .my-board-container .pagination-container {
+  display: flex;
+  justify-content: center;
+}

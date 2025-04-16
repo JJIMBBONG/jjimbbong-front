@@ -29,9 +29,9 @@
 #user-update-container .user-update-box {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 #user-update-container .user-update-box:hover {
@@ -41,7 +41,7 @@
 #user-update-container .user-update-box .user-update-row {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 #user-update-container .user-update-row>.title {
@@ -56,6 +56,7 @@
   padding: 4px 10px;
 
   height: 40px;
+  line-height: 175%;
 
   color: white;
   background-color: lightgrey;
@@ -76,12 +77,12 @@
   line-height: 175%;
 }
 
-#user-update-container .user-update-row .address-area {
+#user-update-container .user-update-row .update-area {
   display: flex;
   gap: 16px;
 }
 
-#user-update-container .user-update-row .address-area>input {
+#user-update-container .user-update-row .update-area>input {
   flex: 1;
   outline: none;
 
@@ -98,7 +99,7 @@
   cursor: default;
 }
 
-#user-update-container .user-update-row .address-area>.address-button {
+#user-update-container .user-update-row .update-area>.button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,6 +119,64 @@
   cursor: pointer;
 }
 
-#user-update-container .user-update-row .address-area>.address-button:hover {
+#user-update-container .user-update-row .update-area>.button.disable {
+  background-color: grey;
+
+  color: white;
+  cursor: default;
+}
+
+#user-update-container .user-update-row .update-area>.button.disable:hover {
+  opacity: 1;
+}
+
+#user-update-container .user-update-row .update-area>.button:hover {
+  opacity: 0.85;
+}
+
+#user-update-container .user-update-row .message {
+  height: 13px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+#user-update-container .user-update-row .message.error {
+  color: rgba(255, 0, 0, 0.6);
+}
+
+#user-update-container .user-update-row .message.success {
+  color: rgba(0, 0, 255, 0.6);
+}
+
+#user-update-container .update-button-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+#user-update-container .update-button-box>.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 8px;
+
+  width: 200px;
+  height: 30px;
+
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 175%;
+
+  background-color: black;
+
+  cursor: pointer;
+}
+
+#user-update-container .update-button-box>.button:hover {
   opacity: 0.85;
 }
