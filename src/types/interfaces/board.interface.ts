@@ -1,23 +1,27 @@
-
 export default interface Board {
-  boardNumber: number;
-  boardWriteDate: string;
-  boardTitle: string;
-  boardContent: string;
-  boardAddressCategory: string;
-  boardDetailCategory: string;
-  boardAddress: string;
-  boardViewCount: number;
-  boardImage: string | null;
+    boardNumber: number;
+    boardWriteDate: string;
+    boardTitle: string;
+    boardContent: string;
+    boardAddressCategory: string;
+    boardDetailCategory: string;
+    boardAddress: string;
+    boardViewCount: number;
+    boardImage: string;
 
+}
+
+// response json형태와 필드명 동일하게!
 export default interface RecommandBoard {
     boardNumber : number;
-    addressCategory : string;
-    detailCategory : string;
-    writeDate: string;
-    title: string;
-    viewCount : number;
-    score : number;
-    image : string;
+    boardWriteDate: string;
+    boardAddressCategory : string;
+    boardDetailCategory : string;
+    boardTitle: string;
+    boardViewCount : number;
+    boardScore : number;
+    boardImage : string;
+    userNickname : string;
+    goodCount : number;
 }
 

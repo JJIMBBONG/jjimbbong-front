@@ -1,6 +1,7 @@
 import { ResponseDto } from "./dto/response";
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import GetBoardResponseDto from "./dto/response/board/get-board.response.dto";
+import GetRecommandBoardResponseDto from "./dto/response/board/get-recommand-board.response.dto";
 
 // variable: URL 상수 //
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
@@ -40,7 +41,7 @@ export const getFillterdBoardRequest = async (areaCategoryCode?: number | null, 
     const responseBody = await axios.get(GET_FILLTERD_BOARD_URL, {
         params: { areaCategoryCode, detailCategory },
     })
-        .then(responseSuccessHandler<GetBoardResponseDto>)
+        .then(responseSuccessHandler<GetRecommandBoardResponseDto>)
         .catch(responseErrorHandler)
     return responseBody;
 };
@@ -48,7 +49,7 @@ export const getFillterdBoardRequest = async (areaCategoryCode?: number | null, 
 // function : get recommand board API 요청 함수 //
 export const getRecommandBoardRequest = async () => {
     const responseBody = await axios.get(GET_RECOMMAND_BOARD_URL)
-        .then(responseSuccessHandler<GetBoardResponseDto>)
+        .then(responseSuccessHandler<GetRecommandBoardResponseDto>)
         .catch(responseErrorHandler)
     return responseBody;
 }
