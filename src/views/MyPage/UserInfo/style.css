@@ -56,12 +56,37 @@
   line-height: 175%;
 }
 
-#user-info-container .button-box {
+#user-info-container>.exit-button-box {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  box-sizing: border-box;
+  padding: 10px 0;
 }
 
-#user-info-container .button-box>.button {
+#user-info-container>.exit-button-box .exit-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 8px;
+
   width: 200px;
+  height: 30px;
+
+  color: white;
+  background-color: black;
+
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 175%;
+
+  cursor: pointer;
+}
+
+#user-info-container>.exit-button-box .exit-button:hover {
+  opacity: 0.85;
 }

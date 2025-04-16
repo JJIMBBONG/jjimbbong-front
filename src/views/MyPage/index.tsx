@@ -106,14 +106,14 @@ export default function MyPageMain() {
             <div className='user-level' style={userLevelStyle}></div>
             <div className='user-nickname'>{userNickname}홍길동</div>
           </div>
-          <div className='button-box'>
-            <div className='button' onClick={onUserInfoClickHandler}>내 정보</div>
+          <div className='user-button-box'>
+            <div className='info-button' onClick={onUserInfoClickHandler}>내 정보</div>
             {isInfoOpen &&
             <Modal title='사용자 정보' onClose={onUserInfoClickHandler}>
               <MyPageUserInfo onModalViewChange={onUserInfoClickHandler} />
             </Modal>
             }
-            <div className='button' onClick={onUserInfoUpdateClickHandler}>내 정보 수정</div>
+            <div className='info-button' onClick={onUserInfoUpdateClickHandler}>내 정보 수정</div>
             {isInfoUpdateOpen &&
             <Modal title='사용자 정보 수정' onClose={onUserInfoUpdateClickHandler}>
               <MyPageUserInfoUpdate onModalViewChange={onUserInfoUpdateClickHandler} />
