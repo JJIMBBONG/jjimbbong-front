@@ -25,3 +25,4 @@ export default interface RecommandBoard {
     goodCount : number;
 }
 
+

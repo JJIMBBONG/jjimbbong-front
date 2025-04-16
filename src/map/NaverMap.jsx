@@ -8,12 +8,11 @@ function NaverMap() {
   const [regionData, setRegionData] = useState(null); // 관광 정보 등
   // Check 여기가봤어, 길찾기 토글 상태
   const [showCheck, setShowCheck] = useState(false);
-  const [showDirections, setShowDirections] = useState(false);
 
   // 축제 일정기간 
   const formatDate = (dateStr) => {
     if (!dateStr || dateStr.length !== 8) return dateStr;
-    return `${dateStr.slice(0, 4)}-${dateStr.slice(0,6)}-${dateStr.slice(6, 8)}`;
+    return `${dateStr.slice(0, 4)}-${dateStr.slice(4,6)}-${dateStr.slice(6, 8)}`;
   };
 
   const fetchFestivalData = async (areaCode, sigunguCode) => {
@@ -97,14 +96,28 @@ function NaverMap() {
             }
 
             const festivals = await fetchFestivalData(region.areaCode, region.sigunguCode);
-
             const filteredFestivals = festivals.filter(f => f.address?.includes(cleanName) || f.address?.includes(name));
 
-            // ✅ 지역 관련 관광정보 불러오기
+            // 팝업정보 추후 데이터베이스 연결
+            const popupRes = await fetch(`http://localhost:4000/popup-stores?region=${encodeURI(name)}`);
+            const popups = await popupRes.json();
+
+            const matchedPopups = popups.filter(p => 
+              p.region === name || name.includes(p.region) || p.region.includes(name)
+            );
+
+            // 맛집
+            const restaurantRes = await fetch(`http://localhost:4000/restaurants?region=${encodeURI(name)}`);
+            const restaurants = await restaurantRes.json();
+
+            const matchedRestarant = restaurants.filter(r => 
+              r.region === name || name.includes(r.region) || r.region.includes(name));
+
+            // 지역 관련 관광정보 불러오기
             const testData = {
               festivals: filteredFestivals,
-              popups: ["플리마켓 팝업", "로컬 브랜드 팝업"],
-              restaurants: ["동래 가야밀면", "영진 돼지국밥"],
+              popups: matchedPopups,
+              restaurants: matchedRestarant
             };
             setRegionData(testData);
           });
@@ -123,10 +136,7 @@ function NaverMap() {
           <div className="card">
             <button className="toggle-header" onClick={()=> setShowCheck(!showCheck)}>📍 Check! 여기 가봤어? <span>{showCheck ? "▲" : "▼"}</span></button>
             {showCheck && (
-              <div>
-                <p>부산의 명소를 다녀오셨나요?</p>
-                <button className="action-button">방문 인증하기</button>
-              </div>
+                <button className="action-button">추억 보러 가기</button>
             )}
           </div>
 
@@ -158,8 +168,17 @@ function NaverMap() {
             <div className="card">
               <h3 className="card-title">🛍 팝업스토어</h3>
               <ul className="list">
-                {regionData.popups?.map((p, i) => <li key={i}>{p}</li>)||(
-                  <li>정보 없음</li>
+                {regionData.popups?.length > 0 ? (
+                  regionData.popups.map((p, i) => (
+                    <li key={i}>
+                      <p>{p.popupTitle}</p>
+                      <p>{p.region}</p>
+                      <p>{p.popupDate}</p>
+                      {p.popupImage && <img src={p.popupImage} alt={p.popupTitle} style={{ width: "100px"}} />}
+                    </li>
+                  ))
+                ) : (
+                  <li>등록된 팝업스토어가 없습니다.</li>
                 )}
               </ul>
             </div>
@@ -167,7 +186,17 @@ function NaverMap() {
             <div className="card">
               <h3 className="card-title">🍽 맛집</h3>
                 <ul className="list">
-                  {regionData.restaurants?.map((r, i) => <li key={i}>{r}</li>)}
+                  {regionData.restaurants?.length > 0 ? (
+                    regionData.restaurants.map((r, i) => (
+                      <li key={i}>
+                        <p>{r.restaurantTitle}</p>
+                        <p>{r.region}</p>
+                        <p>{r.restaurantAddress}</p>
+                      </li>
+                    ))
+                  ) : (
+                    <li>등록된 맛집이 없습니다.</li>
+                  )}
                 </ul>
             </div>
 
