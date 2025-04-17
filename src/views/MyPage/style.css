@@ -1,0 +1,172 @@
+#mypage-main-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  margin: 0 auto;
+  padding-top: 52px;
+}
+
+#mypage-main-wrapper .user-container {
+  display: flex;
+  height: 200px;
+}
+
+#mypage-main-wrapper .user-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  width: 200px;
+  height: 160px;
+  
+  position: fixed;
+  top: 80px;
+  right: 30px;
+
+  z-index: 499;
+}
+
+#mypage-main-wrapper .user-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  box-sizing: border-box;
+  padding: 10px 10px;
+}
+
+#mypage-main-wrapper .user-box>.user-level {
+  width: 40px;
+  height: 40px;
+
+  cursor: pointer;
+}
+
+#mypage-main-wrapper .user-box>.user-nickname {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+#mypage-main-wrapper .user-button-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  box-sizing: border-box;
+  padding: 10px 0;
+}
+
+#mypage-main-wrapper .user-button-box>.info-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 8px;
+
+  height: 30px;
+
+  color: white;
+  background-color: black;
+
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 175%;
+}
+
+#mypage-main-wrapper .user-button-box>.info-button:hover {
+  opacity: 0.85;
+  cursor: pointer;
+}
+
+#mypage-main-wrapper .my-board-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#mypage-main-wrapper .my-board-title {
+  padding-left: 30px;
+
+  font-size: 30px;
+  font-weight: 700;
+}
+
+#mypage-main-wrapper .board-box {
+  display: flex;
+  gap: 25px;
+
+  margin: 2px 30px;
+
+  box-sizing: border-box;
+  padding: 10px;
+
+  border: 1px solid grey;
+  border-radius: 6px;
+}
+
+#mypage-main-wrapper .board-box:hover {
+  cursor: pointer;
+}
+
+#mypage-main-wrapper .board-box>.board-image {
+  width: 150px;
+  height: 150px;
+
+  background-color: antiquewhite;
+}
+
+#mypage-main-wrapper .board-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+#mypage-main-wrapper .board-info-container>.title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#mypage-main-wrapper .board-info-container>.write-date {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+#mypage-main-wrapper .board-box .sub-container {
+  display: flex;
+  gap: 20px;
+}
+
+#mypage-main-wrapper .board-box .sub-container>.sub-box {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+#mypage-main-wrapper .sub-box>.icon{
+  width: 30px;
+  height: 30px;
+
+  background-size: 100% 100%;
+}
+
+#mypage-main-wrapper .sub-box>.view-count {
+  background-image: url(src/assets/images/Eye.png);
+}
+
+#mypage-main-wrapper .sub-box>.good-count {
+  background-image: url(src/assets/images/good_count.png);
+}
+
+#mypage-main-wrapper .sub-box>.comment-count {
+  background-image: url(src/assets/images/comment.png);
+}
+
+#mypage-main-wrapper .my-board-container .pagination-container {
+  display: flex;
+  justify-content: center;
+}
