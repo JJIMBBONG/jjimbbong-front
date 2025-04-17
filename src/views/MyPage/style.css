@@ -23,6 +23,8 @@
   position: fixed;
   top: 80px;
   right: 30px;
+
+  z-index: 499;
 }
 
 #mypage-main-wrapper .user-box {
