@@ -1,0 +1,33 @@
+#region-wrapper label {
+    padding: 25px;
+    font-size: 1.2rem;
+}
+
+#region-wrapper ul{
+    list-style: none;
+    background-color: white;
+
+}
+
+
+#region-wrapper .regionSelect-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+    
+}
+
+
+#region-wrapper .regionSelect-wrapper .regionSelect-sido {
+    width: 45%;
+    height: 35px;
+    background-color: white;
+}
+
+#region-wrapper .regionSelect-wrapper .regionSelect-gungu {
+    width: 45%;
+    height: 35px;
+    background-color: white;
+
+}

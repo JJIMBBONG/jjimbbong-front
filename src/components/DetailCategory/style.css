@@ -1,0 +1,28 @@
+#detail-wrapper label {
+    padding: 25px;
+    font-size: 1.2rem;
+}
+
+#detail-wrapper ul{
+    list-style: none;
+    background-color: white;
+
+}
+
+#detail-wrapper .detailSelect-wrapper{
+    justify-content: center;
+    padding-left: 15px;
+    gap: 10px;
+    width: 50%;
+    height: 100%;
+}
+
+#detail-wrapper .detailSelect-wrapper .detailSelect-toggle{
+    width: 90%;
+    height: 35px;
+    background-color: white;
+}
+
+#detail-wrapper .detail-dropdown-list{
+    background-color: white;
+}
