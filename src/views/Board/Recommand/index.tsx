@@ -7,6 +7,8 @@ import Pagination from 'src/components/Pagination';
 import { BOARD_VIEW_ABSOLUTE_PATH } from 'src/constants';
 import usePagination2 from 'src/hooks/pagination2.hook';
 import type { RecommandBoard } from 'src/types/interfaces'
+import './style.css'
+import { url } from 'inspector';
 
 interface CardItemProps {
   boards : RecommandBoard;
@@ -30,7 +32,7 @@ function CardItem({boards} : CardItemProps){
   return (
     <div className='card-body' onClick={onclick}>
       <div className='card-first-wrap'>
-        <img className='card-image' src={boardImage} alt="" />
+        <img className='card-image' src={boardImage !== "" ? boardImage : ""} alt="" />
       </div>
       <div className='card-second-wrap'>
         <div className='card-title'>{boardTitle}</div>
@@ -40,7 +42,7 @@ function CardItem({boards} : CardItemProps){
         </div>
       </div>
       <div className='card-third-wrap'>
-        <div className='card-writer-tier'>{boardScore}</div>
+        <div className='card-board-tier'>{boardScore}</div>
         <div className='card-writer-nickname'>{userNickname}</div>
       </div>
     </div>
@@ -78,7 +80,8 @@ export default function RecommandBoardMain() {
     // 전체 게시글 저장
     setOriginalList(boards);
     // 초기 필터 없음 상태로 설정 
-    setTotalList(boards);        
+    setTotalList(boards);
+    console.log(boards);        
   };
 
 
@@ -99,9 +102,9 @@ export default function RecommandBoardMain() {
 
 
   return (
-    <div>
+    <div id='board-list-wrapper'>
       <div className='board-list-container'>
-        <div>추천 게시물</div>
+        <div className='board-list-title'>추천 게시물</div>
           <div className="category-tabs">
             <button
               className={`tab ${selectedCategory === null ? 'active' : ''}`}
