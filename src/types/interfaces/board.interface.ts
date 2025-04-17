@@ -1,3 +1,4 @@
+
 export default interface Board {
     boardNumber: number;
     boardWriteDate: string;
@@ -10,6 +11,7 @@ export default interface Board {
     boardImage: string;
 
 }
+
 
 // response json형태와 필드명 동일하게!
 export default interface RecommandBoard {
@@ -24,5 +26,3 @@ export default interface RecommandBoard {
     userNickname : string;
     goodCount : number;
 }
-
-
