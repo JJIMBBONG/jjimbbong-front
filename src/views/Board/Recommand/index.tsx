@@ -55,6 +55,7 @@ export default function RecommandBoardMain() {
 
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [originalList, setOriginalList] = useState<RecommandBoard[]>([]);
+    const [isEmpty, setIsEmpty] = useState(false);
     const categoryList = ['맛집', '축제', '팝업 스토어', '교통']; // 예시 카테고리
 
     // state: 페이지네이션 상태 //
@@ -96,8 +97,12 @@ export default function RecommandBoardMain() {
       const filtered = selectedCategory
         ? originalList.filter(item => item.boardDetailCategory === selectedCategory)
         : originalList;
+      
+      console.log(selectedCategory);
 
-      setTotalList(filtered || []);
+      setTotalList(filtered);
+      setIsEmpty(filtered.length === 0);
+      //setOriginalList(filtered);
     }, [selectedCategory, originalList]);
 
 
@@ -125,7 +130,10 @@ export default function RecommandBoardMain() {
           </div>
         <div>
           {
-            viewList.map((boards, index) => <CardItem key={index} boards={boards} />)
+            !isEmpty ? (
+              viewList.map((boards, index) => <CardItem key={index} boards={boards} />)
+              
+            ) : <p>해당 카테고리에 게시글이 없습니다.</p>
           }
         </div>
         <div className='pagination-container'>

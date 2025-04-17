@@ -23,12 +23,12 @@ export default function MainTitle() {
             <div className='title'>찜뽕!</div>
             <img className='title-logo' src={TitleLogo}/>
         </div>
-        <div className='category'>
+        <div className='category-wrapper'>
           <div className='category-select'>
-          <div>
+          <div className='category-address'>
             <AddressCategory onSelect={setSelectedRegion}/>
           </div>
-          <div>
+          <div className='category-detail'>
             <DetailCatebory onSelect={setSelectedDetail}/>
           </div>
           </div>

@@ -23,8 +23,12 @@ const usePagination2 = <T>() => {
     const totalSection = Math.ceil(totalPage / PAGES_PER_SECTION);
     setTotalSection(totalSection);
 
+    // totalList가 바뀌어도 계속 초기화 시켜버림
     setCurrentPage(1);
     setCurrentSection(1);
+
+    // => totalList가 바뀔 때 viewList도 바뀌게!
+    initViewList(totalList);
   };
 
   // function: 뷰 리스트 변경 함수 //

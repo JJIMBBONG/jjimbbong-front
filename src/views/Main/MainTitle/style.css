@@ -15,7 +15,6 @@
 }
 
 #wrapper-title .title {
-    position: absolute;
     top: 50%;
     left: 45%;
     display: inline-block;
@@ -41,7 +40,8 @@
 }
 
 #wrapper-title .title-logo {
-    width: 500px;
+    width: 60%;
+    margin: 10px;
     display: inline-block;
     animation-name: stamp1;
     animation-duration: 2s;
@@ -53,4 +53,47 @@
     0% {transform: scale(1); opacity: 0;}
     95% {transform: scale(5); opacity: 0;}
     100% {transform: scale(1); opacity: 1;}
+}
+
+
+#wrapper-title .category-wrapper{
+    display: flex;
+    width: 50%;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    background-color: aqua;
+    gap: 10px;
+}
+
+#wrapper-title .category-wrapper .category-search-button{
+    border-radius: 10px;
+    padding: 20px 30px;
+    color: white;
+    background-color: black;
+}
+
+#wrapper-title .category-select {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 80%;
+    background-color: antiquewhite;
+    justify-content: center;
+    padding: 10px;
+}
+
+#wrapper-title .category-select .category-address{
+    width: 100%;
+    height: 50%;
+    z-index: 3;
+    background-color: red;
+
+}
+
+#wrapper-title .category-select .category-detail{
+    width: 100%;
+    height: 50%;
+    z-index: 2;
+    background-color: blue;
 }
