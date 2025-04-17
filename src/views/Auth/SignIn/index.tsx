@@ -50,6 +50,7 @@ export default function SignIn(props: Props) {
     }
 
     const { accessToken, expiration } = responseBody as SignInResponseDto;
+    
     const expires = new Date(Date.now() + (expiration * 1000));
     setCookie(ACCESS_TOKEN, accessToken, { path: ROOT_PATH, expires });
 
@@ -85,7 +86,7 @@ export default function SignIn(props: Props) {
     window.location.href = SNS_SIGN_IN_URL(sns);
   };
 
-  // effect: 아이디 혹은 비밀번호 변경시 실행할 함수 //
+  // effect: 아이디 혹은 비밀번호 변경시 메세지 출력 변경 실행할 함수 //
   useEffect(() => {
     setUserIdMessage('');
     setUserPasswordMessage('');
@@ -100,11 +101,11 @@ export default function SignIn(props: Props) {
         <InputBox type={'password'} label={'비밀번호'} value={userPassword} placeholder={'비밀번호를 입력해주세요.'} message={userPasswordMessage} isErrorMessage onChange={onUserPasswordChangeHandler} />
       </div>
       <div className='button-container'>
-        <div className='button-google-gray fullwidth' onClick={onLoginButtonClick}>로그인</div>
+        <div className='button-black fullwidth' onClick={onLoginButtonClick}>로그인</div>
         <div className='link-container'>
           <div className='link' onClick={() => onPageChange('sign-up')}>회원가입</div>
-          <div className='link'>아이디 찾기</div>
-          <div className='link'>비밀번호 찾기</div>
+          <div className='link' onClick={() => onPageChange('id-search')}>아이디 찾기</div>
+          <div className='link' onClick={() => onPageChange('password-reset')}>비밀번호 찾기</div>
         </div>
       </div>
       <div className='sns-container'>

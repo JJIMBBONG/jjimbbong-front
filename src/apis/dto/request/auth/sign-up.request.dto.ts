@@ -9,7 +9,7 @@ export default interface SignUpRequestDto {
     detailAddress: string;
     gender: string;
     userLevel: string;
-    profileImage: string;
+    profileImage?: string;
     joinType: string;
     snsId?: string
 }

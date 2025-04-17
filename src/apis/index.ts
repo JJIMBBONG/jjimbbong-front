@@ -90,12 +90,16 @@ export const EmailAuthRequest = async (requestBody: EmailAuthRequestDto) => {
     return responseBody;
 };
 
-// function: email auth check API 요청 함수 //
+// // function: email auth check API 요청 함수 //
+// export const EmailAuthCheckRequest = async (requestBody: EmailAuthCheckRequestDto) => {
+//     const responseBody = await axios.post(EMAIL_AUTH_CHECK_URL, requestBody)
+//       .then(responseSuccessHandler)
+//       .catch(responseErrorHandler);
+//     return responseBody;
+// };
 export const EmailAuthCheckRequest = async (requestBody: EmailAuthCheckRequestDto) => {
-    const responseBody = await axios.post(EMAIL_AUTH_CHECK_URL, requestBody)
-      .then(responseSuccessHandler)
-      .catch(responseErrorHandler);
-    return responseBody;
+      const response = await axios.post(EMAIL_AUTH_CHECK_URL, requestBody);
+      return response.data;
 };
 
 // function: id check API 요청 함수 //
