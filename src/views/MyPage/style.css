@@ -23,6 +23,8 @@
   position: fixed;
   top: 80px;
   right: 30px;
+
+  z-index: 499;
 }
 
 #mypage-main-wrapper .user-box {
@@ -48,7 +50,7 @@
   font-weight: 500;
 }
 
-#mypage-main-wrapper .button-box {
+#mypage-main-wrapper .user-button-box {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -57,7 +59,7 @@
   padding: 10px 0;
 }
 
-#mypage-main-wrapper .button-box>.button {
+#mypage-main-wrapper .user-button-box>.info-button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,7 +78,7 @@
   line-height: 175%;
 }
 
-#mypage-main-wrapper .button-box>.button:hover {
+#mypage-main-wrapper .user-button-box>.info-button:hover {
   opacity: 0.85;
   cursor: pointer;
 }

@@ -55,8 +55,8 @@ export default function MyPageUserInfo({onModalViewChange}: UserInfoProps) {
           <div className='content'>{detailAddress}</div>
         </div>
       </div>
-      <div className='button-box'>
-        <div className='button' onClick={onExitClickHandler}>나가기</div>
+      <div className='exit-button-box'>
+        <div className='exit-button' onClick={onExitClickHandler}>나가기</div>
       </div>
     </div>
   )
