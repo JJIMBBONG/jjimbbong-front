@@ -18,7 +18,7 @@
   gap: 10px;
 }
 
-.password-recheck-container .input-area input {
+.password-recheck-container .input-area>input {
   flex: 1;
   outline: none;
 
@@ -35,7 +35,7 @@
   line-height: 175%;
 }
 
-.password-recheck-container input::placeholder {
+.password-recheck-container>input::placeholder {
   color: grey;
 }
 
@@ -67,7 +67,7 @@
 }
 
 .password-recheck-container .button.able {
-  background-color: dodgerblue;
+  background-color: lightskyblue;
   
   color: white;
 }

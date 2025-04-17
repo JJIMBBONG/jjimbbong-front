@@ -1,0 +1,33 @@
+.card-body{
+    display: inline-block;
+    background-color: aqua;
+    width: 200px;
+    border-radius: 10px;
+    gap: 10px;
+    padding: 10px;
+}
+
+.card-body .card-first-wrap{
+    border: solid black 1px;
+}
+
+.card-body .card-second-wrap{
+    border: solid black 1px;
+}
+
+.card-body .card-third-wrap{
+    border: solid black 1px;
+    display: flex;
+}
+
+.card-body .card-board-tier{
+    display: inline-block;
+    border: solid black 1px;
+    gap: 8px;
+}
+
+.card-body .card-writer-nickname{
+    display: inline-block;
+    border: solid black 1px;
+    gap: 8px;
+}
