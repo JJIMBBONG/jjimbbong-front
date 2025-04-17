@@ -40,6 +40,7 @@
     align-self: stretch;
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
     /* gap: 16px; */
   }
   
@@ -48,12 +49,6 @@
     flex-direction: column;
     align-items: center;
     gap: 16px;
-  }
-  
-  #auth-login-container .sns-header {
-    color: var(--Lightmode-Grey2);
-    font-size: 16px;
-    font-weight: 400;
   }
   
   #auth-login-container .sns-button-box {
@@ -75,7 +70,7 @@
     
     padding: 12px 20px;
     width: 424px; /* 고정 너비 500px */
-    height: 21px; /* 높이 45px로 설정 */
+    height: 20px; /* 높이 44px로 설정 */
     border-radius: 8px;
     cursor: pointer;
     
@@ -134,13 +129,9 @@
     padding: 5px;
   }
   
-  #auth-login-container .link:hover {
+   #auth-login-container .link:hover {
     color: var(--Primary); /* 링크 hover 효과 */
-  }
-  
-  #auth-login-container .button-container {
-    margin-bottom: 10px;
-  }
+  } 
 
   #auth-login-container .link-container > .link:first-child {
     text-align: left; /* 첫 번째 버튼(회원가입)은 왼쪽 정렬 */

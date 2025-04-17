@@ -47,10 +47,10 @@
   }
   
   .button.disable {
-    background-color: var(--Lightmode-Grey3);
+    background-color: var(--Lightmode-Grey2);
   
-    color: var(--Lightmode-Grey2);
-  
+    color: white;
+
     cursor: default;
   }
   
@@ -59,9 +59,9 @@
   }
   
   .button.second {
-    background-color: var(--Second);
+    background-color: rgba(0, 0, 0, 1);
   
-    color: var(--Primary);
+    color: white;
   }
   
   .button.primary {
@@ -93,7 +93,7 @@
     cursor: pointer;
   }
 
-  .button-google-gray {
+  .button-black {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -113,6 +113,6 @@
     font-family: "Roboto", sans-serif;
   }
   
-  .button-google-gray:hover {
+  .button-black:hover {
     box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px rgba(60, 64, 67, 0.15);
   }

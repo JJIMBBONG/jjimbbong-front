@@ -166,6 +166,14 @@ export const getSignInUserRequest = (accessToken: string) => {
     return responseBody;
 };
 
+// // function: email auth check API 요청 함수 //
+// export const EmailAuthCheckRequest = async (requestBody: EmailAuthCheckRequestDto) => {
+//     const responseBody = await axios.post(EMAIL_AUTH_CHECK_URL, requestBody)
+//       .then(responseSuccessHandler)
+//       .catch(responseErrorHandler);
+//     return responseBody;
+// };
+
 // function: patch user API 요청 함수 //
 export const patchSignInUserRequest = async (requestBody: PatchSignInUserRequestDto, accessToken: string) => {
     const responseBody = await axios.patch(PATCH_SIGN_IN_USER_URL, requestBody, bearerAuthorization(accessToken))
