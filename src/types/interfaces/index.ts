@@ -1,4 +1,5 @@
 
+
 import Board from "./board.interface";
 import Comment from "./comment.interface";
 
@@ -13,6 +14,7 @@ export type{
     Region,
     Sigungu,
     AreaWithSigungu,
+    RecommandBoard,
     RecommandBoard,
     Board,
     Comment,
