@@ -26,6 +26,11 @@
     cursor: pointer;
 }
 
+#top-bar .nav-logo:hover{
+    transition: 1s;
+    
+}
+
 #top-bar .login{
     border-radius: 10px;
     background-color: black;
