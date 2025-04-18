@@ -7,6 +7,7 @@ import Pagination from 'src/components/Pagination';
 import { BOARD_VIEW_ABSOLUTE_PATH } from 'src/constants';
 import usePagination2 from 'src/hooks/pagination2.hook';
 import type { RecommandBoard } from 'src/types/interfaces'
+import GoodIconColor from 'src/assets/images/good-icon-color.png';
 import './style.css'
 import { url } from 'inspector';
 
@@ -37,8 +38,8 @@ function CardItem({boards} : CardItemProps){
       <div className='card-second-wrap'>
         <div className='card-title'>{boardTitle}</div>
         <div className='card-good'>
-          <img className='good-image' src="" />
-          <div className='good-length'>{goodCount}</div>
+          <img className='good-image' src={GoodIconColor} />
+          <div className='good-length'>{goodCount !== null ? goodCount : '0'}</div>
         </div>
       </div>
       <div className='card-third-wrap'>
@@ -108,8 +109,8 @@ export default function RecommandBoardMain() {
 
   return (
     <div id='board-list-wrapper'>
+      <div className='board-list-title'>추천 게시물</div>
       <div className='board-list-container'>
-        <div className='board-list-title'>추천 게시물</div>
           <div className="category-tabs">
             <button
               className={`tab ${selectedCategory === null ? 'active' : ''}`}
@@ -128,7 +129,7 @@ export default function RecommandBoardMain() {
             ))}
             
           </div>
-        <div>
+        <div className='recommand-board-list'>
           {
             !isEmpty ? (
               viewList.map((boards, index) => <CardItem key={index} boards={boards} />)
