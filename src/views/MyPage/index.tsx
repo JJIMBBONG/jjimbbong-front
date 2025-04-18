@@ -104,7 +104,7 @@ export default function MyPageMain() {
         <div className='user-card'>
           <div className='user-box'>
             <div className='user-level' style={userLevelStyle}></div>
-            <div className='user-nickname'>{userNickname}홍길동</div>
+            <div className='user-nickname'>{userNickname}홍길홍길동</div>
           </div>
           <div className='user-button-box'>
             <div className='info-button' onClick={onUserInfoClickHandler}>내 정보</div>

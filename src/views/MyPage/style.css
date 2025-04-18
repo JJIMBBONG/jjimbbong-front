@@ -9,7 +9,7 @@
 
 #mypage-main-wrapper .user-container {
   display: flex;
-  height: 200px;
+  height: 230px;
 }
 
 #mypage-main-wrapper .user-card {
@@ -21,10 +21,10 @@
   height: 160px;
   
   position: fixed;
-  top: 80px;
-  right: 30px;
+  top: 130px;
+  right: 70px;
 
-  z-index: 499;
+  z-index: 490;
 }
 
 #mypage-main-wrapper .user-box {

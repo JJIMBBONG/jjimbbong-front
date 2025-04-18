@@ -31,9 +31,8 @@ export default function Layout() {
         setShowMyContent(!showMyContent);
     };
 
-    // event handler : 마이페이지 클릭 이벤트 처리 //
+    // event handler: 마이페이지 클릭 이벤트 처리 //
     const onMyPageClickHandler = () => {
-        // 비밀번호 입력 란이 먼저 나옴 //
         navigator(MY_PAGE_ABSOLUTE_PATH);
     }
 
@@ -60,7 +59,6 @@ export default function Layout() {
                             { login ? 
                                 <div className='nav-right-content'>
                                     <div className='map-logo' onClick={onMapClickHandler}>Map</div>
-
 
                                     <div className='my-content' onClick={onMyContentClickHandler}>
                                     {showMyContent &&

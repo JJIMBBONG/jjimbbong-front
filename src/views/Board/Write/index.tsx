@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './style.css';
 
-const 게시글작성페이지 = () => {
+const 게시글작성페이지 = () => {}
+
+export default function BoardWrite() {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedDetailedLocation, setSelectedDetailedLocation] = useState('');
@@ -152,4 +154,4 @@ const 게시글작성페이지 = () => {
       </div>
     </div>
   );
-};
+}
