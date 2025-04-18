@@ -221,10 +221,23 @@ export default function SignUp(props: Props) {
 
   // event handler: 사용자 이름 변경 이벤트 처리 //
   const onUserNameChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setUserName(value);
+    let { value } = event.target;
 
-    setUserNameMessage('');
+    // 1. 한글만 남기고 나머지는 제거
+    value = value.replace(/[^가-힣]/g, '');
+  
+    // 2. 상태 저장
+    setUserName(value);
+  
+    // 3. 유효성 검사 (2~5자의 한글만 허용)
+    const regexp = /^[가-힣]{2,5}$/;
+    const isMatch = regexp.test(value);
+  
+    // 4. 메시지 설정
+    const message = isMatch ? '' : '한글로 2 ~ 5자 입력해주세요';
+    setUserNameMessage(message);
+
+
   };
 
   // event handler: 사용자 닉네임 변경 이벤트 처리 //
@@ -237,10 +250,20 @@ export default function SignUp(props: Props) {
 
   // event handler: 사용자 이메일 변경 이벤트 처리 //
   const onUserEmailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+    let { value } = event.target;
+
+    // 1. 한글 제거
+    value = value.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
     setUserEmail(value);
 
-    setUserEmailMessage('');
+    // 2. 이메일 유효성 검사
+    const regexp = /^[a-zA-Z0-9]*@([-.]?[a-zA-Z0-9])*\.[a-zA-Z]{2,4}$/;
+    const isMatch = regexp.test(value);
+    const message = isMatch ? '' : '이메일 형식으로 작성해주세요';
+    setUserEmailMessage(message);
+    setUserEmailChecked(isMatch);
+    setUserEmailMessageError(!isMatch);
+
   };
 
   // event handler: 사용자 이메일 변경 이벤트 처리 //
@@ -253,19 +276,38 @@ export default function SignUp(props: Props) {
 
   // event handler: 사용자 아이디 변경 이벤트 처리 //
   const onUserIdChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setUserId(value);
+    let { value } = event.target;
 
-    setUserIdChecked(false);
-    setUserIdMessage('');
-    setUserIdMessageError(false);
+    // 1. 영어와 숫자를 제외한 문자 제거
+    value = value.replace(/[^a-zA-Z0-9]/g, '');
+    setUserId(value);
+  
+    // 2. 유효성 검사
+    const regexp = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
+    const isMatch = regexp.test(value);
+    const message = isMatch ? '' : '영문, 숫자를 혼용하여 6 ~ 20자 입력해주세요';
+    setUserIdMessage(message);
+    setUserIdChecked(isMatch);
+    setUserIdMessageError(!isMatch);
+
   };
 
   // event handler: 사용자 비밀번호 변경 이벤트 처리 //
   const onUserPasswordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setUserPassword(value);
+    let { value } = event.target;
 
+    // 1. 영어와 숫자를 제외한 문자 제거
+    value = value.replace(/[^a-zA-Z0-9]/g, '');
+
+    // 2. 입력 길이 제한: 13자까지만 허용
+    if (value.length > 13) {
+      value = value.slice(0, 13); // 초과분 잘라냄
+    }
+  
+    // 3. 상태 저장
+    setUserPassword(value);
+  
+    // 4. 정규식 검사 (영문+숫자 조합, 8~13자)
     const regexp = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,13}$/;
     const isMatch = regexp.test(value);
     const message = isMatch ? '' : '영문, 숫자를 혼용하여 8 ~ 13자 입력해주세요';
@@ -275,8 +317,30 @@ export default function SignUp(props: Props) {
 
   // event handler: 사용자 비밀번호 확인 변경 이벤트 처리 //
   const onUserPasswordCheckChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+    let { value } = event.target;
+
+    // 1. 영어와 숫자를 제외한 문자 제거
+    value = value.replace(/[^a-zA-Z0-9]/g, '');
+  
+    // 2. 길이 초과 여부 체크
+    const isTooLong = value.length > 13;
+    if (isTooLong) {
+      value = value.slice(0, 13);
+    }
+  
+    // 3. 상태 저장
     setUserPasswordCheck(value);
+  
+    // 4. 유효성 검사
+    const regexp = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,13}$/;
+    const isMatch = regexp.test(value);
+  
+    // 5. 에러 메시지 처리
+    let message = '';
+    if (isTooLong || !isMatch) {
+      message = '영문, 숫자를 혼용하여 8 ~ 13자 입력해주세요';
+    }
+    setUserPasswordCheckMessage(message);
   };
 
   // event handler: 사용자 주소 변경 이벤트 처리 //
@@ -365,7 +429,7 @@ export default function SignUp(props: Props) {
           }
       })
       .catch(error => {
-          alert('이미 사용중인 이메일입니다.');
+          alert('이메일 인증 요청에 실패했습니다.');
           setUserEmailChecked(false);
       });
   };
