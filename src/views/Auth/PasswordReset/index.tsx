@@ -31,6 +31,8 @@ export default function PasswordReset(props: Props) {
   const [authNumber, setAuthNumber] = useState<string>('');
   // state: 이메일 전송중 상태 //
   const [isLoadingEmailSend, setIsLoadingEmailSend] = useState(false); 
+  // state: 임시 비밀번호 이메일 전송중 상태 //
+  const [isLoadingPasswordReset, setIsLoadingPasswordReset] = useState(false);
 
   // state: 사용자 아이디 메세지 상태 //
   const [userIdMessage, setUserIdMessage] = useState<string>('');
@@ -223,24 +225,31 @@ export default function PasswordReset(props: Props) {
       setAuthNumberMessageError(true);
     }
     if (!isIdSearchButtonActive) return;
-
+  
     const requestBody: PasswordResetRequestDto = {
       userId, userEmail, authNumber
     };
-
+  
+    // 로딩 시작
+    setIsLoadingPasswordReset(true);
+  
     axios.post('http://127.0.0.1:4000/api/v1/auth/password-reset', requestBody)
-    .then((response) => {
-      console.log('임시비밀번호를 이메일로 전송했습니다.');
-      if (response.data.code === 'SU') {
-        alert('임시비밀번호를 이메일로 전송했습니다.');
-        onPageChange('sign-in');
-      } else {
-        alert(`아이디 찾기 실패: ${response.data.message}`);
-      }
-    })
-    .catch(error => {
+      .then((response) => {
+        console.log('임시비밀번호를 이메일로 전송했습니다.');
+        if (response.data.code === 'SU') {
+          alert('임시비밀번호를 이메일로 전송했습니다.');
+          onPageChange('sign-in');
+        } else {
+          alert(`아이디 찾기 실패: ${response.data.message}`);
+        }
+      })
+      .catch(error => {
         alert('인증번호 확인에 실패했습니다. 다시 시도해주세요.');
         console.error("회원가입 중 오류 발생:", error.response ? error.response.data : error);
+      })
+      .finally(() => {
+        // 로딩 종료
+        setIsLoadingPasswordReset(false);
       });
   };
 
@@ -259,7 +268,14 @@ export default function PasswordReset(props: Props) {
 
       </div>
       <div className='button-container'>
-        <div className={IdSearchButtonClass} onClick={onPasswordResetClickHandler}>비밀번호 찾기</div>
+      <div className={IdSearchButtonClass} onClick={onPasswordResetClickHandler}> {isLoadingPasswordReset ? (
+        <span className="loading-text">
+          전송중
+          <span className="dot">.</span>
+          <span className="dot">.</span>
+          <span className="dot">.</span>
+        </span> ) : ( '비밀번호 찾기' )} 
+      </div>
         <div className='link' onClick={() => onPageChange('sign-in')}>로그인</div>
       </div>
     </div>
