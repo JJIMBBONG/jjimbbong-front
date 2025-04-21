@@ -6,6 +6,7 @@ import './style.css';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router';
 import { ACCESS_TOKEN, JOIN_TYPE, MAIN_ABSOLUTE_PATH, SNS_ID } from '../../constants';
+import IdSearch from './IdSearch';
 
 export default function Auth() {
 
@@ -25,19 +26,22 @@ export default function Auth() {
 
   // effect: 화면 렌더시 실행할 함수 //
   useEffect(() => {
-    if (cookies[ACCESS_TOKEN]) navigator(MAIN_ABSOLUTE_PATH);
-    if (cookies[JOIN_TYPE] && cookies[SNS_ID]) setPage('sign-up');
+    if (cookies[ACCESS_TOKEN]) {
+      navigator(MAIN_ABSOLUTE_PATH);
+      return;
+    }
+    // 최초 한 번만 실행하도록 조건
+    if (page === 'sign-in' && cookies[JOIN_TYPE] && cookies[SNS_ID]) {
+      setPage('sign-up');
+  }
   }, [cookies, navigator]);
 
   return (
     <div id='auth-wrapper'>
       <div className='auth-box'>
-        {/* 현재 페이지 상태에 따라 SignIn 또는 SignUp 렌더링 */}
-        {page === 'sign-in' ? (
-          <SignIn onPageChange={onPageChangeHandler} /> // onPageChange 전달
-        ) : (
-          <SignUp onPageChange={onPageChangeHandler} /> // onPageChange 전달
-        )}
+        {page === 'sign-in' && <SignIn onPageChange={onPageChangeHandler} />}
+        {page === 'sign-up' && <SignUp onPageChange={onPageChangeHandler} />}
+        {page === 'id-search' && <IdSearch onPageChange={onPageChangeHandler} />}
       </div>
     </div>
   );

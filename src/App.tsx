@@ -8,7 +8,7 @@ import NaverMap from './map/NaverMap';
 import { AUTH_PATH, BOARD_PATH, BOARD_UPDATE_PATH, BOARD_VIEW_PATH, BOARD_WRITE_PATH, MAIN_PATH, MAP_PATH, MY_PAGE_MAIN_PATH, MY_PAGE_PATH, OTHERS_PATH } from './constants';
 import Auth from './views/Auth';
 import BoardMain from './views/Board';
-import BoardWrite from './views/Board/Write';
+import BoardWrite from './views/Board';
 import BoardDetail from './views/Board/Detail';
 import BoardUpdate from './views/Board/Update';
 import MyPagePasswordCheck from './views/MyPage/PasswordCheck';
