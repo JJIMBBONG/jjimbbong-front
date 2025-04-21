@@ -110,6 +110,25 @@ export default function Layout() {
     //         return () => window.removeEventListener("mousemove", handleMouseMove);
     //     }, []);
 
+    useEffect(() => {
+        const topBar = document.getElementById('top-bar');
+        const handleScroll = () => {
+            if (!topBar) return;
+        
+            if (window.scrollY >= window.innerHeight) {
+                topBar.classList.add('scrolled');
+            } else {
+                topBar.classList.remove('scrolled');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     return (
         <div id='layout-wrapper'>
             <div id='top-bar'>
