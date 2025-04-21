@@ -26,3 +26,17 @@ export default interface RecommandBoard {
     userNickname : string;
     goodCount : number;
 }
+
+export default interface FilteredBoard {
+    boardNumber : number;
+    boardWriteDate: string;
+    boardAddressCategory : string;
+    boardDetailCategory : string;
+    boardTitle: string;
+    boardViewCount : number;
+    boardScore : number;
+    boardImage : string;
+    userNickname : string;
+    goodCount : number;
+    commentCount : number;
+}

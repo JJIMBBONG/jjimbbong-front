@@ -3,6 +3,12 @@
     width: 100%;
     position: fixed;
     background-color: var(--Lightmode-Grey3);
+    transition: background-color 0.3s ease;
+}
+
+#top-bar.scrolled {
+    background-color: rgb(225, 115, 75);
+    color: white;
 }
 
 #top-bar .map-logo{
