@@ -31,6 +31,9 @@ export default function SignUp(props: Props) {
   // state: cookie 상태 //
   const [cookies, _, removeCookie] = useCookies();
 
+  // state: 이메일 전송중 상태 //
+  const [isLoadingEmailSend, setIsLoadingEmailSend] = useState(false); 
+
   // state: 사용자 이름 상태 //
   const [userName, setUserName] = useState<string>('');
   // state: 사용자 아이디 상태 //
@@ -393,32 +396,40 @@ export default function SignUp(props: Props) {
   }, [userPassword, userPasswordCheck]);
 
   // 이메일 중복확인 및 인증번호 전송 처리 함수
-  const onCheckUserEmailClickHandler = () => {
-    if (!isUserEmailCheckButtonActive) return;
+const onCheckUserEmailClickHandler = () => {
+  if (!isUserEmailCheckButtonActive) return;
 
-    const requestBody = {
-      userEmail: userEmail
-    }
+  // 로딩 상태 시작
+  setIsLoadingEmailSend(true);
 
-    // 이메일 중복 확인 후 인증번호 전송
-    axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth', requestBody)
-      .then(response => {
-        console.log('Server Response:', response.data); 
-          if (response.data.code) {
-            alert('인증번호를 전송했습니다.');
-            userEmailCheckResponse(response.data);
-            setUserEmailChecked(true);
-          } else {
-            alert('이메일 인증 요청에 실패했습니다.');
-              alert(response.data.message);  // 실패 메시지 처리
-              setUserEmailChecked(false);
-          }
-      })
-      .catch(error => {
-          alert('이메일 인증 요청에 실패했습니다.');
-          setUserEmailChecked(false);
-      });
+  const requestBody = {
+    userEmail: userEmail
   };
+
+  // 이메일 중복 확인 후 인증번호 전송
+  axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth', requestBody)
+    .then(response => {
+      console.log('Server Response:', response.data); 
+      if (response.data.code) {
+        alert('인증번호를 전송했습니다.');
+        userEmailCheckResponse(response.data);
+        setUserEmailChecked(true);
+      } else {
+        alert('이메일 인증 요청에 실패했습니다.');
+        alert(response.data.message);  // 실패 메시지 처리
+        setUserEmailChecked(false);
+      }
+    })
+    .catch(error => {
+      alert('이메일 인증 요청에 실패했습니다.');
+      setUserEmailChecked(false);
+    })
+    .finally(() => {
+      // 로딩 상태 종료
+      setIsLoadingEmailSend(false);
+    });
+};
+
 
   // 이메일, 인증번호 인증 확인 함수 //
   const onCheckAuthNumberClickHandler = () => {
@@ -515,7 +526,7 @@ export default function SignUp(props: Props) {
 
         <InputBox label={'상세 주소'} type={'text'} value={userDetailAddress} placeholder={'상세 주소를 입력해주세요.'} onChange={onUserDetailAddressChangeHandler} message={''} />
 
-        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive} />
+        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive}isLoading={isLoadingEmailSend} />
 
         <InputBox label={'인증번호'} type={'text'} value={authNumber} placeholder={'인증번호 입력해주세요.'} onChange={onAuthNumberChangeHandler} message={authNumberMessage} buttonName={'인증번호 확인'} onButtonClick={onCheckAuthNumberClickHandler} isErrorMessage={authNumberMessageError} isButtonActive={isAuthNumberCheckButtonActive} />
 

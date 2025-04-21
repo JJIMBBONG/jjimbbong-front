@@ -5,9 +5,7 @@ import InputBox from '../../../components/InputBox';
 import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdSearchRequestDto, PasswordResetRequestDto } from '../../../apis/dto/request/auth';
 import { EmailAuthCheckRequest, EmailAuthRequest } from '../../../apis';
 import { ResponseDto } from '../../../apis/dto/response';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { IdSearchResponseDto } from 'src/apis/dto/response/auth';
 
 
 // interface: 비밀번호 찾기 컴포넌트 속성 //
@@ -31,6 +29,8 @@ export default function PasswordReset(props: Props) {
   const [userEmail, setUserEmail] = useState<string>('');
   // state: 사용자 인증 번호 상태 //
   const [authNumber, setAuthNumber] = useState<string>('');
+  // state: 이메일 전송중 상태 //
+  const [isLoadingEmailSend, setIsLoadingEmailSend] = useState(false); 
 
   // state: 사용자 아이디 메세지 상태 //
   const [userIdMessage, setUserIdMessage] = useState<string>('');
@@ -164,31 +164,33 @@ export default function PasswordReset(props: Props) {
 
   // 이메일 인증번호 전송 처리 함수
   const onCheckUserEmailClickHandler = () => {
-    if (!isUserEmailCheckButtonActive) return;
-
-    const requestBody = {
-      userEmail: userEmail
-    }
-
-    // 이메일 인증번호 전송
+    if (!isUserEmailCheckButtonActive || isLoadingEmailSend) return;
+  
+    setIsLoadingEmailSend(true); // 시작
+  
+    const requestBody = { userEmail };
+  
     axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth-id', requestBody)
       .then(response => {
-        console.log('Server Response:', response.data); 
-          if (response.data.code) {
-            alert('인증번호를 전송했습니다.');
-            userEmailCheckResponse(response.data);
-            setUserEmailChecked(true);
-          } else {
-            alert('이메일 인증 요청에 실패했습니다.');
-              alert(response.data.message);  // 실패 메시지 처리
-              setUserEmailChecked(false);
-          }
+        if (response.data.code) {
+          alert('인증번호를 전송했습니다.');
+          userEmailCheckResponse(response.data);
+          setUserEmailChecked(true);
+        } else {
+          alert('이메일 인증 요청에 실패했습니다.');
+          alert(response.data.message);
+          setUserEmailChecked(false);
+        }
       })
       .catch(error => {
-          alert('이메일 인증 요청에 실패했습니다.');
-          setUserEmailChecked(false);
+        alert('이메일 인증 요청에 실패했습니다.');
+        setUserEmailChecked(false);
+      })
+      .finally(() => {
+        setIsLoadingEmailSend(false); // 종료
       });
   };
+
 
   // 이메일, 인증번호 인증 확인 함수 //
   const onCheckAuthNumberClickHandler = () => {
@@ -251,7 +253,7 @@ export default function PasswordReset(props: Props) {
 
         <InputBox label={'아이디'} type={'text'} value={userId} placeholder={'아이디 입력해주세요.'} onChange={onUserIdChangeHandler} message={userIdMessage} isErrorMessage />
 
-        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive} />
+        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive} isLoading={isLoadingEmailSend} />
 
         <InputBox label={'인증번호'} type={'text'} value={authNumber} placeholder={'인증번호 입력해주세요.'} onChange={onAuthNumberChangeHandler} message={authNumberMessage} buttonName={'인증번호 확인'} onButtonClick={onCheckAuthNumberClickHandler} isErrorMessage={authNumberMessageError} isButtonActive={isAuthNumberCheckButtonActive} />
 

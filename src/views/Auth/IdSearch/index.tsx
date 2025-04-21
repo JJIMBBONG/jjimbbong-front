@@ -31,6 +31,8 @@ export default function IdSearch(props: Props) {
   const [userEmail, setUserEmail] = useState<string>('');
   // state: 사용자 인증 번호 상태 //
   const [authNumber, setAuthNumber] = useState<string>('');
+  // state: 이메일 전송중 상태 //
+  const [isLoadingEmailSend, setIsLoadingEmailSend] = useState(false); 
 
   // state: 사용자 이름 메세지 상태 //
   const [userNameMessage, setUserNameMessage] = useState<string>('');
@@ -156,31 +158,31 @@ export default function IdSearch(props: Props) {
     setAuthNumberMessage('');
   };
 
-  // 이메일 중복확인 및 인증번호 전송 처리 함수
   const onCheckUserEmailClickHandler = () => {
-    if (!isUserEmailCheckButtonActive) return;
-
-    const requestBody = {
-      userEmail: userEmail
-    }
-
-    // 이메일 인증번호 전송
+    if (!isUserEmailCheckButtonActive || isLoadingEmailSend) return;
+  
+    setIsLoadingEmailSend(true); // 시작
+  
+    const requestBody = { userEmail };
+  
     axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth-id', requestBody)
       .then(response => {
-        console.log('Server Response:', response.data); 
-          if (response.data.code) {
-            alert('인증번호를 전송했습니다.');
-            userEmailCheckResponse(response.data);
-            setUserEmailChecked(true);
-          } else {
-            alert('이메일 인증 요청에 실패했습니다.');
-              alert(response.data.message);  // 실패 메시지 처리
-              setUserEmailChecked(false);
-          }
+        if (response.data.code) {
+          alert('인증번호를 전송했습니다.');
+          userEmailCheckResponse(response.data);
+          setUserEmailChecked(true);
+        } else {
+          alert('이메일 인증 요청에 실패했습니다.');
+          alert(response.data.message);
+          setUserEmailChecked(false);
+        }
       })
       .catch(error => {
-          alert('이메일 인증 요청에 실패했습니다.');
-          setUserEmailChecked(false);
+        alert('이메일 인증 요청에 실패했습니다.');
+        setUserEmailChecked(false);
+      })
+      .finally(() => {
+        setIsLoadingEmailSend(false); // 종료
       });
   };
 
@@ -245,7 +247,7 @@ export default function IdSearch(props: Props) {
 
         <InputBox label={'이름'} type={'text'} value={userName} placeholder={'이름을 입력해주세요.'} onChange={onUserNameChangeHandler} message={userNameMessage} isErrorMessage />
 
-        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive} />
+        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive} isLoading={isLoadingEmailSend} />
 
         <InputBox label={'인증번호'} type={'text'} value={authNumber} placeholder={'인증번호 입력해주세요.'} onChange={onAuthNumberChangeHandler} message={authNumberMessage} buttonName={'인증번호 확인'} onButtonClick={onCheckAuthNumberClickHandler} isErrorMessage={authNumberMessageError} isButtonActive={isAuthNumberCheckButtonActive} />
 
