@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { postBoardRequest } from 'src/apis'; // API 호출 파일
 import './style.css';
 
+
 const BoardWrite = () => {
   const navigate = useNavigate();
+
 
   const [form, setForm] = useState({
     boardAddressCategory: '',
@@ -88,6 +90,8 @@ const BoardWrite = () => {
       <button onClick={handleSubmit}>작성하기</button>
     </div>
   );
+
 };
 
 export default BoardWrite;
+

@@ -1,11 +1,11 @@
 import React, { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import Modal from 'src/components/Modal';
 import { useNavigate } from 'react-router';
-import { useSignInUserStore } from 'src/stores';
 import { passwordReCheckRequest } from 'src/apis';
 import { ResponseDto } from 'src/apis/dto/response';
 import { PasswordReCheckRequestDto } from 'src/apis/dto/request/mypage';
-import { MAIN_ABSOLUTE_PATH, MY_PAGE_MAIN_ABSOLUTE_PATH } from 'src/constants';
+import { ACCESS_TOKEN, MAIN_ABSOLUTE_PATH, MY_PAGE_MAIN_ABSOLUTE_PATH } from 'src/constants';
+import { useCookies } from 'react-cookie';
 
 import './style.css';
 
@@ -17,15 +17,17 @@ interface PasswordReCheckProps {
 // component: 로그인 사용자 비밀번호 일치여부 컴포넌트 //
 function PasswordReCheck({onModalViewChange}: PasswordReCheckProps) {
 
+  // state: cookie 상태 //
+  const [cookies] = useCookies();
   
-  // state: 로그인 사용자 정보 상태 //
-  const { userPassword } = useSignInUserStore();
-  
-  // state: 사용자가 입력한 비밀번호 상태 //
+  // state: 사용자 비밀번호 상태 //
   const [inputPassword, setInputPassword] = useState<string>('');
   
   // state: 비밀번호 입력에 따른 메세지 상태 //
   const [inputPasswordMessage, setInputPasswordMessage] = useState<string>('');
+
+  // variable: accessToken //
+  const accessToken = cookies[ACCESS_TOKEN];
   
   // variable: 확인 버튼 활성화 //
   const isPasswordReCheckActive = inputPassword;
@@ -43,21 +45,21 @@ function PasswordReCheck({onModalViewChange}: PasswordReCheckProps) {
 
   // function: password recheck response 처리 함수 //
   const postPasswordReCheckResponse = (responseBody: ResponseDto | null) => {
-    // const message = 
-    //   !responseBody ? '서버에 문제가 있습니다.' :
-    //   responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' :
-    //   responseBody.code === 'AF' ? '인증에 실패했습니다.' : 
-    //   responseBody.code === 'PN' ? '비밀번호가 일치하지 않습니다.' : '';
+    const message = 
+      !responseBody ? '서버에 문제가 있습니다.' :
+      responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' :
+      responseBody.code === 'AF' ? '인증에 실패했습니다.' :
+      responseBody.code === 'PN' ? '비밀번호가 일치하지 않습니다.' : '';
 
-    // const isSuccess = responseBody !== null && responseBody.code === 'SU';
-    // if (!isSuccess) {
-    //   if (responseBody && responseBody.code === 'PN') {
-    //     setInputPasswordMessage(message);
-    //     return;
-    //   }
-    //   alert(message);
-    //   return;
-    // }
+    const isSuccess = responseBody !== null && responseBody.code === 'SU';
+    if (!isSuccess) {
+      if (responseBody && responseBody.code === 'PN') {
+        setInputPasswordMessage(message);
+        return;
+      }
+      alert(message);
+      return;
+    }
 
     onModalViewChange();
     navigator(MY_PAGE_MAIN_ABSOLUTE_PATH);
@@ -72,9 +74,9 @@ function PasswordReCheck({onModalViewChange}: PasswordReCheckProps) {
   // event handler: 확인 버튼 클릭 이벤트 처리 //
   const onCheckButtonClickHandler = () => {
     const requestBody: PasswordReCheckRequestDto = {
-      userPassword
+      inputPassword
     }
-    passwordReCheckRequest(requestBody).then(postPasswordReCheckResponse);
+    passwordReCheckRequest(requestBody, accessToken).then(postPasswordReCheckResponse);
   };
 
   // event handler: 확인 버튼 키보드 입력 이벤트 처리 //
