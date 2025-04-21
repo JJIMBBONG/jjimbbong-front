@@ -20,11 +20,11 @@
   width: 200px;
   height: 160px;
   
-  position: fixed;
+  position: absolute;
   top: 130px;
   right: 70px;
 
-  z-index: 490;
+  z-index: 80;
 }
 
 #mypage-main-wrapper .user-box {
@@ -91,9 +91,28 @@
 
 #mypage-main-wrapper .my-board-title {
   padding-left: 30px;
+  padding-right: 30px;
 
   font-size: 30px;
-  font-weight: 700;
+  font-weight: 800;
+}
+
+#mypage-main-wrapper .my-board-title>.divider {
+  width: 100%;
+  border-top: 1px solid;
+}
+
+#mypage-main-wrapper .no-boards-message {
+  text-align: center;
+
+  box-sizing: border-box;
+  padding: 50px 30px;
+
+  height: 300px;
+
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 170px;
 }
 
 #mypage-main-wrapper .board-box {

@@ -8,7 +8,6 @@
 #user-update-container .update-image-box {
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 #user-update-container .update-image-box>.update-image {
@@ -20,10 +19,8 @@
   width: 150px;
   height: 150px;
 
-  background-image: url(src/assets/images/default-profile.png);
-  background-size: 100% 100%;
-
-  cursor: pointer;
+  background-size: cover;
+  background-position: 50% 50%;
 }
 
 #user-update-container .user-update-box {

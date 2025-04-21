@@ -1,12 +1,17 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {Outlet, useNavigate} from 'react-router';
 import NavLogo from 'src/assets/images/small_logo.png'
 
 import './style.css';
-import { AUTH_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH } from 'src/constants';
+import { ACCESS_TOKEN, AUTH_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH } from 'src/constants';
+import { useCookies } from 'react-cookie';
+import useSignInUser from 'src/hooks/sign-in-user.hook';
 
 // component : 공통 레이아웃 컴포넌트 //
 export default function Layout() {
+
+    // state: cookie 상태 //
+    const [cookies] = useCookies();
 
     const navigator = useNavigate();
 
@@ -15,6 +20,9 @@ export default function Layout() {
 
     // state: My Content 드롭다운 상태 //
     const [showMyContent, setShowMyContent] = useState<boolean>(false);
+
+    // function: 로그인 유저 정보 불러오기 함수 //
+    const getSignInUser = useSignInUser();
 
     // event handler: 홈 클릭 이벤트 처리 //
     const onHomeClickHandler = () => {
@@ -45,6 +53,12 @@ export default function Layout() {
     const onSignInClickHandler = () => {
         navigator(AUTH_ABSOLUTE_PATH);
     }
+
+    // effect: cookie의 accessToken이 변경될 시 실행할 함수 //
+    useEffect(() => {
+        if(!cookies[ACCESS_TOKEN]) return;
+        getSignInUser();
+    }, [cookies[ACCESS_TOKEN]]);
 
     // state: My Content List 요소 참조 //
     const myContentListRef = useRef<HTMLDivElement | null>(null);

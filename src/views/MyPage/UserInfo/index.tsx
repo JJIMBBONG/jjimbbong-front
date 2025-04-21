@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSignInUserStore } from 'src/stores';
-import DefaultProfileImage from 'src/assets/images/default-profile.png';
+import DefaultProfile from 'src/assets/images/default-profile.png';
 
 import './style.css';
 
@@ -16,7 +16,7 @@ export default function MyPageUserInfo({onModalViewChange}: UserInfoProps) {
   const { userId, userNickname, name, gender, address, detailAddress, profileImage } = useSignInUserStore();
 
   // variable: 프로필 이미지 스타일 //
-  const profileImageStyle = { backgroundImage: `url(${profileImage ? profileImage : DefaultProfileImage})` };
+  const profileImageStyle = { backgroundImage: `url(${profileImage ? profileImage : DefaultProfile})` };
 
   // event handler: 나가기 버튼 클릭 이벤트 처리 //
   const onExitClickHandler = () => {

@@ -8,7 +8,6 @@
 #user-info-container .image-box {
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 #user-info-container .image-box>.profile-image {
@@ -20,7 +19,8 @@
   width: 150px;
   height: 150px;
 
-  background-size: 100% 100%;
+  background-size: cover;
+  background-position: 50% 50%;
 }
 
 #user-info-container .user-info-box {

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'src/components/Modal';
 import MyPageUserInfo from './UserInfo';
 import MyPageUserInfoUpdate from './UserInfoUpdate';
-import { useNavigate, useParams } from 'react-router';
-import { BOARD_VIEW_ABSOLUTE_PATH } from 'src/constants';
+import { useNavigate } from 'react-router';
+import { ACCESS_TOKEN, BOARD_VIEW_ABSOLUTE_PATH } from 'src/constants';
 import { usePagination } from 'src/hooks';
 import { useCookies } from 'react-cookie';
 import { useSignInUserStore } from 'src/stores';
@@ -11,6 +11,11 @@ import { MyPageBoard } from 'src/types/interfaces';
 import Pagination from 'src/components/Pagination';
 
 import './style.css';
+import useSignInUser from 'src/hooks/sign-in-user.hook';
+import { getMyPageBoardRequest } from 'src/apis';
+import { GetMyPageBoardResponseDto } from 'src/apis/dto/response/mypage';
+import { ResponseDto } from 'src/apis/dto/response';
+import { createPortal } from 'react-dom';
 
 // interface: 마이페이지 테이블 레코드 컴포넌트 속성 //
 interface TableItemProps {
@@ -59,7 +64,7 @@ function TableItem({ myBoards }: TableItemProps) {
 export default function MyPageMain() {
 
   // state: cookie 상태 //
-  // const [cookies] = useCookies();
+  const [cookies] = useCookies();
 
   // state: 페이지네이션 상태 //
   const {
@@ -76,15 +81,32 @@ export default function MyPageMain() {
   // state: 유저 정보 수정 모달 오픈 상태 //
   const [isInfoUpdateOpen, setInfoUpdateOpen] = useState<boolean>(false);
 
+  // variable: accessToken //
+  const accessToken = cookies[ACCESS_TOKEN];
+
   // variable: 회원 등급 이미지 스타일 //
-  let testLevel = 1; /*test 용*/
-  const userLevelStyle = {
-    backgroundColor: `${
-      testLevel === 0 ? 'red' :
-      testLevel === 1 ? 'orange' : 
-      testLevel === 2 ? 'yellow' :
-      testLevel === 3 ? 'green' : ''
-    }`
+  const userLevelStyle = { backgroundColor: `${
+    userLevel === 5 ? 'red' :
+    userLevel === 4 ? 'orange' : 
+    userLevel === 3 ? 'yellow' :
+    userLevel === 2 ? 'green' : 
+    userLevel === 1 ? 'blue' : 'purple'}` };
+
+  // function: get my page board response 처리 함수 //
+  const getMyPageBoardResponse = (responseBody: GetMyPageBoardResponseDto | ResponseDto | null) => {
+    const message = 
+      !responseBody ? '서버에 문제가 있습니다.' : 
+      responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' : 
+      responseBody.code === 'AF' ? '인증에 실패했습니다.' : '';
+
+    const isSuccess = responseBody !== null && responseBody.code === 'SU';
+    if (!isSuccess) {
+      alert(message);
+      return;
+    }
+
+    const { myBoards } = responseBody as GetMyPageBoardResponseDto;
+    setTotalList(myBoards);
   };
 
   // event handler: 내 정보 버튼 클릭 이벤트 처리 //
@@ -97,6 +119,12 @@ export default function MyPageMain() {
     setInfoUpdateOpen(!isInfoUpdateOpen);
   };
 
+  // effect: 컴포넌트 로드시 실행할 함수 //
+  useEffect(() => {
+    if (!accessToken) return;
+    getMyPageBoardRequest(accessToken).then(getMyPageBoardResponse)
+  }, []);
+
   // render: 마이페이지 메인 화면 컴포넌트 렌더링 //
   return (
     <div id='mypage-main-wrapper'>
@@ -104,63 +132,51 @@ export default function MyPageMain() {
         <div className='user-card'>
           <div className='user-box'>
             <div className='user-level' style={userLevelStyle}></div>
-            <div className='user-nickname'>{userNickname}홍길홍길동</div>
+            <div className='user-nickname'>{userNickname}</div>
           </div>
           <div className='user-button-box'>
             <div className='info-button' onClick={onUserInfoClickHandler}>내 정보</div>
-            {isInfoOpen &&
+            {isInfoOpen && createPortal(
             <Modal title='사용자 정보' onClose={onUserInfoClickHandler}>
               <MyPageUserInfo onModalViewChange={onUserInfoClickHandler} />
-            </Modal>
+            </Modal>,
+            document.body
+            )
             }
             <div className='info-button' onClick={onUserInfoUpdateClickHandler}>내 정보 수정</div>
-            {isInfoUpdateOpen &&
+            {isInfoUpdateOpen && createPortal(
             <Modal title='사용자 정보 수정' onClose={onUserInfoUpdateClickHandler}>
               <MyPageUserInfoUpdate onModalViewChange={onUserInfoUpdateClickHandler} />
-            </Modal>
+            </Modal>,
+            document.body
+            )
             }
           </div>
         </div>
       </div>
       <div className='my-board-container'>
-        <div className='my-board-title'>나의 게시물</div>
-          {viewList.map((myBoards, index) => <TableItem key={index} myBoards={myBoards} />)}
-          <div className='board-box'>
-            <div className='board-image'></div>
-            <div className='board-info-container'>
-              <div className='title'>게시글 제목</div>
-              <div className='write-date'>게시글 작성 날짜</div>
-              <div className='sub-container'>
-                <div className='sub-box'>
-                  <div className='icon view-count'/> 0
-                </div>
-                <div className='sub-box'>
-                  <div className='icon good-count'/> 0
-                </div>
-                <div className='sub-box'>
-                  <div className='icon comment-count'/> 0
-                </div>
+        <div className='my-board-title'>나의 게시물
+          <div className='divider'></div>
+        </div>
+        {viewList.length === 0 ? <div className='no-boards-message'>작성하신 게시글이 없습니다.</div> : viewList.map((myBoards, index) => <TableItem key={index} myBoards={myBoards} />)}
+        <div className='board-box'>
+          <div className='board-image'></div>
+          <div className='board-info-container'>
+            <div className='title'>게시글 제목</div>
+            <div className='write-date'>게시글 작성 날짜</div>
+            <div className='sub-container'>
+              <div className='sub-box'>
+                <div className='icon view-count'/> 0
+              </div>
+              <div className='sub-box'>
+                <div className='icon good-count'/> 0
+              </div>
+              <div className='sub-box'>
+                <div className='icon comment-count'/> 0
               </div>
             </div>
           </div>
-          <div className='board-box'>
-            <div className='board-image'></div>
-            <div className='board-info-container'>
-              <div className='title'>게시글 제목</div>
-              <div className='write-date'>게시글 작성 날짜</div>
-              <div className='sub-container'>
-                <div className='sub-box'>
-                  <div className='icon view-count'/> 0
-                </div>
-                <div className='sub-box'>
-                  <div className='icon good-count'/> 0
-                </div>
-                <div className='sub-box'>
-                  <div className='icon comment-count'/> 0
-                </div>
-              </div>
-            </div>
-          </div>
+        </div>
         <div className='pagination-container'>
           {/* {totalSection !== 0 && */}
           <Pagination 

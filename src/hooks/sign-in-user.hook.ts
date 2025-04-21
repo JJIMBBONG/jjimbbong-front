@@ -2,7 +2,7 @@ import { useCookies } from 'react-cookie';
 import { getSignInUserRequest } from 'src/apis';
 import { ResponseDto } from 'src/apis/dto/response';
 import { GetSignInUserResponseDto } from 'src/apis/dto/response/mypage';
-import { ROOT_PATH } from 'src/constants';
+import { ACCESS_TOKEN, ROOT_PATH } from 'src/constants';
 import { useSignInUserStore } from 'src/stores';
 
 const useSignInUser = () => {
@@ -23,7 +23,7 @@ const useSignInUser = () => {
     const isSuccess = responseBody !== null && responseBody.code === 'SU';
     if (!isSuccess) {
       alert(message);
-      removeCookie('accessToken', { path: ROOT_PATH });
+      removeCookie(ACCESS_TOKEN, { path: ROOT_PATH });
       resetSignInUser();
       return;
     }
