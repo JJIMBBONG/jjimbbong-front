@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {Outlet, useNavigate} from 'react-router';
 import NavLogo from 'src/assets/images/small_logo.png'
 
@@ -50,48 +50,106 @@ export default function Layout() {
     // state: My Content List 요소 참조 //
     const myContentListRef = useRef<HTMLDivElement | null>(null);
 
-  return (
-    <div id='layout-wrapper'>
-        <div id='top-bar'>
-            <div className='navigation'>
-                <div className='navigation-list'>
-                    <img className='nav-logo' src={NavLogo} width='50px' onClick={onHomeClickHandler}/>
-                    
-                            { login ? 
-                                <div className='nav-right-content'>
-                                    <div className='map-logo' onClick={onMapClickHandler}>Map</div>
+    // Top 버튼 //
+    useEffect(() => {
+        const topButton = document.getElementById('go-top-btn') as HTMLButtonElement | null;
 
+        if (!topButton) return;
 
-                                    <div className='my-content' onClick={onMyContentClickHandler}>
-                                    {showMyContent &&
-                                        <div ref={myContentListRef} className='my-content-list'>
-                                            <div className='my-content-item' onClick={onMyPageClickHandler}>마이페이지</div>
-                                            <div className='my-content-item' onClick={onSignOutClickHandler}>로그아웃</div>
+        const windowScroll = () => {
+            if (window.scrollY > 100) {
+                topButton.classList.add('visible');
+            } else {
+                topButton.classList.remove('visible');
+            }
+        };
+
+        const handleClick = () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        };
+
+        topButton.addEventListener('click', handleClick);
+        window.addEventListener('scroll', windowScroll);
+
+        // cleanup
+        return () => {
+            topButton.removeEventListener('click', handleClick);
+            window.removeEventListener('scroll', windowScroll);
+        };
+    }, []);
+
+    // useEffect(() => {
+    //         let prevX = 0;
+    //         let prevY = 0;
+        
+    //         const handleMouseMove = (e: MouseEvent) => {
+    //         const dx = e.clientX - prevX;
+    //         const dy = e.clientY - prevY;
+        
+    //         const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    //         prevX = e.clientX;
+    //         prevY = e.clientY;
+        
+    //         const footprint = document.createElement("div");
+    //         footprint.className = "footprint";
+    //         footprint.style.left = `${e.clientX}px`;
+    //         footprint.style.top = `${e.clientY}px`;
+    //         footprint.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+            
+    //         document.body.appendChild(footprint);
+        
+    //         setTimeout(() => {
+    //             footprint.remove(); // 일정 시간 후 사라지게
+    //         }, 1000);
+    //         };
+        
+    //         window.addEventListener("mousemove", handleMouseMove);
+    //         return () => window.removeEventListener("mousemove", handleMouseMove);
+    //     }, []);
+
+    return (
+        <div id='layout-wrapper'>
+            <div id='top-bar'>
+                <div className='navigation'>
+                    <div className='navigation-list'>
+                        <img className='nav-logo' src={NavLogo} width='50px' onClick={onHomeClickHandler}/>
+                        
+                                { login ? 
+                                    <div className='nav-right-content'>
+                                        <div className='map-logo' onClick={onMapClickHandler}>Map</div>
+                                        <div className='my-content' onClick={onMyContentClickHandler}>
+                                        {showMyContent &&
+                                            <div ref={myContentListRef} className='my-content-list'>
+                                                <div className='my-content-item' onClick={onMyPageClickHandler}>마이페이지</div>
+                                                <div className='my-content-item' onClick={onSignOutClickHandler}>로그아웃</div>
+                                            </div>
+                                        }
                                         </div>
-                                    }
+                                        
                                     </div>
-                                    
-                                </div>
-                                :
-                                <div className='nav-right-content'>
+                                    :
+                                    <div className='nav-right-content'>
 
-                                    <div className='map-logo' onClick={onMapClickHandler}>Map</div>
-                                    <div className='login' onClick={onSignInClickHandler}>Login</div>
+                                        <div className='map-logo' onClick={onMapClickHandler}>Map</div>
+                                        <div className='login' onClick={onSignInClickHandler}>Login</div>
 
-                                </div>
-                        }
+                                    </div>
+                            }
+                    </div>
+                </div>
+            </div>
+            <div id='main'>
+                <Outlet />
+            </div>
+            <div id='go-top-btn'><div>TOP</div></div>
+            <div id='footer'>
+                <div>
+                    footer 내용
                 </div>
             </div>
         </div>
-        <div id='main'>
-            <Outlet />
-        </div>
-        <div id='footer'>
-            <hr />
-            <div>
-                footer 내용
-            </div>
-        </div>
-    </div>
-  )
+    )
 }
