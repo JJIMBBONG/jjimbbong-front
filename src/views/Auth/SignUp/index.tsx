@@ -31,6 +31,9 @@ export default function SignUp(props: Props) {
   // state: cookie 상태 //
   const [cookies, _, removeCookie] = useCookies();
 
+  // state: 이메일 전송중 상태 //
+  const [isLoadingEmailSend, setIsLoadingEmailSend] = useState(false); 
+
   // state: 사용자 이름 상태 //
   const [userName, setUserName] = useState<string>('');
   // state: 사용자 아이디 상태 //
@@ -96,7 +99,7 @@ export default function SignUp(props: Props) {
   // state: 가입 경로 상태 //
   const [joinType, setJoinType] = useState<JoinType>('NORMAL');
   // state: SNS ID 상태 //
-  const [snsId, setSnsId] = useState<string | undefined>(undefined);
+  const [snsId, setSnsId] = useState<string | null>(null);
   
   // variable: 아이디 중복 확인 버튼 활성화 //
   const isUserIdCheckButtonActive = userId !== '';
@@ -219,26 +222,17 @@ export default function SignUp(props: Props) {
     onPageChange('sign-in');
   };
 
-  // event handler: 사용자 이름 변경 이벤트 처리 //
-  const onUserNameChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    let { value } = event.target;
-
-    // 1. 한글만 남기고 나머지는 제거
-    value = value.replace(/[^가-힣]/g, '');
-  
-    // 2. 상태 저장
-    setUserName(value);
-  
-    // 3. 유효성 검사 (2~5자의 한글만 허용)
-    const regexp = /^[가-힣]{2,5}$/;
-    const isMatch = regexp.test(value);
-  
-    // 4. 메시지 설정
-    const message = isMatch ? '' : '한글로 2 ~ 5자 입력해주세요';
-    setUserNameMessage(message);
-
-
-  };
+    // onChange에서는 필터링 없이 그대로 저장
+    const onUserNameChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.target;
+      setUserName(value);
+    
+      // 유효성 체크 (한글 외 입력은 가능하지만 활성화 불가)
+      const regexp = /^[가-힣]{2,5}$/;
+      const isMatch = regexp.test(value);
+      const message = isMatch ? '' : '한글로 2 ~ 5자 입력해주세요';
+      setUserNameMessage(message);
+    };
 
   // event handler: 사용자 닉네임 변경 이벤트 처리 //
   const onUserNicknameChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -266,7 +260,7 @@ export default function SignUp(props: Props) {
 
   };
 
-  // event handler: 사용자 이메일 변경 이벤트 처리 //
+  // event handler: 사용자 인증번호 변경 이벤트 처리 //
   const onAuthNumberChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setAuthNumber(value);
@@ -363,7 +357,7 @@ export default function SignUp(props: Props) {
     idCheckRequest(requestBody).then(idCheckResponse);
   };
 
-  // event handler: 중복 확인 버튼 클릭 이벤트 처리 //
+  // event handler: 닉네임 중복 확인 버튼 클릭 이벤트 처리 //
   const onCheckUserNicknameClickHandler = () => {
     if (!isUserNicknameCheckButtonActive) return;
     
@@ -374,11 +368,6 @@ export default function SignUp(props: Props) {
   // event handler: 주소 검색 버튼 클릭 이벤트 처리 //
   const onSearchAddressClickHandler = () => {
     open({ onComplete: daumPostCompleteHandler });
-  };
-
-  // event handler: sns 로그인 버튼 클릭 이벤트 처리 //
-  const onSnsButtonClickHandler = (sns: 'kakao' | 'naver') => {
-    window.location.href = SNS_SIGN_IN_URL(sns);
   };
 
   // effect: 컴포넌트 로드시 실행할 함수 //
@@ -407,32 +396,40 @@ export default function SignUp(props: Props) {
   }, [userPassword, userPasswordCheck]);
 
   // 이메일 중복확인 및 인증번호 전송 처리 함수
-  const onCheckUserEmailClickHandler = () => {
-    if (!isUserEmailCheckButtonActive) return;
+const onCheckUserEmailClickHandler = () => {
+  if (!isUserEmailCheckButtonActive) return;
 
-    const requestBody = {
-      userEmail: userEmail
-    }
+  // 로딩 상태 시작
+  setIsLoadingEmailSend(true);
 
-    // 이메일 중복 확인 후 인증번호 전송
-    axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth', requestBody)
-      .then(response => {
-        console.log('Server Response:', response.data); 
-          if (response.data.code) {
-            alert('인증번호를 전송했습니다.');
-            userEmailCheckResponse(response.data);
-            setUserEmailChecked(true);
-          } else {
-            alert('이메일 인증 요청에 실패했습니다.');
-              alert(response.data.message);  // 실패 메시지 처리
-              setUserEmailChecked(false);
-          }
-      })
-      .catch(error => {
-          alert('이메일 인증 요청에 실패했습니다.');
-          setUserEmailChecked(false);
-      });
+  const requestBody = {
+    userEmail: userEmail
   };
+
+  // 이메일 중복 확인 후 인증번호 전송
+  axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth', requestBody)
+    .then(response => {
+      console.log('Server Response:', response.data); 
+      if (response.data.code) {
+        alert('인증번호를 전송했습니다.');
+        userEmailCheckResponse(response.data);
+        setUserEmailChecked(true);
+      } else {
+        alert('이메일 인증 요청에 실패했습니다.');
+        alert(response.data.message);  // 실패 메시지 처리
+        setUserEmailChecked(false);
+      }
+    })
+    .catch(error => {
+      alert('이메일 인증 요청에 실패했습니다.');
+      setUserEmailChecked(false);
+    })
+    .finally(() => {
+      // 로딩 상태 종료
+      setIsLoadingEmailSend(false);
+    });
+};
+
 
   // 이메일, 인증번호 인증 확인 함수 //
   const onCheckAuthNumberClickHandler = () => {
@@ -448,8 +445,8 @@ export default function SignUp(props: Props) {
         emailAuthCheckResponse(response.data);
       })
       .catch(error => {
-        console.error('인증번호 확인 중 오류 발생', error);
         alert('인증번호 확인에 실패했습니다. 다시 시도해주세요.');
+        console.error("회원가입 중 오류 발생:", error.response ? error.response.data : error);
       });
   };
 
@@ -500,6 +497,7 @@ export default function SignUp(props: Props) {
     .catch((error) => {
       console.error('회원가입 중 오류 발생:', error);
       alert('회원가입 요청에 실패했습니다.');
+      console.log(requestBody)
     });
   };
 
@@ -529,7 +527,7 @@ export default function SignUp(props: Props) {
 
         <InputBox label={'상세 주소'} type={'text'} value={userDetailAddress} placeholder={'상세 주소를 입력해주세요.'} onChange={onUserDetailAddressChangeHandler} message={''} />
 
-        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive} />
+        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive} isLoading={isLoadingEmailSend} />
 
         <InputBox label={'인증번호'} type={'text'} value={authNumber} placeholder={'인증번호 입력해주세요.'} onChange={onAuthNumberChangeHandler} message={authNumberMessage} buttonName={'인증번호 확인'} onButtonClick={onCheckAuthNumberClickHandler} isErrorMessage={authNumberMessageError} isButtonActive={isAuthNumberCheckButtonActive} />
 

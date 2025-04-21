@@ -12,6 +12,7 @@ interface Props {
   isErrorMessage?: boolean;
   isButtonActive?: boolean;
   readOnly?: boolean;
+  isLoading?: boolean;
 
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onButtonClick?: () => void;
@@ -35,9 +36,9 @@ export default function InputBox(props: Props) {
       <div className='input-contents'>
         <div className='input-area'>
           <input type={type} value={value} placeholder={placeholder} onChange={onChange} readOnly={readOnly} />
-          {onButtonClick && buttonName && 
-          <div className={buttonClass} onClick={onButtonClick}>{buttonName}</div>
-          }
+          {onButtonClick && buttonName && (
+            <div className={buttonClass} onClick={props.isLoading ? undefined : onButtonClick} style={{ cursor: props.isLoading ? 'default' : 'pointer' }}>
+            {props.isLoading ? (<> <span className="spinner" /> 전송 중... </> ) : ( buttonName )} </div> )}
         </div>
         <div className={messageClass}>{message}</div>
       </div>
