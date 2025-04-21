@@ -1,12 +1,10 @@
 import { ResponseDto } from './dto/response';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import GetBoardResponseDto from "./dto/response/board/get-board.response.dto";
-
 import GetRecommandBoardResponseDto from "./dto/response/board/get-recommand-board.response.dto";
+import { PostBoardRequestDto } from './dto/request/board';
 
 import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSearchRequestDto, NicknameCheckRequestDto, PasswordResetRequestDto, SignInRequestDto, SignUpRequestDto } from "./dto/request/auth";
 import { SignInResponseDto } from "./dto/response/auth";
-import { GetMyPageBoardResponseDto } from './dto/response/mypage';
 import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto'
 import { PasswordReCheckRequestDto, PatchSignInUserRequestDto } from './dto/request/mypage';
 
@@ -41,6 +39,14 @@ const FILE_UPLOAD_URL = `${API_DOMAIN}/file/upload`;
 
 // variable: //
 const multipartFormData = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+// function: 게시글 작성 API 요청 함수 추가 //
+export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessToken: string) => {
+    const responseBody = await axios.post(POST_BOARD_URL, requestBody, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
 
 
 // function: Authorization Bearer 헤더 //
