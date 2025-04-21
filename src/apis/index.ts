@@ -7,6 +7,7 @@ import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSea
 import { SignInResponseDto } from "./dto/response/auth";
 import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto'
 import { PasswordReCheckRequestDto, PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from './dto/request/mypage';
+import GetMyPageBoardResponseDto from './dto/response/mypage/get-mypage-board.response.dto';
 
 // variable: URL 상수 //
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;

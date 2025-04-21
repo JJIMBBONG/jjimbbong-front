@@ -99,7 +99,7 @@ export default function SignUp(props: Props) {
   // state: 가입 경로 상태 //
   const [joinType, setJoinType] = useState<JoinType>('NORMAL');
   // state: SNS ID 상태 //
-  const [snsId, setSnsId] = useState<string | undefined>(undefined);
+  const [snsId, setSnsId] = useState<string | null>(null);
   
   // variable: 아이디 중복 확인 버튼 활성화 //
   const isUserIdCheckButtonActive = userId !== '';
@@ -497,6 +497,7 @@ const onCheckUserEmailClickHandler = () => {
     .catch((error) => {
       console.error('회원가입 중 오류 발생:', error);
       alert('회원가입 요청에 실패했습니다.');
+      console.log(requestBody)
     });
   };
 
@@ -526,7 +527,7 @@ const onCheckUserEmailClickHandler = () => {
 
         <InputBox label={'상세 주소'} type={'text'} value={userDetailAddress} placeholder={'상세 주소를 입력해주세요.'} onChange={onUserDetailAddressChangeHandler} message={''} />
 
-        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive}isLoading={isLoadingEmailSend} />
+        <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive} isLoading={isLoadingEmailSend} />
 
         <InputBox label={'인증번호'} type={'text'} value={authNumber} placeholder={'인증번호 입력해주세요.'} onChange={onAuthNumberChangeHandler} message={authNumberMessage} buttonName={'인증번호 확인'} onButtonClick={onCheckAuthNumberClickHandler} isErrorMessage={authNumberMessageError} isButtonActive={isAuthNumberCheckButtonActive} />
 
