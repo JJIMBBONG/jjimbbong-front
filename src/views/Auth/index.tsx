@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router';
 import { ACCESS_TOKEN, JOIN_TYPE, MAIN_ABSOLUTE_PATH, SNS_ID } from '../../constants';
 import IdSearch from './IdSearch';
+import PasswordReset from './PasswordReset';
 
 export default function Auth() {
 
@@ -42,6 +43,7 @@ export default function Auth() {
         {page === 'sign-in' && <SignIn onPageChange={onPageChangeHandler} />}
         {page === 'sign-up' && <SignUp onPageChange={onPageChangeHandler} />}
         {page === 'id-search' && <IdSearch onPageChange={onPageChangeHandler} />}
+        {page === 'password-reset' && <PasswordReset onPageChange={onPageChangeHandler} />}
       </div>
     </div>
   );

@@ -20,7 +20,8 @@
   /* 그라데이션 효과
   background-image: linear-gradient(to top left, #f5f5f5, #ffffff); */
   
-  margin-top: 60px; /* 탑바와의 거리 */
+  margin-top: 80px; /* 탑바와의 거리 */
+  margin-bottom: 70px;
 }
   
   #auth-sign-up-container .header {
