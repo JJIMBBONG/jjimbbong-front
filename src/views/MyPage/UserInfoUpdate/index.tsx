@@ -1,13 +1,15 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
+import { fileUploadRequest, patchSignInUserRequest, updateNicknameCheckRequest } from 'src/apis';
+import { ResponseDto } from 'src/apis/dto/response';
+import { PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from 'src/apis/dto/request/mypage';
+import { ACCESS_TOKEN } from 'src/constants';
+import { useSignInUserStore } from 'src/stores';
+import useSignInUser from 'src/hooks/sign-in-user.hook';
+import DefaultProfile from 'src/assets/images/default-profile.png';
 
 import './style.css';
-import { filerUploadRequest, patchSignInUserRequest } from 'src/apis';
-import { useSignInUserStore } from 'src/stores';
-import { PatchSignInUserRequestDto } from 'src/apis/dto/request/mypage';
-import { ResponseDto } from 'src/apis/dto/response';
-import useSignInUser from 'src/hooks/sign-in-user.hook';
 
 // interface: 로그인 사용자 정보 수정 컴포넌트 속성 //
 interface UserInfoUpdateProps {
@@ -18,7 +20,7 @@ interface UserInfoUpdateProps {
 export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdateProps) {
 
   // state: cookie 상태 //
-  // const [cookies] = useCookies();
+  const [cookies] = useCookies();
 
   // state: 로그인 사용자 정보 상태 //
   const { profileImage, userId, userNickname, userPassword, name, address, detailAddress } = useSignInUserStore();
@@ -28,9 +30,7 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
 
   // state: 프로필 이미지 미리보기 상태 //
   const [previewProfile, setPreviewProfile] = useState<string | null>(null);
-  // state: 수정 사용자 프로필 이미지 상태 //
-  const [updateProfileImage, setUpdateProfileImage] = useState<File | null>(null);
-
+  
   // state: 수정 사용자 닉네임 상태 //
   const [updateNickname, setUpdateNickname] = useState<string>('');
   // state: 수정 사용자 비밀번호 상태 //
@@ -41,6 +41,8 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   const [updateAddress, setUpdateAddress] = useState<string>('');
   // state: 수정 사용자 상세주소 상태 //
   const [updateDetailAddress, setUpdateDetailAddress] = useState<string>('');
+  // state: 수정 사용자 프로필 이미지 상태 //
+  const [updateProfileImage, setUpdateProfileImage] = useState<File | null>(null);
 
   // state: 수정 닉네임 중복 확인 상태 //
   const [isUpdateNicknameChecked, setUpdateNicknameChecked] = useState<boolean>(false);
@@ -58,15 +60,19 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   // state: 수정 비밀번호 동일 여부 상태 //
   const [isUpdatePasswordEquals, setUpdatePasswordEquals] = useState<boolean>(false);
 
-  // const accessToken = cookies['accessToken'];
+  // variable: accessToken //
+  const accessToken = cookies[ACCESS_TOKEN];
 
   // variable: 중복 확인 버튼 활성화 //
-  const isNicknameCheckButtonActive = updateNickname !== '';
+  const isNicknameCheckButtonActive = updateNickname !== '' && updateNickname !== userNickname;
   // variable: 버튼 클래스 //
   const buttonClass = `button ${isNicknameCheckButtonActive ? '' : 'disable'}`;
 
+  // variable: 프로필 이미지 스타일 //
+  const profileImageStyle = { cursor: 'pointer', backgroundImage: `url(${previewProfile ?  previewProfile : DefaultProfile})` };
+
   // function: 로그인 유저 정보 불러오기 함수 //
-  // const getSignInUser = useSignInUser();
+  const getSignInUser = useSignInUser();
 
   // function: 다음 포스트 코드 팝업 오픈 함수 //
   const open = useDaumPostcodePopup();
@@ -77,12 +83,11 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   };
 
   // function: nickname check response 처리 함수 //
-  const nicknameCheckResponse = (responseBody: ResponseDto | null) => {
+  const updateNicknameCheckResponse = (responseBody: ResponseDto | null) => {
     const message = 
       !responseBody ? '서버에 문제가 있습니다.' :
       responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' : 
-      responseBody.code === 'EU' ? '이미 사용중인 닉네임입니다.' :
-      responseBody.code === 'VF' ? '닉네임을 입력해주세요' : '사용 가능한 닉네임입니다.';
+      responseBody.code === 'EU' ? '이미 사용중인 닉네임입니다.' : '사용 가능한 닉네임입니다.';
 
     const isSuccess = responseBody !== null && responseBody.code === 'SU';
     setUpdateNicknameMessage(message);
@@ -95,15 +100,18 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
     const message =
       !responseBody ? '서버에 문제가 있습니다.' :
       responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' :
-      responseBody.code === 'AF' ? '인증에 실패했습니다.' : '';
+      responseBody.code === 'AF' ? '인증에 실패했습니다.' :
+      responseBody.code === 'EU' ? '이미 사용중인 닉네임입니다.': '';
 
     const isSuccess = responseBody !== null && responseBody.code === 'SU';
     if (!isSuccess) {
-      alert(message);
+      setUpdatePasswordMessage(message);
+      setUpdateNicknameDuplicatedMessage(true);
       return;
     }
 
-    // getSignInUser();
+    alert('수정이 완료되었습니다.');
+    getSignInUser();
     onModalViewChange();
   };
 
@@ -168,8 +176,8 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   const onCheckNicknameClickHandler = () => {
     if (!isNicknameCheckButtonActive) return;
 
-    // const requestBody: NicknameCheckRequestDto = { updateNickname };
-    // nicknameCheckRequest(requestBody).then(nicknameCheckResponse);
+    const requestBody: PostNicknameCheckRequestDto = { updateNickname };
+    updateNicknameCheckRequest(requestBody, accessToken).then(updateNicknameCheckResponse);
   };
 
   // event handler: 수정 버튼 클릭 이벤트 처리 //
@@ -179,32 +187,36 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
       !updatePassword ? '비밀번호를 입력하세요.' :
       !updatePasswordCheck ? '비밀번호 확인을 입력하세요.' :
       !updateAddress ? '주소를 입력하세요.' : '';
+    
+    if (!isUpdateNicknameChecked) {
+      setUpdateNicknameMessage('닉네임 중복 확인해주세요');
+      setUpdateNicknameDuplicatedMessage(true);
+    }
 
-    const isCheck = updateNickname && updatePassword && updatePasswordCheck && updateAddress;
+    const isCheck = updateNickname && updatePassword && updatePasswordCheck && updateAddress && isUpdatePasswordChecked && isUpdatePasswordEquals;
     if (!isCheck) {
       alert(message);
       return;
     }
 
-    let newProfileImgage: string | null = null;
+    let newProfileImage: string | null = null;
     if (updateProfileImage) {
       const formData = new FormData();
       formData.append('file', updateProfileImage);
-      newProfileImgage = await filerUploadRequest(formData);
+      newProfileImage = await fileUploadRequest(formData);
     }
 
-    newProfileImgage = profileImage === previewProfile ? profileImage : newProfileImgage;
+    newProfileImage = profileImage === previewProfile ? profileImage : newProfileImage;
 
     const requestBody: PatchSignInUserRequestDto = {
       userNickname: updateNickname,
       userPassword: updatePassword,
       address: updateAddress,
       detailAddress: updateDetailAddress,
-      profileImage: newProfileImgage
+      profileImage: newProfileImage
     };
 
-    onModalViewChange();
-    // patchSignInUserRequest(requestBody, accessToken).then(patchSignInUserResponse);
+    patchSignInUserRequest(requestBody, accessToken).then(patchSignInUserResponse);
   };
   // event handler: 취소 버튼 클릭 이벤트 처리 //
   const onExitClickHandler = () => {
@@ -223,8 +235,6 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   useEffect(() => {
     setPreviewProfile(profileImage);
     setUpdateNickname(userNickname);
-    setUpdatePassword(userPassword);
-    setUpdatePasswordCheck(userPassword);
     setUpdateAddress(address);
     setUpdateDetailAddress(detailAddress ? detailAddress : '');
   }, []);
@@ -233,8 +243,8 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   return (
     <div id='user-update-container'>
       <div className='update-image-box'>
-        <div className='update-image' onClick={onProfileClickHandler}></div>
-        <input ref={fileRef} style={{ display: 'none' }} type='file' accept='image/png, image/jpg, image/jpeg' onChange={onFileChangeHandler} />
+        <div className='update-image' style={profileImageStyle} onClick={onProfileClickHandler}></div>
+        <input ref={fileRef} style={{ display: 'none' }} type='file' accept='image/png, image/jpeg' onChange={onFileChangeHandler} />
       </div>
       <div className='user-update-box'>
         <div className='user-update-row'>
@@ -244,10 +254,13 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
         <div className='user-update-row'>
           <div className='title'>닉네임</div>
           <div className='update-area'>
-            <input type='text' value={updateNickname} onChange={onNicknameChangeHandler}></input>
-            <div className={buttonClass}>중복 확인</div>
+            <input type='text' placeholder={updateNickname} onChange={onNicknameChangeHandler}></input>
+            <div className={buttonClass} onClick={onCheckNicknameClickHandler}>중복 확인</div>
           </div>
-          <div className='message success error'>{updateNicknameDuplicatedMessage}</div>
+          {isUpdateNicknameChecked ?
+          <div className='message success'>{updateNicknameMessage}</div> :
+          <div className='message error'>{updateNicknameMessage}</div>
+          }
         </div>
         <div className='user-update-row'>
           <div className='title'>비밀번호</div>
@@ -266,7 +279,7 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
         <div className='user-update-row'>
           <div className='title'>주소</div>
           <div className='update-area'>
-            <input type='text' value={updateAddress} onChange={() => {}} readOnly></input>
+            <input type='text' placeholder={updateAddress} onChange={() => {}} readOnly></input>
             <div className='button' onClick={onSearchAddressClickHandler}>주소 검색</div>
           </div>
         </div>
