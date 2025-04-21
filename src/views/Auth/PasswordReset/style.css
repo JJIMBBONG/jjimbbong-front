@@ -1,4 +1,4 @@
-#auth-id-search-container {
+#auth-password-reset-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,7 +24,7 @@
     margin-bottom: 70px;
   }
     
-    #auth-id-search-container .header {
+    #auth-password-reset-container .header {
       color: var(--Lightmode-Grey);
       font-size: 30px;
       font-weight: 700;
@@ -32,7 +32,7 @@
     }
   
     
-    #auth-id-search-container .input-container {
+    #auth-password-reset-container .input-container {
       align-self: stretch;
     
       display: flex;
@@ -40,7 +40,7 @@
       gap: 10px;
     }
     
-    #auth-id-search-container .button-container {
+    #auth-password-reset-container .button-container {
       align-self: stretch;
     
       display: flex;
@@ -48,7 +48,7 @@
       gap: 16px;
     }
   
-    #auth-id-search-container .gender-button-box {
+    #auth-password-reset-container .gender-button-box {
       display: flex;
       flex-direction: row;           /* 가로 정렬 */
       align-items: center;

@@ -2,7 +2,7 @@ import { ChangeEvent, useMemo, useState } from 'react';
 import './style.css';
 import { AuthPage } from '../../../types/aliases';
 import InputBox from '../../../components/InputBox';
-import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdSearchRequestDto } from '../../../apis/dto/request/auth';
+import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdSearchRequestDto, PasswordResetRequestDto } from '../../../apis/dto/request/auth';
 import { EmailAuthCheckRequest, EmailAuthRequest } from '../../../apis';
 import { ResponseDto } from '../../../apis/dto/response';
 import { useCookies } from 'react-cookie';
@@ -10,12 +10,12 @@ import axios from 'axios';
 import { IdSearchResponseDto } from 'src/apis/dto/response/auth';
 
 
-// interface: 아이디 찾기 컴포넌트 속성 //
+// interface: 비밀번호 찾기 컴포넌트 속성 //
 interface Props {
   onPageChange: (page: AuthPage) => void;
 }
-// component: 아이디 찾기 컴포넌트 //
-export default function IdSearch(props: Props) {
+// component: 비밀번호 찾기 컴포넌트 //
+export default function PasswordReset(props: Props) {
 
   const { onPageChange } = props;
 
@@ -25,20 +25,22 @@ export default function IdSearch(props: Props) {
     timeout: 1000, // 기본 타임아웃 설정 (필요시)
   });
 
-  // state: 사용자 이름 상태 //
-  const [userName, setUserName] = useState<string>('');
+  // state: 사용자 아이디 상태 //
+  const [userId, setUserId] = useState<string>('');
   // state: 사용자 이메일 상태 //
   const [userEmail, setUserEmail] = useState<string>('');
   // state: 사용자 인증 번호 상태 //
   const [authNumber, setAuthNumber] = useState<string>('');
 
-  // state: 사용자 이름 메세지 상태 //
-  const [userNameMessage, setUserNameMessage] = useState<string>('');
+  // state: 사용자 아이디 메세지 상태 //
+  const [userIdMessage, setUserIdMessage] = useState<string>('');
   // state: 사용자 이메일 메세지 상태 //
   const [userEmailMessage, setUserEmailMessage] = useState<string>('');
   // state: 사용자 인증번호 메세지 상태 //
   const [authNumberMessage, setAuthNumberMessage] = useState<string>('');
 
+  // state: 사용자 아이디 메세지 에러 상태 //
+  const [userIdMessageError, setUserIdMessageError] = useState<boolean>(false);
   // state: 사용자 이메일 메세지 에러 상태 //
   const [userEmailMessageError, setUserEmailMessageError] = useState<boolean>(false);
   // state: 사용자 인증번호 메세지 에러 상태 //
@@ -57,9 +59,9 @@ export default function IdSearch(props: Props) {
   // variable: 회원가입 버튼 활성화 //
 
   const isIdSearchButtonActive = useMemo(() => (
-    userName && userEmail && authNumber && isUserEmailChecked && isAuthNumberChecked 
+    userId && userEmail && authNumber && isUserEmailChecked && isAuthNumberChecked 
   ), [
-    userName, userEmail, authNumber, isUserEmailChecked, isAuthNumberChecked
+    userId, userEmail, authNumber, isUserEmailChecked, isAuthNumberChecked
   ]);
 
   // variable: 회원가입 버튼 클래스 //
@@ -98,7 +100,7 @@ export default function IdSearch(props: Props) {
   };
 
   // function: id search response 처리 함수 //
-  const idSearchResponse = (responseBody: ResponseDto | null) => {
+  const passwordResetResponse = (responseBody: ResponseDto | null) => {
     const message = 
       !responseBody ? '서버에 문제가 있습니다' :
       responseBody.code === 'DBE' ? '서버에 문제가 있습니다' :
@@ -108,7 +110,7 @@ export default function IdSearch(props: Props) {
     const isSuccess = responseBody !== null && responseBody.code === 'SU';
     if (!isSuccess) {
       if (responseBody && responseBody.code === 'EU') {
-        setUserNameMessage(message);
+        setUserIdMessage(message); 
         return;
       }
       alert(message);
@@ -118,16 +120,20 @@ export default function IdSearch(props: Props) {
     onPageChange('main');
   };
 
-    // onChange에서는 필터링 없이 그대로 저장
-    const onUserNameChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setUserName(value);
+  // event handler: 사용자 아이디 변경 이벤트 처리 //
+  const onUserIdChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    let { value } = event.target;
+
+    // 1. 영어와 숫자를 제외한 문자 제거
+    value = value.replace(/[^a-zA-Z0-9]/g, '');
+    setUserId(value);
   
-    // 유효성 체크 (한글 외 입력은 가능하지만 활성화 불가)
-    const regexp = /^[가-힣]{2,5}$/;
+    // 2. 유효성 검사
+    const regexp = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
     const isMatch = regexp.test(value);
-    const message = isMatch ? '' : '한글로 2 ~ 5자 입력해주세요';
-    setUserNameMessage(message);
+    const message = isMatch ? '' : '영문, 숫자를 혼용하여 6 ~ 20자 입력해주세요';
+    setUserIdMessage(message);
+    setUserIdMessageError(!isMatch);
   };
 
   // event handler: 사용자 이메일 변경 이벤트 처리 //
@@ -156,7 +162,7 @@ export default function IdSearch(props: Props) {
     setAuthNumberMessage('');
   };
 
-  // 이메일 중복확인 및 인증번호 전송 처리 함수
+  // 이메일 인증번호 전송 처리 함수
   const onCheckUserEmailClickHandler = () => {
     if (!isUserEmailCheckButtonActive) return;
 
@@ -203,9 +209,9 @@ export default function IdSearch(props: Props) {
       });
   };
 
-  // event handler: 아이디 찾기 버튼 클릭 이벤트 처리 //
-  const onIdSearchClickHandler = () => {
-    if (!userName) setUserNameMessage('이름을 입력해주세요');
+  // event handler: 비밀번호 찾기 버튼 클릭 이벤트 처리 //
+  const onPasswordResetClickHandler = () => {
+    if (!userId) setUserIdMessage('이름을 입력해주세요');
     if (!isUserEmailChecked) {
       setUserEmailMessage('인증번호를 전송해주세요');
       setUserEmailMessageError(true);
@@ -216,15 +222,15 @@ export default function IdSearch(props: Props) {
     }
     if (!isIdSearchButtonActive) return;
 
-    const requestBody: IdSearchRequestDto = {
-      name: userName, userEmail, authNumber
+    const requestBody: PasswordResetRequestDto = {
+      userId, userEmail, authNumber
     };
 
-    axios.post('http://127.0.0.1:4000/api/v1/auth/id-search', requestBody)
+    axios.post('http://127.0.0.1:4000/api/v1/auth/password-reset', requestBody)
     .then((response) => {
-      console.log('아이디 찾기 응답:', response.data);
+      console.log('임시비밀번호를 이메일로 전송했습니다.');
       if (response.data.code === 'SU') {
-        alert(`아이디: ${response.data.userId}`);
+        alert('임시비밀번호를 이메일로 전송했습니다.');
         onPageChange('sign-in');
       } else {
         alert(`아이디 찾기 실패: ${response.data.message}`);
@@ -236,14 +242,14 @@ export default function IdSearch(props: Props) {
       });
   };
 
-  // render: 아이디 찾기 컴포넌트 렌더링 //
+  // render: 비밀번호 찾기 컴포넌트 렌더링 //
   return (
-    <div id='auth-id-search-container'>
-      <div className='header'>아이디 찾기</div>
+    <div id='auth-password-reset-container'>
+      <div className='header'>비밀번호 찾기</div>
       <div className='divider'></div>
       <div className='input-container'>
 
-        <InputBox label={'이름'} type={'text'} value={userName} placeholder={'이름을 입력해주세요.'} onChange={onUserNameChangeHandler} message={userNameMessage} isErrorMessage />
+        <InputBox label={'아이디'} type={'text'} value={userId} placeholder={'아이디 입력해주세요.'} onChange={onUserIdChangeHandler} message={userIdMessage} isErrorMessage />
 
         <InputBox label={'이메일'} type={'text'} value={userEmail} placeholder={'이메일을 입력해주세요.'} onChange={onUserEmailChangeHandler} message={userEmailMessage} buttonName={'인증번호 전송'} onButtonClick={onCheckUserEmailClickHandler} isErrorMessage={userEmailMessageError} isButtonActive={isUserEmailCheckButtonActive} />
 
@@ -251,7 +257,7 @@ export default function IdSearch(props: Props) {
 
       </div>
       <div className='button-container'>
-        <div className={IdSearchButtonClass} onClick={onIdSearchClickHandler}>아이디 찾기</div>
+        <div className={IdSearchButtonClass} onClick={onPasswordResetClickHandler}>비밀번호 찾기</div>
         <div className='link' onClick={() => onPageChange('sign-in')}>로그인</div>
       </div>
     </div>
