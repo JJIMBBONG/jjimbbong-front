@@ -20,7 +20,6 @@ function NaverMap() {
       // 백엔드 연결시 제거
       const serviceKey = "vvbWIqafswD60L%2Fz5l1eUwiu835Akri6p5UQFwTnGcPwd8J%2FNQzaNgtzPiwatqxbdu%2BQk0por8jYm0UopoVUtA%3D%3D";
       const url = `https://apis.data.go.kr/B551011/KorService1/searchFestival1?serviceKey=${serviceKey}&numOfRows=5&pageNo=1&MobileOS=ETC&MobileApp=MapApp&eventStartDate=20250401&areaCode=${areaCode}&sigunguCode=${sigunguCode}&_type=json`;
-
       const res = await fetch(url);
       const data = await res.json();
       // 여기서 data는 공공데이터에서 받아온 원본 JSON
@@ -59,12 +58,12 @@ function NaverMap() {
       .then((res) => res.json())
       .then((data) => {
         data.features.forEach((feature) => {
+          console.log(feature.properties);
           const name = feature.properties.SGG_NM; // 시 군 구 이름
           const coords = feature.geometry.coordinates;
           const paths = (feature.geometry.type === "Polygon" 
             ? coords.map((ring) => ring.map(([lng, lat]) => new naver.maps.LatLng(lat, lng)))
             : coords.flat().map((ring) => ring.map(([lng, lat]) => new naver.maps.LatLng(lat, lng))));
-
 
           const polygon = new naver.maps.Polygon({
             map,
@@ -77,29 +76,29 @@ function NaverMap() {
           });
 
           naver.maps.Event.addListener(polygon, "mouseover", () => {polygon.setOptions({ fillColor: "#fca5a5", fillOpacity: 0.6 });});
-
           naver.maps.Event.addListener(polygon, "mouseout", () => {polygon.setOptions({ fillColor: "#b4e2d5", fillOpacity: 0.4 });});
 
           naver.maps.Event.addListener(polygon, "click", async () => {
             setSelectedRegion(name);
+            
             const cleanName = name.trim().replace(/^(서울특별시|부산광역시|대구광역시|인천광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|경기도|강원도|충청북도|충청남도|전라북도|전라남도|경상북도|경상남도|제주특별자치도)\s*/, "")
             const normalize = (s) => s.replace(/\s/g, "").replace(/시|군|구/g, "").trim();
             const cleanNorm = normalize(cleanName);
 
             // const 사용시 값을 바꿀수없어 다음 축제 정보가 재할당 되지않음
-            let region = regionCodes.find((r) => normalize(r.regionName) === cleanNorm) || 
-                         regionCodes.find((r) => normalize(r.regionName).includes(cleanName) || cleanNorm.includes(r.regionName));
+            let region = regionCodes.find((r) => normalize(r.regionName) === cleanNorm) 
+            || regionCodes.find((r) => normalize(r.regionName).includes(cleanName) || cleanNorm.includes(r.regionName));
 
             if (!region) {
               setRegionData({ festivals: [], popups: [], restaurants: []});
               return;
             }
 
+
             const festivals = await fetchFestivalData(region.areaCode, region.sigunguCode);
             const filteredFestivals = festivals.filter(f => f.address?.includes(cleanName) || f.address?.includes(name));
 
-            // 팝업정보 추후 데이터베이스 연결
-            const popupRes = await fetch(`http://localhost:4000/popup-stores?region=${encodeURI(name)}`);
+            const popupRes = await fetch(`http://localhost:4000/popup-stores?region=${encodeURIComponent(name.trim())}`);
             const popups = await popupRes.json();
 
             const matchedPopups = popups.filter(p => 
@@ -107,19 +106,18 @@ function NaverMap() {
             );
 
             // 맛집
-            const restaurantRes = await fetch(`http://localhost:4000/restaurants?region=${encodeURI(name)}`);
+            const restaurantRes = await fetch(`http://localhost:4000/restaurants?region=${encodeURIComponent(name.trim())}`);
             const restaurants = await restaurantRes.json();
 
             const matchedRestarant = restaurants.filter(r => 
               r.region === name || name.includes(r.region) || r.region.includes(name));
 
             // 지역 관련 관광정보 불러오기
-            const testData = {
+            setRegionData({
               festivals: filteredFestivals,
               popups: matchedPopups,
               restaurants: matchedRestarant
-            };
-            setRegionData(testData);
+            });
           });
         });
       });
@@ -136,7 +134,7 @@ function NaverMap() {
           <div className="card">
             <button className="toggle-header" onClick={()=> setShowCheck(!showCheck)}>📍 Check! 여기 가봤어? <span>{showCheck ? "▲" : "▼"}</span></button>
             {showCheck && (
-                <button className="action-button">추억 보러 가기</button>
+                <button className="action-button">게시글 보러가기</button>
             )}
           </div>
 
@@ -213,4 +211,5 @@ function NaverMap() {
 }
 
 export default NaverMap;
+
 
