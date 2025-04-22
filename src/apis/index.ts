@@ -5,9 +5,9 @@ import { PostBoardRequestDto } from './dto/request/board';
 
 import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSearchRequestDto, NicknameCheckRequestDto, PasswordResetRequestDto, SignInRequestDto, SignUpRequestDto } from "./dto/request/auth";
 import { SignInResponseDto } from "./dto/response/auth";
+import { GetMyLevelResponseDto, GetMyPageBoardResponseDto } from './dto/response/mypage';
 import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto'
 import { PasswordReCheckRequestDto, PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from './dto/request/mypage';
-import GetMyPageBoardResponseDto from './dto/response/mypage/get-mypage-board.response.dto';
 
 // variable: URL 상수 //
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
@@ -32,7 +32,9 @@ const GET_RECOMMAND_BOARD_URL = `${MAIN_MODULE_URL}`;
 
 const MY_PAGE_MODULE_URL = `${API_DOMAIN}/api/v1/my-page`;
 const PASSWORD_RECHECK_URL = `${MY_PAGE_MODULE_URL}`;
-const GET_MY_PAGE_BOARD_URL = `${MY_PAGE_MODULE_URL}/my-main`;
+const GET_MY_PAGE_BOARD_URL = `${MY_PAGE_MODULE_URL}/my-main/my-boards`;
+const PUT_MY_PAGE_INFO_URL = `${MY_PAGE_MODULE_URL}/my-main`;
+const GET_MY_LEVEL_URL = `${MY_PAGE_MODULE_URL}/my-main/level`;
 const GET_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main/user-info`;
 const PATCH_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main/user-info`;
 const POST_NICKNAME_CHECK_URL = `${MY_PAGE_MODULE_URL}/my-main/nickname-check`;
@@ -159,7 +161,23 @@ export const passwordReCheckRequest = async (requestBody: PasswordReCheckRequest
 // function: get my page board API 요청 함수 //
 export const getMyPageBoardRequest = async (accessToken: string) => {
     const responseBody = await axios.get(GET_MY_PAGE_BOARD_URL, bearerAuthorization(accessToken))
-        .then(responseSuccessHandler<GetMyPageBoardResponseDto>)
+    .then(responseSuccessHandler<GetMyPageBoardResponseDto>)
+    .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: put my page info API 요청 함수 //
+export const updateMyPageInfoRequest = async (accessToken: string) => {
+    const responseBody = await axios.put(PUT_MY_PAGE_INFO_URL, {}, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: get my level API 요청 함수 //
+export const getMyLevelRequest = async (accessToken: string) => {
+    const responseBody = await axios.get(GET_MY_LEVEL_URL, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler<GetMyLevelResponseDto>)
         .catch(responseErrorHandler);
     return responseBody;
 };
