@@ -58,7 +58,6 @@ function NaverMap() {
       .then((res) => res.json())
       .then((data) => {
         data.features.forEach((feature) => {
-          console.log(feature.properties);
           const name = feature.properties.SGG_NM; // 시 군 구 이름
           const coords = feature.geometry.coordinates;
           const paths = (feature.geometry.type === "Polygon" 
@@ -89,6 +88,7 @@ function NaverMap() {
             let region = regionCodes.find((r) => normalize(r.regionName) === cleanNorm) 
             || regionCodes.find((r) => normalize(r.regionName).includes(cleanName) || cleanNorm.includes(r.regionName));
 
+
             if (!region) {
               setRegionData({ festivals: [], popups: [], restaurants: []});
               return;
@@ -96,19 +96,15 @@ function NaverMap() {
 
 
             const festivals = await fetchFestivalData(region.areaCode, region.sigunguCode);
-            const filteredFestivals = festivals.filter(f => f.address?.includes(cleanName) || f.address?.includes(name));
+            const filteredFestivals = festivals.filter(f => f.address?.includes(name) || f.address?.includes(region.regionName));
 
             const popupRes = await fetch(`http://localhost:4000/popup-stores?region=${encodeURIComponent(name.trim())}`);
             const popups = await popupRes.json();
-
-            const matchedPopups = popups.filter(p => 
-              p.region === name || name.includes(p.region) || p.region.includes(name)
-            );
+            const matchedPopups = popups.filter(p => p.region === name || name.includes(p.region) || p.region.includes(name));
 
             // 맛집
             const restaurantRes = await fetch(`http://localhost:4000/restaurants?region=${encodeURIComponent(name.trim())}`);
             const restaurants = await restaurantRes.json();
-
             const matchedRestarant = restaurants.filter(r => 
               r.region === name || name.includes(r.region) || r.region.includes(name));
 
@@ -211,5 +207,3 @@ function NaverMap() {
 }
 
 export default NaverMap;
-
-
