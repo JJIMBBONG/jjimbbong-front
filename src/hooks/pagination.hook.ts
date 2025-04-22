@@ -24,6 +24,8 @@ const usePagination = <T>() => {
 
     setCurrentPage(1);
     setCurrentSection(1);
+
+    initViewList(totalList);
   };
 
   // function: 뷰 리스트 변경 함수 //

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { postBoardRequest } from 'src/apis'; // API 호출 파일
 import './style.css';
 

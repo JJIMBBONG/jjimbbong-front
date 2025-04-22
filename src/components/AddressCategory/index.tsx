@@ -85,7 +85,6 @@ export default function AddressCategory({ onSelect }: Props) {
                         )
                     }
                 </div>
-            
                 <div className='regionSelect-gungu'>
                     <div className='regionSelect-gungu-toggle' onClick={()=>setGunguOpen(!gunguOpen)}>
                         {selectedSigunguCode ? filteredSigungu.find((region)=>region.sigunguCode === selectedSigunguCode)?.regionName:'전체'}

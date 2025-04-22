@@ -37,6 +37,7 @@ export default interface FilteredBoard {
     boardScore : number;
     boardImage : string;
     userNickname : string;
+    userLevel : string;
     goodCount : number;
     commentCount : number;
 }
