@@ -6,8 +6,8 @@ import { ResponseDto } from 'src/apis/dto/response';
 import { PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from 'src/apis/dto/request/mypage';
 import { ACCESS_TOKEN } from 'src/constants';
 import { useSignInUserStore } from 'src/stores';
-import useSignInUser from 'src/hooks/sign-in-user.hook';
 import DefaultProfile from 'src/assets/images/default-profile.png';
+import { useSignInUser } from 'src/hooks';
 
 import './style.css';
 
@@ -285,7 +285,7 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
         </div>
         <div className='user-update-row'>
           <div className='title'>상세주소</div>
-          <input type='text' value={updateDetailAddress} onChange={onDetailAddressChangeHandler}></input>
+          <input type='text' placeholder={updateDetailAddress} onChange={onDetailAddressChangeHandler}></input>
         </div>
       </div>
       <div className='update-button-box'>
