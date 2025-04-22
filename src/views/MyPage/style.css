@@ -9,20 +9,24 @@
 
 #mypage-main-wrapper .user-container {
   display: flex;
-  height: 230px;
+  height: 220px;
 }
 
 #mypage-main-wrapper .user-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+
+  box-sizing: border-box;
+  border: 2px rgba(255, 70, 0, 0.6);
+  border-radius: 10px;
+  border-style: dashed;
 
   width: 200px;
-  height: 160px;
+  height: 150px;
   
   position: absolute;
-  top: 130px;
-  right: 70px;
+  top: 100px;
+  right: 100px;
 
   z-index: 80;
 }
@@ -37,22 +41,45 @@
   padding: 10px 10px;
 }
 
-#mypage-main-wrapper .user-box>.user-level {
+#mypage-main-wrapper .user-box>.user-level-icon {
   width: 40px;
   height: 40px;
 
   cursor: pointer;
 }
 
+#mypage-main-wrapper .user-level-container {
+  display: flex;
+}
+
+.user-level-container .user-level-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 70px;
+
+  height: 40px;
+}
+
+.user-level-container .user-level,
+.user-level-container .user-score {
+  font-size: 18px;
+  font-weight: 400;
+}
+
 #mypage-main-wrapper .user-box>.user-nickname {
   flex: 1;
   font-size: 20px;
   font-weight: 500;
+  
+  text-wrap: nowrap;
+  overflow: hidden;
 }
 
 #mypage-main-wrapper .user-button-box {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
 
   box-sizing: border-box;
@@ -68,6 +95,7 @@
   border: 1px solid black;
   border-radius: 8px;
 
+  width: 180px;
   height: 30px;
 
   color: white;
@@ -90,16 +118,16 @@
 }
 
 #mypage-main-wrapper .my-board-title {
-  padding-left: 30px;
-  padding-right: 30px;
+  padding: 0 100px;
 
   font-size: 30px;
   font-weight: 800;
 }
 
 #mypage-main-wrapper .my-board-title>.divider {
-  width: 100%;
+  margin-top: 10px;
   border-top: 1px solid;
+  width: 100%;
 }
 
 #mypage-main-wrapper .no-boards-message {
@@ -107,12 +135,11 @@
 
   box-sizing: border-box;
   padding: 50px 30px;
-
-  height: 300px;
+  min-height: 800px;
 
   font-size: 25px;
   font-weight: 600;
-  line-height: 170px;
+  line-height: 300px;
 }
 
 #mypage-main-wrapper .board-box {

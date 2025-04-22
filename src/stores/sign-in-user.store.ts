@@ -8,7 +8,6 @@ interface SignInUserStore {
   name: string;
   address: string;
   detailAddress: string | null;
-  userLevel: number;
   gender: string;
   profileImage: string | null;
 
@@ -18,7 +17,6 @@ interface SignInUserStore {
   setName: (name: string) => void;
   setAddress: (address: string) => void;
   setDetailAddress: (detailAddress: string | null) => void;
-  setUserLevel: (userLevel: number) => void;
   setGender: (gender: string) => void;
   setProfileImage: (profileImage: string | null) => void;
 
@@ -33,7 +31,6 @@ const useStore = create<SignInUserStore>(set => ({
   name: '',
   address: '',
   detailAddress: null,
-  userLevel: 0,
   gender: '',
   profileImage: null,
 
@@ -43,7 +40,6 @@ const useStore = create<SignInUserStore>(set => ({
   setName: (name: string) => set(state => ({ ...state, name })),
   setAddress: (address: string) => set(state => ({ ...state, address })),
   setDetailAddress: (detailAddress: string | null) => set(state => ({ ...state, detailAddress })),
-  setUserLevel: (userLevel: number) => set(state => ({ ...state, userLevel })),
   setGender: (gender: string) => set(state => ({ ...state, gender })),
   setProfileImage: (profileImage: string | null) => set(state => ({ ...state, profileImage })),
 
@@ -55,7 +51,6 @@ const useStore = create<SignInUserStore>(set => ({
     name: '',
     address: '',
     detailAddress: null,
-    userLevel: 0,
     gender: '',
     profileImage: null
   }))

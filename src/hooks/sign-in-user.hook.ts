@@ -40,7 +40,7 @@ const useSignInUser = () => {
 
   // function: 로그인 사용자 정보 불러오기 //
   const getSignInUser = () => {
-    getSignInUserRequest(cookies['accessToken']).then(getSignInUserResponse);
+    getSignInUserRequest(cookies[ACCESS_TOKEN]).then(getSignInUserResponse);
   };
 
   return getSignInUser;

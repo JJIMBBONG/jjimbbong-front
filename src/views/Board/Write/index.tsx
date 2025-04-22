@@ -1,74 +1,132 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
+
 import { postBoardRequest } from 'src/apis'; // API 호출 파일
+import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { ACCESS_TOKEN } from 'src/constants';
+import { postBoardRequest } from 'src/apis';
 import './style.css';
 
+import ImageIcon from 'src/assets/images/image.png';
+import PaperclipIcon from 'src/assets/images/Paperclip.png';
+import TypeIcon from 'src/assets/images/Type.png';
+import VideoIcon from 'src/assets/images/Video.png';
+
+const categories = ['카테고리 1', '카테고리 2', '카테고리 3', '카테고리 4', '카테고리 5'];
 
 const BoardWrite = () => {
+  const [cookies] = useCookies();
   const navigate = useNavigate();
 
-
   const [form, setForm] = useState({
-    boardAddressCategory: '',
-    boardDetailCategory: '',
     boardTitle: '',
     boardContent: '',
+    boardAddressCategory: '',
+    boardDetailCategory: '',
     boardAddress: '',
     boardImage: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+  const [areaSelected, setAreaSelected] = useState('');
+  const [districtSelected, setDistrictSelected] = useState('');
+  const [categorySelected, setCategorySelected] = useState('');
+
+  const handleAreaSelect = () => {
+    setAreaSelected('부산광역시');
+    setDistrictSelected('부산진구');
+    setForm((prev) => ({
+      ...prev,
+      boardAddressCategory: '부산광역시',
+      boardAddress: '부산진구',
+    }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleCategoryClick = (category: string) => {
+    setCategorySelected(category);
+    setForm((prev) => ({ ...prev, boardDetailCategory: category }));
+  };
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm((prev) => ({ ...prev, boardImage: reader.result as string }));
-    };
-    reader.readAsDataURL(file);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
+    const accessToken = cookies[ACCESS_TOKEN];
+    if (!accessToken) {
+      alert('로그인이 필요합니다.');
+      navigate('/auth');
+      return;
+    }
+
+    if (!areaSelected || !districtSelected) {
+      alert('지역을 선택해주세요.');
+      return;
+    }
+
+    if (!categorySelected) {
+      alert('카테고리를 선택해주세요.');
+      return;
+    }
+
+    if (!form.boardContent.trim()) {
+      alert('내용을 입력해주세요.');
+      return;
+    }
+
     try {
-      const accessToken = localStorage.getItem('token') ?? '';
       await postBoardRequest(form, accessToken);
       alert('게시글이 작성되었습니다!');
       navigate('/board');
     } catch (error) {
-      console.error(error);
-      alert('게시글 작성에 실패했습니다.');
+      alert('게시글 작성 실패');
+    }
+  };
+
+  const handleCancel = () => {
+    if (window.confirm('작성을 취소하시겠습니까?')) {
+      navigate('/board');
     }
   };
 
   return (
     <div className="board-write-container">
-      <h2>게시글 작성</h2>
+      <button className="select-area-button" onClick={handleAreaSelect}>
+        지역을 선택해주세요
+      </button>
 
-      <select name="boardAddressCategory" value={form.boardAddressCategory} onChange={handleChange}>
-        <option value="">주소 카테고리 선택</option>
-        <option value="서울">서울</option>
-        <option value="부산">부산</option>
-      </select>
+      {areaSelected && districtSelected && (
+        <div className="selected-area">{areaSelected} {districtSelected}</div>
+      )}
 
-      <select name="boardDetailCategory" value={form.boardDetailCategory} onChange={handleChange}>
-        <option value="">상세 카테고리 선택</option>
-        <option value="맛집">맛집</option>
-        <option value="여행지">여행지</option>
-      </select>
+      <div className="category-box">
+        {categories.map((category) => (
+          <button
+            key={category}
+            className={`category-button ${categorySelected === category ? 'selected' : ''}`}
+            onClick={() => handleCategoryClick(category)}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
 
+      <div className="input-label">제목을 입력해주세요.</div>
       <input
-        type="text"
         name="boardTitle"
         value={form.boardTitle}
         onChange={handleChange}
         placeholder="제목을 입력하세요"
       />
 
+      <div className="editor-tools">
+        <img src={ImageIcon} alt="이미지" className="editor-icon" />
+        <img src={PaperclipIcon} alt="파일" className="editor-icon" />
+        <img src={TypeIcon} alt="텍스트" className="editor-icon" />
+        <img src={VideoIcon} alt="비디오" className="editor-icon" />
+      </div>
+
+      <div className="input-label">내용을 입력해주세요.</div>
       <textarea
         name="boardContent"
         value={form.boardContent}
@@ -76,22 +134,12 @@ const BoardWrite = () => {
         placeholder="내용을 입력하세요"
       />
 
-      <input
-        type="text"
-        name="boardAddress"
-        value={form.boardAddress}
-        onChange={handleChange}
-        placeholder="주소 입력 (선택)"
-      />
-
-      <input type="file" accept="image/*" onChange={handleImageChange} />
-      {form.boardImage && <img src={form.boardImage} alt="미리보기" style={{ width: 200, marginTop: '10px' }} />}
-
-      <button onClick={handleSubmit}>작성하기</button>
+      <div className="button-group">
+        <button className="cancel-button" onClick={handleCancel}>취소</button>
+        <button className="submit-button" onClick={handleSubmit}>작성 완료</button>
+      </div>
     </div>
   );
-
 };
 
 export default BoardWrite;
-

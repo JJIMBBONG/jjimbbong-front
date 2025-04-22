@@ -6,10 +6,11 @@ import { ResponseDto } from 'src/apis/dto/response';
 import { PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from 'src/apis/dto/request/mypage';
 import { ACCESS_TOKEN } from 'src/constants';
 import { useSignInUserStore } from 'src/stores';
-import useSignInUser from 'src/hooks/sign-in-user.hook';
 import DefaultProfile from 'src/assets/images/default-profile.png';
+import { useSignInUser } from 'src/hooks';
 
 import './style.css';
+import { HttpStatusCode } from 'axios';
 
 // interface: 로그인 사용자 정보 수정 컴포넌트 속성 //
 interface UserInfoUpdateProps {
@@ -23,7 +24,7 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   const [cookies] = useCookies();
 
   // state: 로그인 사용자 정보 상태 //
-  const { profileImage, userId, userNickname, userPassword, name, address, detailAddress } = useSignInUserStore();
+  const { profileImage, userId, userNickname, name, address, detailAddress } = useSignInUserStore();
 
   // state: 파일 인풋 참조 상태 //
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -48,8 +49,6 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   const [isUpdateNicknameChecked, setUpdateNicknameChecked] = useState<boolean>(false);
   // state: 수정 닉네임 메세지 상태 //
   const [updateNicknameMessage, setUpdateNicknameMessage] = useState<string>('');
-  // state: 수정 닉네임 중복 메세지 상태 //
-  const [updateNicknameDuplicatedMessage, setUpdateNicknameDuplicatedMessage] = useState<boolean>(false);
 
   // state: 수정 비밀번호 메세지 상태 //
   const [updatePasswordMessage, setUpdatePasswordMessage] = useState<string>('');
@@ -64,7 +63,7 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   const accessToken = cookies[ACCESS_TOKEN];
 
   // variable: 중복 확인 버튼 활성화 //
-  const isNicknameCheckButtonActive = updateNickname !== '' && updateNickname !== userNickname;
+  const isNicknameCheckButtonActive = updateNickname !== '';
   // variable: 버튼 클래스 //
   const buttonClass = `button ${isNicknameCheckButtonActive ? '' : 'disable'}`;
 
@@ -91,7 +90,6 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
 
     const isSuccess = responseBody !== null && responseBody.code === 'SU';
     setUpdateNicknameMessage(message);
-    setUpdateNicknameDuplicatedMessage(!isSuccess);
     setUpdateNicknameChecked(isSuccess);
   };
 
@@ -100,13 +98,13 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
     const message =
       !responseBody ? '서버에 문제가 있습니다.' :
       responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' :
-      responseBody.code === 'AF' ? '인증에 실패했습니다.' :
-      responseBody.code === 'EU' ? '이미 사용중인 닉네임입니다.': '';
+      responseBody.code === 'AF' ? '인증에 실패했습니다.' : 
+      responseBody.code === 'EU' ? '이미 사용중인 닉네임입니다.' : 
+      HttpStatusCode.BadRequest ? '닉네임 중복 확인해주세요.' : '';
 
     const isSuccess = responseBody !== null && responseBody.code === 'SU';
     if (!isSuccess) {
-      setUpdatePasswordMessage(message);
-      setUpdateNicknameDuplicatedMessage(true);
+      alert(message);
       return;
     }
 
@@ -142,7 +140,6 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
 
     setUpdateNicknameChecked(false);
     setUpdateNicknameMessage('');
-    setUpdateNicknameDuplicatedMessage(false);
   };
 
   // event handler: 사용자 비밀번호 변경 이벤트 처리 //
@@ -190,7 +187,6 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
     
     if (!isUpdateNicknameChecked) {
       setUpdateNicknameMessage('닉네임 중복 확인해주세요');
-      setUpdateNicknameDuplicatedMessage(true);
     }
 
     const isCheck = updateNickname && updatePassword && updatePasswordCheck && updateAddress && isUpdatePasswordChecked && isUpdatePasswordEquals;
@@ -285,7 +281,7 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
         </div>
         <div className='user-update-row'>
           <div className='title'>상세주소</div>
-          <input type='text' value={updateDetailAddress} onChange={onDetailAddressChangeHandler}></input>
+          <input type='text' placeholder={updateDetailAddress} onChange={onDetailAddressChangeHandler}></input>
         </div>
       </div>
       <div className='update-button-box'>

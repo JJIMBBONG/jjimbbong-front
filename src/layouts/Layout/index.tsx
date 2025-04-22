@@ -5,7 +5,7 @@ import NavLogo from 'src/assets/images/small_logo.png'
 import './style.css';
 import { ACCESS_TOKEN, AUTH_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH } from 'src/constants';
 import { useCookies } from 'react-cookie';
-import useSignInUser from 'src/hooks/sign-in-user.hook';
+import { useSignInUser } from 'src/hooks';
 
 // component : 공통 레이아웃 컴포넌트 //
 export default function Layout() {
