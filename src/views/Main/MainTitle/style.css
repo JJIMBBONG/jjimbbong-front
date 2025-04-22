@@ -5,6 +5,23 @@
     font-style: normal;
 }
 
+#wrapper-main{
+    display: flex;
+    position: relative;
+}
+
+#wrapper-main .main-left{
+    width: 20%;
+    z-index: 5;
+    background-color: aqua;
+}
+
+#wrapper-main .main-right{
+    width: 20%;
+    z-index: 5;
+    background-color: aqua;
+}
+
 #wrapper-title{
     position: relative;
     width: 100%;

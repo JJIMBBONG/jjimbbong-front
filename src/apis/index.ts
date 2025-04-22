@@ -1,8 +1,7 @@
 import { ResponseDto } from './dto/response';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import GetBoardResponseDto from "./dto/response/board/get-board.response.dto";
-
 import GetRecommandBoardResponseDto from "./dto/response/board/get-recommand-board.response.dto";
+import { PostBoardRequestDto } from './dto/request/board';
 
 import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSearchRequestDto, NicknameCheckRequestDto, PasswordResetRequestDto, SignInRequestDto, SignUpRequestDto } from "./dto/request/auth";
 import { SignInResponseDto } from "./dto/response/auth";
@@ -25,7 +24,7 @@ const SIGN_IN_URL = `${AUTH_MODULE_URL}/sign-in`;
 export const SNS_SIGN_IN_URL = (sns: 'kakao' | 'naver') => `${AUTH_MODULE_URL}/sns/${sns}`;
 
 const BOARD_MODULE_URL = `${API_DOMAIN}/api/v1/board`;
-const GET_FILLTERD_BOARD_URL = `${BOARD_MODULE_URL}`;
+const GET_FILTERD_BOARD_URL = `${BOARD_MODULE_URL}`;
 const POST_BOARD_URL = `${BOARD_MODULE_URL}`;
 
 const MAIN_MODULE_URL = `${API_DOMAIN}/api/v1/main`;
@@ -45,6 +44,14 @@ const FILE_UPLOAD_URL = `${API_DOMAIN}/file/upload`;
 // variable: //
 const multipartFormData = { headers: { 'Content-Type': 'multipart/form-data' } };
 
+// function: 게시글 작성 API 요청 함수 추가 //
+export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessToken: string) => {
+    const responseBody = await axios.post(POST_BOARD_URL, requestBody, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
 
 // function: Authorization Bearer 헤더 //
 const bearerAuthorization = (accessToken: string) => ({ headers: { 'Authorization': `Bearer ${accessToken}` } })
@@ -63,11 +70,9 @@ const responseErrorHandler = (error: AxiosError<ResponseDto>) => {
     return data;
 };
 
-// function: get fillterd board API 요청 함수 //
-export const getFillterdBoardRequest = async (areaCategoryCode?: number | null, detailCategory?: string) => {
-    const responseBody = await axios.get(GET_FILLTERD_BOARD_URL, {
-        params: { areaCategoryCode, detailCategory },
-    })
+// function: get filterd board API 요청 함수 //
+export const getFilterdBoardRequest = async () => {
+    const responseBody = await axios.get(GET_FILTERD_BOARD_URL)
         .then(responseSuccessHandler<GetRecommandBoardResponseDto>)
         .catch(responseErrorHandler)
     return responseBody;

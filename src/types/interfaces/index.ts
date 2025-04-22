@@ -4,6 +4,7 @@ import Region from './region.interface';
 import Sigungu from './sigungu.interface';
 import AreaWithSigungu from './areawithsigungu.interface';
 import RecommandBoard from './board.interface';
+import FilteredBoard from './board.interface';
 
 import MyPageBoard from './mypage.board.interface';
 
@@ -14,5 +15,6 @@ export type{
     RecommandBoard,
     Board,
     Comment,
-    MyPageBoard
+    MyPageBoard,
+    FilteredBoard
 }

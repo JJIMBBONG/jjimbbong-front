@@ -105,6 +105,7 @@ export default function SignIn(props: Props) {
         <div className='link-container'>
           <div className='link' onClick={() => onPageChange('sign-up')}>회원가입</div>
           <div className='link' onClick={() => onPageChange('id-search')}>아이디 찾기</div>
+          <div className='link-not'> | </div>
           <div className='link' onClick={() => onPageChange('password-reset')}>비밀번호 찾기</div>
         </div>
       </div>
