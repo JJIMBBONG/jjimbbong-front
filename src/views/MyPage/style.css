@@ -9,7 +9,7 @@
 
 #mypage-main-wrapper .user-container {
   display: flex;
-  height: 200px;
+  height: 220px;
 }
 
 #mypage-main-wrapper .user-card {
@@ -71,6 +71,9 @@
   flex: 1;
   font-size: 20px;
   font-weight: 500;
+  
+  text-wrap: nowrap;
+  overflow: hidden;
 }
 
 #mypage-main-wrapper .user-button-box {

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useCookies } from 'react-cookie';
 import { createPortal } from 'react-dom';
 import Modal from 'src/components/Modal';
 import MyPageUserInfo from './UserInfo';
 import MyPageUserInfoUpdate from './UserInfoUpdate';
 import { getMyLevelRequest, getMyPageBoardRequest } from 'src/apis';
-import { ACCESS_TOKEN, BOARD_VIEW_ABSOLUTE_PATH } from 'src/constants';
+import { ACCESS_TOKEN, BOARD_VIEW_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH } from 'src/constants';
 import Pagination from 'src/components/Pagination';
 import { MyPageBoard } from 'src/types/interfaces';
 import { useSignInUserStore } from 'src/stores';
@@ -111,6 +111,9 @@ function TableItem({ myBoards }: TableItemProps) {
 // component: 마이페이지 메인 화면 컴포넌트 //
 export default function MyPageMain() {
 
+  // state: 경로 상태 //
+  const pathname = useLocation();
+
   // state: cookie 상태 //
   const [cookies] = useCookies();
 
@@ -138,7 +141,7 @@ export default function MyPageMain() {
   // variable: accessToken //
   const accessToken = cookies[ACCESS_TOKEN];
 
-  // variable: 회원 등급 이미지 스타일 //
+  // variable: 사용자 등급 이미지 스타일 //
   const userLevelStyle = { backgroundColor: `${
     userLevel === 5 ? 'red' :
     userLevel === 4 ? 'orange' : 
@@ -146,7 +149,10 @@ export default function MyPageMain() {
     userLevel === 2 ? 'green' : 
     userLevel === 1 ? 'blue' : 'purple'}` };
 
-  // function: //
+  // function: 네비게이터 함수 //
+  const navigator = useNavigate();
+
+  // function: 로그인 사용자 등급 갱신 정보 //
   const updateMyPageInfo = useMyPageInfo();
 
   // function: get my level response 처리 함수 //
@@ -200,9 +206,13 @@ export default function MyPageMain() {
     setInfoUpdateOpen(!isInfoUpdateOpen);
   };
 
+  // effect: cookie의 accessToken과 경로가 변경될 시 실행할 함수 //
+  useEffect(() => {
+    if (!accessToken) navigator(MAIN_ABSOLUTE_PATH);
+  }, [accessToken, pathname]);
+
   // effect: 컴포넌트 로드시 실행할 함수 //
   useEffect(() => {
-    if (!accessToken) return;
     updateMyPageInfo();
     getMyLevelRequest(accessToken).then(getMyLevelResponse);
     getMyPageBoardRequest(accessToken).then(getMyPageBoardResponse);
