@@ -8,6 +8,7 @@ import { ACCESS_TOKEN, MAIN_ABSOLUTE_PATH, MY_PAGE_MAIN_ABSOLUTE_PATH } from 'sr
 import { useCookies } from 'react-cookie';
 
 import './style.css';
+import { usePasswordReCheckStore } from 'src/stores';
 
 // interface: 로그인 사용자 비밀번호 일치여부 컴포넌트 속성 //
 interface PasswordReCheckProps {
@@ -16,6 +17,9 @@ interface PasswordReCheckProps {
 
 // component: 로그인 사용자 비밀번호 일치여부 컴포넌트 //
 function PasswordReCheck({onModalViewChange}: PasswordReCheckProps) {
+
+  // state: 로그인 사용자 비밀번호 재확인 상태 - 마이페이지로 이동시 //
+  const { verify } = usePasswordReCheckStore();
 
   // state: cookie 상태 //
   const [cookies] = useCookies();
@@ -60,9 +64,10 @@ function PasswordReCheck({onModalViewChange}: PasswordReCheckProps) {
       alert(message);
       return;
     }
-
+    /* 비밀번호 재확인 인증완료 함수 호출 */
+    verify();
     onModalViewChange();
-    navigator(MY_PAGE_MAIN_ABSOLUTE_PATH);
+    navigator(MY_PAGE_MAIN_ABSOLUTE_PATH, { replace: true });
   };
 
   // event handler: 비밀번호 입력 이벤트 처리 //
