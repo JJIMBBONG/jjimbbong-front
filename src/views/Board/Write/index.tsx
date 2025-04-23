@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+import { postBoardRequest } from 'src/apis'; // API 호출 파일
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { ACCESS_TOKEN } from 'src/constants';
@@ -30,10 +32,8 @@ const BoardWrite = () => {
   const [categorySelected, setCategorySelected] = useState('');
 
   const handleAreaSelect = () => {
-    // 실제로는 지역 선택 모달을 띄워야 함
     setAreaSelected('부산광역시');
     setDistrictSelected('부산진구');
-
     setForm((prev) => ({
       ...prev,
       boardAddressCategory: '부산광역시',
@@ -103,7 +103,7 @@ const BoardWrite = () => {
         {categories.map((category) => (
           <button
             key={category}
-            className={`category-button ${categorySelected === category ? 'selected' : 'unselected'}`}
+            className={`category-button ${categorySelected === category ? 'selected' : ''}`}
             onClick={() => handleCategoryClick(category)}
           >
             {category}

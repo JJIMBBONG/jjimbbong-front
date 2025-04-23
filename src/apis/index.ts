@@ -8,6 +8,9 @@ import { SignInResponseDto } from "./dto/response/auth";
 import { GetMyLevelResponseDto, GetMyPageBoardResponseDto } from './dto/response/mypage';
 import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto'
 import { PasswordReCheckRequestDto, PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from './dto/request/mypage';
+import GetMyPageBoardResponseDto from './dto/response/mypage/get-mypage-board.response.dto';
+import GetFilteredBoardResponseDto from './dto/response/board/get-filtered-board.response';
+
 
 // variable: URL 상수 //
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
@@ -24,7 +27,9 @@ const SIGN_IN_URL = `${AUTH_MODULE_URL}/sign-in`;
 export const SNS_SIGN_IN_URL = (sns: 'kakao' | 'naver') => `${AUTH_MODULE_URL}/sns/${sns}`;
 
 const BOARD_MODULE_URL = `${API_DOMAIN}/api/v1/board`;
-const GET_FILTERD_BOARD_URL = `${BOARD_MODULE_URL}`;
+const GET_WRITE_DATE_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/write-date`;
+const GET_VIEW_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/view-count`;
+const GET_GOOD_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/good-count`;
 const POST_BOARD_URL = `${BOARD_MODULE_URL}`;
 
 const MAIN_MODULE_URL = `${API_DOMAIN}/api/v1/main`;
@@ -70,10 +75,27 @@ const responseErrorHandler = (error: AxiosError<ResponseDto>) => {
     return data;
 };
 
+
+
 // function: get filterd board API 요청 함수 //
-export const getFilterdBoardRequest = async () => {
-    const responseBody = await axios.get(GET_FILTERD_BOARD_URL)
-        .then(responseSuccessHandler<GetRecommandBoardResponseDto>)
+export const getWriteDateFilterdBoardRequest = async () => {
+    const responseBody = await axios.get(GET_WRITE_DATE_SORTED_BOARD_URL)
+        .then(responseSuccessHandler<GetFilteredBoardResponseDto>)
+        .catch(responseErrorHandler)
+    //console.log(GET_WRITE_DATE_SORTED_BOARD_URL);
+    return responseBody;
+};
+
+export const getViewCountFilterdBoardRequest = async () => {
+    const responseBody = await axios.get(GET_VIEW_COUNT_SORTED_BOARD_URL)
+        .then(responseSuccessHandler<GetFilteredBoardResponseDto>)
+        .catch(responseErrorHandler)
+    return responseBody;
+};
+
+export const getGoodCountFilterdBoardRequest = async () => {
+    const responseBody = await axios.get(GET_GOOD_COUNT_SORTED_BOARD_URL)
+        .then(responseSuccessHandler<GetFilteredBoardResponseDto>)
         .catch(responseErrorHandler)
     return responseBody;
 };

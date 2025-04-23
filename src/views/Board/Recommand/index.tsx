@@ -9,7 +9,7 @@ import usePagination2 from 'src/hooks/pagination2.hook';
 import type { RecommandBoard } from 'src/types/interfaces'
 import GoodIconColor from 'src/assets/images/good-icon-color.png';
 import './style.css'
-import { url } from 'inspector';
+
 
 interface CardItemProps {
   boards : RecommandBoard;
@@ -84,7 +84,7 @@ export default function RecommandBoardMain() {
     // 초기 필터 없음 상태로 설정 
     setTotalList(boards);
     console.log(boards);        
-  };
+    };
 
 
     // API 결과 처리
