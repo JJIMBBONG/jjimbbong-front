@@ -11,6 +11,8 @@ import PaperclipIcon from 'src/assets/images/Paperclip.png';
 import TypeIcon from 'src/assets/images/Type.png';
 import VideoIcon from 'src/assets/images/Video.png';
 
+import RegionSelectModal from 'src/components/RegionSelectModal';
+
 const categories = ['카테고리 1', '카테고리 2', '카테고리 3', '카테고리 4', '카테고리 5'];
 
 const BoardWrite = () => {
@@ -26,19 +28,10 @@ const BoardWrite = () => {
     boardImage: '',
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [areaSelected, setAreaSelected] = useState('');
   const [districtSelected, setDistrictSelected] = useState('');
   const [categorySelected, setCategorySelected] = useState('');
-
-  const handleAreaSelect = () => {
-    setAreaSelected('부산광역시');
-    setDistrictSelected('부산진구');
-    setForm((prev) => ({
-      ...prev,
-      boardAddressCategory: '부산광역시',
-      boardAddress: '부산진구',
-    }));
-  };
 
   const handleCategoryClick = (category: string) => {
     setCategorySelected(category);
@@ -48,6 +41,16 @@ const BoardWrite = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleRegionSelect = (region1: string, region2: string) => {
+    setAreaSelected(region1);
+    setDistrictSelected(region2);
+    setForm((prev) => ({
+      ...prev,
+      boardAddressCategory: region1,
+      boardAddress: region2,
+    }));
   };
 
   const handleSubmit = async () => {
@@ -90,7 +93,7 @@ const BoardWrite = () => {
 
   return (
     <div className="board-write-container">
-      <button className="select-area-button" onClick={handleAreaSelect}>
+      <button className="select-area-button" onClick={() => setIsModalOpen(true)}>
         지역을 선택해주세요
       </button>
 
@@ -102,7 +105,7 @@ const BoardWrite = () => {
         {categories.map((category) => (
           <button
             key={category}
-            className={`category-button ${categorySelected === category ? 'selected' : ''}`}
+            className={`category-button ${categorySelected === category ? 'selected' : 'unselected'}`}
             onClick={() => handleCategoryClick(category)}
           >
             {category}
@@ -137,6 +140,13 @@ const BoardWrite = () => {
         <button className="cancel-button" onClick={handleCancel}>취소</button>
         <button className="submit-button" onClick={handleSubmit}>작성 완료</button>
       </div>
+
+      {isModalOpen && (
+        <RegionSelectModal
+          onClose={() => setIsModalOpen(false)}
+          onSelect={handleRegionSelect}
+        />
+      )}
     </div>
   );
 };
