@@ -5,16 +5,22 @@ import { createPortal } from 'react-dom';
 import Modal from 'src/components/Modal';
 import MyPageUserInfo from './UserInfo';
 import MyPageUserInfoUpdate from './UserInfoUpdate';
-import { getMyLevelRequest, getMyPageBoardRequest } from 'src/apis';
-import { ACCESS_TOKEN, BOARD_VIEW_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH } from 'src/constants';
+import { getMyLevelRequest, getMyPageBoardRequest, passwordReCheckRequest } from 'src/apis';
+import { ACCESS_TOKEN, BOARD_VIEW_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH, MY_PAGE_MAIN_ABSOLUTE_PATH } from 'src/constants';
 import Pagination from 'src/components/Pagination';
-import { MyPageBoard } from 'src/types/interfaces';
-import { useSignInUserStore } from 'src/stores';
+import { Comment, MyPageBoard } from 'src/types/interfaces';
+import { usePasswordReCheckStore, useSignInUserStore } from 'src/stores';
 import { useMyPageInfo, usePagination} from 'src/hooks';
 import { GetMyLevelResponseDto, GetMyPageBoardResponseDto } from 'src/apis/dto/response/mypage';
 import { ResponseDto } from 'src/apis/dto/response';
+import BasicIcon from 'src/assets/images/basic-level-icon.png';
+import TreeIcon from 'src/assets/images/tree-level-icon.png';
+import ForestIcon from 'src/assets/images/forest-level-icon.png';
+import MountainIcon from 'src/assets/images/mountain-level-icon.png';
+import EarthIcon from 'src/assets/images/earth-level-icon.png';
 
 import './style.css';
+import { PasswordReCheckRequestDto } from 'src/apis/dto/request/mypage';
 
 // component: 사용자 등급 모달 컴포넌트 //
 function MyLevel() {
@@ -76,6 +82,12 @@ function TableItem({ myBoards }: TableItemProps) {
   // state: my boards 정보 상태//
   const { boardNumber, boardImage, boardTitle, boardWriteDate, boardViewCount } = myBoards;
 
+  // state: Good 사용자 리스트 상태 //
+  const [goods, setGoods] = useState<string[]>([]);
+
+  // state: comment 리스트 상태 //
+  const [comments, setComments] = useState<Comment[]>([]);
+
   // function: 네비게이터 함수 //
   const navigator = useNavigate();
 
@@ -84,6 +96,11 @@ function TableItem({ myBoards }: TableItemProps) {
     if (!boardNumber) return;
     navigator(BOARD_VIEW_ABSOLUTE_PATH(boardNumber));
   };
+
+  // effect: 컴포넌트 로드 시 실행할 함수 //
+  useEffect(() => {
+    
+  }, []);
 
   // render: 마이페이지 테이블 레코드 컴포넌트 렌더링 //
   return (
@@ -97,10 +114,10 @@ function TableItem({ myBoards }: TableItemProps) {
             <div className='icon view-count'/> {boardViewCount}
           </div>
           <div className='sub-box'>
-            <div className='icon good-count'/> 0
+            <div className='icon good-count'/> {goods.length}
           </div>
           <div className='sub-box'>
-            <div className='icon comment-count'/> 0
+            <div className='icon comment-count'/> {comments.length}
           </div>
         </div>
       </div>
@@ -112,7 +129,9 @@ function TableItem({ myBoards }: TableItemProps) {
 export default function MyPageMain() {
 
   // state: 경로 상태 //
-  const pathname = useLocation();
+  const {pathname} = useLocation();
+  // state: 로그인 사용자 비밀번호 재확인 상태 - 마이페이지로 이동시 //
+  const { isVerified } = usePasswordReCheckStore();
 
   // state: cookie 상태 //
   const [cookies] = useCookies();
@@ -142,12 +161,11 @@ export default function MyPageMain() {
   const accessToken = cookies[ACCESS_TOKEN];
 
   // variable: 사용자 등급 이미지 스타일 //
-  const userLevelStyle = { backgroundColor: `${
-    userLevel === 5 ? 'red' :
-    userLevel === 4 ? 'orange' : 
-    userLevel === 3 ? 'yellow' :
-    userLevel === 2 ? 'green' : 
-    userLevel === 1 ? 'blue' : 'purple'}` };
+  const userLevelStyle = { backgroundImage: `url(${
+    userLevel === 5 ? EarthIcon : 
+    userLevel === 4 ? MountainIcon : 
+    userLevel === 3 ? ForestIcon : 
+    userLevel === 2 ? TreeIcon : BasicIcon })` };
 
   // function: 네비게이터 함수 //
   const navigator = useNavigate();
@@ -210,6 +228,11 @@ export default function MyPageMain() {
   useEffect(() => {
     if (!accessToken) navigator(MAIN_ABSOLUTE_PATH);
   }, [accessToken, pathname]);
+
+  // effect: 비밀번호 재확인 인증이 없을 시 실행할 함수 //
+  useEffect(() => {
+    if (!isVerified) navigator(MY_PAGE_ABSOLUTE_PATH, { replace: true });
+  }, [isVerified, navigator]);
 
   // effect: 컴포넌트 로드시 실행할 함수 //
   useEffect(() => {

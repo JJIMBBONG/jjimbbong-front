@@ -1,14 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
-import {Outlet, useNavigate} from 'react-router';
+import {Outlet, useLocation, useNavigate} from 'react-router';
 import NavLogo from 'src/assets/images/small_logo.png'
 
 import './style.css';
 import { ACCESS_TOKEN, AUTH_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH } from 'src/constants';
 import { useCookies } from 'react-cookie';
 import { useSignInUser } from 'src/hooks';
+import { usePasswordReCheckStore } from 'src/stores';
 
 // component : 공통 레이아웃 컴포넌트 //
 export default function Layout() {
+
+    // state: 경로 상태 //
+    const location = useLocation();
+    // state: 로그인 사용자 비밀번호 재확인 상태 - 마이페이지로 이동시 //
+    const { resetVerify } = usePasswordReCheckStore();
 
     // state: cookie 상태 //
     const [cookies] = useCookies();
@@ -59,6 +65,11 @@ export default function Layout() {
         if(!cookies[ACCESS_TOKEN]) return;
         getSignInUser();
     }, [cookies[ACCESS_TOKEN]]);
+
+    // effect: 경로가 /my-page가 아닌 곳에서는 비밀번호 재확인 인증 리셋 실행할 함수 //
+    useEffect(() => {
+        if (!location.pathname.startsWith('/my-page')) resetVerify();
+    }, [location.pathname, resetVerify]);
 
     // state: My Content List 요소 참조 //
     const myContentListRef = useRef<HTMLDivElement | null>(null);

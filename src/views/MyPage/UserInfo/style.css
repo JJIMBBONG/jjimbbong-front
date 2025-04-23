@@ -88,5 +88,6 @@
 }
 
 #user-info-container>.exit-button-box .exit-button:hover {
-  opacity: 0.85;
+  background-color: #ccc;
+  transition: 0.5s;
 }
