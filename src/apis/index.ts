@@ -8,7 +8,6 @@ import { SignInResponseDto } from "./dto/response/auth";
 import { GetMyLevelResponseDto, GetMyPageBoardResponseDto } from './dto/response/mypage';
 import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto'
 import { PasswordReCheckRequestDto, PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from './dto/request/mypage';
-import GetMyPageBoardResponseDto from './dto/response/mypage/get-mypage-board.response.dto';
 import GetFilteredBoardResponseDto from './dto/response/board/get-filtered-board.response';
 
 
