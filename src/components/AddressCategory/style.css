@@ -80,14 +80,13 @@
     color: gray;
 }
 
-
 #region-wrapper .regionSelect-wrapper {
     display: flex;
     justify-content: center;
     gap: 10px;
     height: 100%;
-    
 }
+
 #region-wrapper .regionSelect-wrapper .regionSelect-sido {
     width: 45%;
     height: 35px;
