@@ -8,6 +8,7 @@ function NaverMap() {
   const [regionData, setRegionData] = useState(null); // 관광 정보 등
   // Check 여기가봤어, 길찾기 토글 상태
   const [showCheck, setShowCheck] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // 축제 일정기간 
   const formatDate = (dateStr) => {
@@ -17,26 +18,31 @@ function NaverMap() {
 
   const fetchFestivalData = async (areaCode, sigunguCode) => {
     try {
-      // 백엔드 연결시 제거
-      const serviceKey = "vvbWIqafswD60L%2Fz5l1eUwiu835Akri6p5UQFwTnGcPwd8J%2FNQzaNgtzPiwatqxbdu%2BQk0por8jYm0UopoVUtA%3D%3D";
-      const url = `https://apis.data.go.kr/B551011/KorService1/searchFestival1?serviceKey=${serviceKey}&numOfRows=5&pageNo=1&MobileOS=ETC&MobileApp=MapApp&eventStartDate=20250401&areaCode=${areaCode}&sigunguCode=${sigunguCode}&_type=json`;
-      const res = await fetch(url);
+      // 백엔드 연결시 제거 - 로그인 기능 활성화시 제거 예정
+      setIsLoading(true);
+      const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxd2VyMTIzNCIsImlhdCI6MTc0NTM4Nzc0NiwiZXhwIjoxNzQ1NDIwMTQ2fQ.IzFWM8da0-vXyV1YVLNGr9SvHBr6El9-4KyHt6Mm80Q'
+      localStorage.setItem('authToken', token);
+      const url = `http://localhost:4000/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`;
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      }
+    );
+      if(!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      
       const data = await res.json();
-      // 여기서 data는 공공데이터에서 받아온 원본 JSON
-      const items = data?.response?.body?.items?.item || [];
-
-      return items.map((item) => ({
-        title: item.title,
-        startDate: item.eventstartdate,
-        endDate: item.eventenddate,
-        image: item.firstimage,
-        address: item.addr1
-      }))
+      setIsLoading(false);
+      console.log("festival 요청", areaCode, sigunguCode);
+      return Array.isArray(data) ? data : [];
     } catch (err) {
       console.error("축제정보 불러오기 실패:", err);
+      setIsLoading(false);
       return [];
     }
-  }
+  };
 
   useEffect(() => {
     if (!window.naver || !window.naver.maps) return;
@@ -58,7 +64,6 @@ function NaverMap() {
       .then((res) => res.json())
       .then((data) => {
         data.features.forEach((feature) => {
-          console.log(feature.properties);
           const name = feature.properties.SGG_NM; // 시 군 구 이름
           const coords = feature.geometry.coordinates;
           const paths = (feature.geometry.type === "Polygon" 
@@ -128,6 +133,7 @@ function NaverMap() {
       <div id="map" className="map" />
 
       <div className="panel">
+        {isLoading && <p>로딩 중 ....</p>}
         {selectedRegion && regionData ? (
           <>
           {/* Check! 여기 가봤어? 카드 */}
@@ -203,7 +209,7 @@ function NaverMap() {
             </button>
           </>
         ) : (
-          <p style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>지역을 누르면 지역정보가 나옵니다.</p>
+          <p style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>{isLoading ? "지역 정보를 불러오는 중..." : "지역을 누르면 지역정보가 나옵니다."}</p>
         )}
       </div>
     </div>
@@ -211,5 +217,3 @@ function NaverMap() {
 }
 
 export default NaverMap;
-
-
