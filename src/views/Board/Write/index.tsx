@@ -4,7 +4,6 @@ import { postBoardRequest } from 'src/apis'; // API 호출 파일
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { ACCESS_TOKEN } from 'src/constants';
-import { postBoardRequest } from 'src/apis';
 import './style.css';
 
 import ImageIcon from 'src/assets/images/image.png';
