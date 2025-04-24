@@ -12,4 +12,5 @@ export default interface GetBoardResponseDto extends ResponseDto {
   boardViewCount: number;
   boardAddress: string;
   boardImage: string | null;
+  boardScore: number;
 }
