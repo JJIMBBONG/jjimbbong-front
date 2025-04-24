@@ -21,7 +21,7 @@ export default function Layout() {
 
     const navigator = useNavigate();
 
-    // state : 로그인 상태 //
+    // state: 로그인 상태 //
     const [login, setLogin] = useState<boolean>(true);
 
     // state: My Content 드롭다운 상태 //
@@ -35,7 +35,7 @@ export default function Layout() {
         navigator(MAIN_ABSOLUTE_PATH);
     };
 
-    // event handler : 지도 클릭 이벤트 처리 //
+    // event handler: 지도 클릭 이벤트 처리 //
     const onMapClickHandler = () => {
         navigator(MAP_ABSOLUTE_PATH);
     }
