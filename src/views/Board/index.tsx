@@ -20,35 +20,6 @@ interface BoardItemProps {
 }
 
 function BoardItem({boards}:BoardItemProps){
-
-  const [selectedAreaCode, setSelectedAreaCode] = useState<number | null>(null);
-  const [selectedSigunguCode, setSelectedSigunguCode] = useState<number | null>(null);
-  const [searchParams] = useSearchParams();
-  const regions: Region[] = regionData;
-
-  const addressCategory1 = searchParams.get('addressCategory1');
-  const addressCategory2 = searchParams.get('addressCategory2');
-  const detailCategory = searchParams.get('detailCategory');
-
-  const areaCodeMap: Record<number, string> = {
-    1: "서울특별시",
-    2: "인천광역시",
-    3: "대전광역시",
-    4: "대구광역시",
-    5: "광주광역시",
-    6: "부산광역시",
-    7: "울산광역시",
-    8: "세종특별자치시",
-    31: "경기도",
-    32: "강원도",
-    33: "충청북도",
-    34: "충청남도",
-    35: "경상북도",
-    36: "경상남도",
-    37: "전라북도",
-    38: "전라남도",
-    39: "제주특별자치도",
-};
   
   const { 
           boardNumber, 
@@ -82,24 +53,22 @@ function BoardItem({boards}:BoardItemProps){
         <div className='board-write-date'>{boardWriteDate}</div>
         <div className='board-data-container'>
           <div className='board-count-data-container'>
-            <div className='board-view-count-logo'>조회</div>
+            <div className='board-view-count-logo'/>
             <div className='board-view-count'>{boardViewCount}</div>
-            <div className='board-good-count-logo'>좋아요</div>
+            <div className='board-good-count-logo'/>
             <div className='board-good-count'>{goodCount}</div>
-            <div className='board-comment-count-logo'>댓글</div>
+            <div className='board-comment-count-logo'/>
             <div className='board-comment-count'>{commentCount}</div>
           </div>
           <div className='board-category-data-container'>
             <div className='board-address-category'>#{boardAddressCategory}</div>
             <div className='board-detail-category'>#{boardDetailCategory}</div>
-            <div className='board-writer-leve'>{userLevel}</div>
+            <div className='board-writer-level'>레벨 : {userLevel}</div>
           </div>
         </div>
       </div>
     </div>
-
     </div>
-    
   )
 }
 
@@ -109,6 +78,8 @@ export default function BoardMain() {
   const [selectedMenu, setSelectedMenu] = useState<string | null>('');
   const [originalList, setOriginalList] = useState<FilteredBoard[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [a1, setA1] = useState<number | null>(0);
+  const [a2, setA2] = useState<number | null>(0);
   const [isEmpty, setIsEmpty] = useState(false);
   const [searchParams] = useSearchParams();
   const navigator = useNavigate();
@@ -151,6 +122,26 @@ export default function BoardMain() {
   console.log(boards);        
   };
 
+  const areaCodeMap: Record<number, string> = {
+    1: "서울특별시",
+    2: "인천광역시",
+    3: "대전광역시",
+    4: "대구광역시",
+    5: "광주광역시",
+    6: "부산광역시",
+    7: "울산광역시",
+    8: "세종특별자치시",
+    31: "경기도",
+    32: "강원도",
+    33: "충청북도",
+    34: "충청남도",
+    35: "경상북도",
+    36: "경상남도",
+    37: "전라북도",
+    38: "전라남도",
+    39: "제주특별자치도",
+  };
+
   const handleChangeMenu = (menu : string | null) => {
     setSelectedMenu(menu);
     setSortMenuOpen(false);
@@ -167,9 +158,12 @@ export default function BoardMain() {
   useEffect(() => {
     getWriteDateFilterdBoardRequest().then(getFilteredBoardResponse);
     setSelectedCategory(detailCategory);
-    console.log(addressCategory1);
-    console.log(addressCategory2);
-    console.log(detailCategory);
+    setA1(Number(addressCategory1));
+    setA2(Number(addressCategory2));
+    //console.log(addressCategory1);
+    //console.log(addressCategory2);
+    //console.log(detailCategory);
+
   }, []);
 
   useEffect(()=>{
@@ -185,19 +179,47 @@ export default function BoardMain() {
   },[selectedMenu])
 
   useEffect(() => {
-    const filtered = selectedCategory
-      ? originalList.filter(item => item.boardDetailCategory === selectedCategory)
-      : originalList;
+    const filtered = originalList.filter(item => {
+      //분야 카테고리가 선택됐다면 비교. 아니면 통과 //
+      const categoryMatch = selectedCategory ? item.boardDetailCategory === selectedCategory : true;
+
+      let addressMatch = true;
+
+      // 시-도 지역 카테고리가 선택 됐다면 비교. 아니면 통과//
+      const areaName = a1 ? areaCodeMap[a1] : '';
+      const sigunguName = regionData.find(region =>
+        region.areaCode === a1 &&
+        region.sigunguCode === a2
+      )?.regionName;
+
+      if (a1 && !a2) {
+        // 시(도)만 선택된 경우 -> 부분 포함
+        addressMatch = item.boardAddressCategory.includes(areaName);
+      } else if (a1 && a2 && sigunguName) {
+        // 시(도) + 구(군) 선택된 경우 -> 전체 주소 문자열 일치
+        const fullAddress = `${areaName} ${sigunguName}`;
+        addressMatch = item.boardAddressCategory === fullAddress;
+      }
+
+      return categoryMatch && addressMatch;
+      });
         
-    console.log(selectedCategory);
+    //console.log(selectedCategory);
   
     setTotalList(filtered);
     setIsEmpty(filtered.length === 0);
-  }, [selectedCategory, originalList]);
+  }, [selectedCategory, originalList, a1, a2]);
   
 
   return (
     <div id='filterd-board-list-wrapper'>
+      <div className='address-category-container'>
+        <AddressCategory onSelect={(a1, a2) => {
+          console.log('Selected address:', a1, a2);
+          setA1(a1);
+          setA2(a2);
+        }}/>
+      </div>
       <div className="category-tabs">
             <button
               className={`tab ${selectedCategory === null ? 'active' : ''}`}
@@ -214,33 +236,36 @@ export default function BoardMain() {
                 {category}
               </button>
             ))}
-            
-          </div>
+      </div>
       <div className='filterd-board-title'>
         게시물
       </div>
-      <div className='board-write-btn' onClick={hadleGoWritePage}>
-        작성하기
-      </div>
-      <div className='sort-toggle' onClick={()=>setSortMenuOpen(!sortMenuOpen)}>
-        {selectedMenu !== '' ? selectedMenu : '최신 순'}
-      </div>
-      {
-          sortMenuOpen && (
-            <ul className='sort-dropdown-list'>
-              {
-                menuList.map((menu)=>(
-                  <li key={menu} onClick={()=>{handleChangeMenu(menu)}}>
-                    {menu}
-                  </li>
-                ))
-              }
-            </ul>
-          )
-      }
+      
       <div className='filterd-board-list-container'>
+        <div className='board-write-btn' onClick={hadleGoWritePage}>
+          작성하기
+        </div>
+        <div className='sort-container'>
+          <div className='sort-toggle' onClick={()=>setSortMenuOpen(!sortMenuOpen)}>
+            {selectedMenu !== '' ? selectedMenu : '최신 순'}
+          </div>
+          {
+              sortMenuOpen && (
+                <ul className='sort-dropdown-list'>
+                  {
+                    menuList.map((menu)=>(
+                      <li key={menu} onClick={()=>{handleChangeMenu(menu)}}>
+                        {menu}
+                      </li>
+                    ))
+                  }
+                </ul>
+              )
+          }
+
+        </div>
         
-        <div className='filterd-board-list'>
+        <div className='filtered-board-list'>
           {
             !isEmpty ? (
               viewList.map((boards, index) => <BoardItem key={index} boards={boards} />)
