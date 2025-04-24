@@ -5,11 +5,14 @@
 
   margin: 0 auto;
   padding-top: 52px;
+  min-width: 800px;
 }
 
 #mypage-main-wrapper .user-container {
   display: flex;
   height: 200px;
+
+  position: relative;
 }
 
 #mypage-main-wrapper .user-card {
@@ -25,7 +28,7 @@
   height: 164px;
   
   position: absolute;
-  top: 70px;
+  top: 20px;
   right: 100px;
 
   z-index: 80;

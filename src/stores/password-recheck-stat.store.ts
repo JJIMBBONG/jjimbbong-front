@@ -8,10 +8,16 @@ interface PasswordReCheckStore {
 }
 
 const useStore = create<PasswordReCheckStore>((set) => ({
-  isVerified: false,
+  isVerified: sessionStorage.getItem('isVerified') === 'true',
 
-  verify: () => set ({ isVerified: true }),
-  resetVerify: () => set ({ isVerified: false })
+  verify: () => {
+    sessionStorage.setItem('isVerified', 'true');
+    set ({ isVerified: true });
+  },
+  resetVerify: () => {
+    sessionStorage.removeItem('isVerified');
+    set ({ isVerified: false });
+  }
 }));
 
 export default useStore;
