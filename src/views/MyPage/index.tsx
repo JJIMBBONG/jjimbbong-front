@@ -63,6 +63,8 @@ function TableItem({ myBoards }: TableItemProps) {
   // state: my boards 정보 상태//
   const { boardNumber, boardImage, boardTitle, boardWriteDate, boardViewCount } = myBoards;
 
+  const { getMyLevel, userLevel } = useGetMyLevel();
+
   // state: Good 사용자 리스트 상태 //
   const [goods, setGoods] = useState<string[]>([]);
 
@@ -114,6 +116,7 @@ function TableItem({ myBoards }: TableItemProps) {
 
   // effect: 컴포넌트 로드 시 실행할 함수 //
   useEffect(() => {
+    getMyLevel();
     // getGoodRequest(boardNumber).then(getGoodResponse);
     // getCommentRequest(boardNumber).then(getCommentResponse); 
   }, []);
@@ -125,7 +128,7 @@ function TableItem({ myBoards }: TableItemProps) {
         <div className='board-image'>{boardImage}</div>
         <div className='board-info-container'>
           <div className='title'>{boardTitle}</div>
-          <div className='write-date'>{boardWriteDate}</div>
+          <div className='write-date'>{boardWriteDate} {userLevel}</div>
           <div className='sub-container'>
             <div className='sub-box'>
               <div className='icon view-count'/> {boardViewCount}

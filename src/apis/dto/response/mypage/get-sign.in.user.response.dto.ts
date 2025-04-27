@@ -4,6 +4,7 @@ import {ResponseDto} from 'src/apis/dto/response';
 export default interface GetSignInUserResponseDto extends ResponseDto {
   userId: string;
   userNickname: string;
+  userLevel: number;
   userPassword: string;
   name: string,
   address: string,

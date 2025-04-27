@@ -5,6 +5,7 @@ interface SignInUserStore {
   userId: string;
   userNickname: string;
   userPassword: string;
+  userLevel: number;
   name: string;
   address: string;
   detailAddress: string | null;
@@ -14,6 +15,7 @@ interface SignInUserStore {
   setUserId: (userId: string) => void;
   setUserNickname: (userNickname: string) => void;
   setUserPassword: (userPassword: string) => void;
+  setUserLevel: (userLevel: number) => void;
   setName: (name: string) => void;
   setAddress: (address: string) => void;
   setDetailAddress: (detailAddress: string | null) => void;
@@ -28,6 +30,7 @@ const useStore = create<SignInUserStore>(set => ({
   userId: '',
   userNickname: '',
   userPassword: '',
+  userLevel: 1,
   name: '',
   address: '',
   detailAddress: null,
@@ -37,6 +40,7 @@ const useStore = create<SignInUserStore>(set => ({
   setUserId: (userId: string) => set(state => ({ ...state, userId })),
   setUserNickname: (userNickname: string) => set(state => ({ ...state, userNickname })),
   setUserPassword: (userPassword: string) => set(state => ({ ...state, userPassword })),
+  setUserLevel: (userLevel: number) => set(state => ({ ...state, userLevel })),
   setName: (name: string) => set(state => ({ ...state, name })),
   setAddress: (address: string) => set(state => ({ ...state, address })),
   setDetailAddress: (detailAddress: string | null) => set(state => ({ ...state, detailAddress })),
@@ -48,6 +52,7 @@ const useStore = create<SignInUserStore>(set => ({
     userId: '',
     userNickname: '',
     userPassword: '',
+    userLevel: 1,
     name: '',
     address: '',
     detailAddress: null,

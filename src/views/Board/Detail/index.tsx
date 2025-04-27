@@ -1,7 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css';
+import { getBoardRequest } from 'src/apis';
+import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH } from 'src/constants';
+import { useCookies } from 'react-cookie';
+import { useNavigate, useParams } from 'react-router';
+import { GetBoardResponseDto } from 'src/apis/dto/response/board';
+import { ResponseDto } from 'src/apis/dto/response';
 
 export default function BoardDetail() {
+  
+  const {boardNumber} = useParams();
+  const [cookies] = useCookies();
+  const accessToken = cookies[ACCESS_TOKEN];
+
+  const [boardTitle, setBoardTitle] = useState<string>('');
+  const [userLevel, setUserLevel] = useState<number>(1);
+  const [userNickname, setUserNickname] = useState<string>('');
+
+  const navigator = useNavigate();
+
+  const getBoardResponse = (responseBody: GetBoardResponseDto | ResponseDto | null) => {
+    const message = 
+      !responseBody ? 'X' :
+      responseBody.code === 'DBE' ? 'DBE X' :
+      responseBody.code === 'AF' ? 'AF X' :
+      responseBody.code === 'NB' ? 'NB X' : 
+      responseBody.code === 'VF' ? 'VF X' : '';
+
+    const isSuccess = responseBody !== null && responseBody.code === 'SU';
+    if (!isSuccess) {
+      alert(message);
+      navigator(BOARD_ABSOLUTE_PATH);
+      return;
+    }
+
+    const { boardTitle, userLevel, userNickname } = responseBody as GetBoardResponseDto;
+    setBoardTitle(boardTitle);
+    setUserLevel(userLevel);
+    setUserNickname(userNickname);
+  };
+
+  useEffect(() => {
+    if (!boardNumber) {
+      navigator(BOARD_ABSOLUTE_PATH);
+      return;
+    }
+    getBoardRequest(Number(boardNumber), accessToken).then(getBoardResponse);
+  }, []);
   return (
     <div id='board-detail-wrapper'>
       <div className='detail-container'>
@@ -11,11 +56,11 @@ export default function BoardDetail() {
 
         <div className='post-meta'>
           <div className='left'>
-            <h1 className='post-title'>게시물 제목</h1>
+            <h1 className='post-title'>{boardTitle}</h1>
           </div>
           <div className='right'>
-            <span className='badge'>회원 등급</span>
-            <span className='nickname'>작성자 닉네임</span>
+            <span className='badge'>{userLevel}</span>
+            <span className='nickname'>{userNickname}</span>
             <button className='location-btn'>위치</button>
           </div>
         </div>
