@@ -104,7 +104,7 @@ export default function BoardUpdate() {
       boardImage: uploadedImageUrl,
     };
   
-    patchBoardRequest(requestBody, accessToken)
+    patchBoardRequest(Number(boardNumber), requestBody, accessToken)
       .then((res) => {
         if (res && res.code === 'SU') {
           alert('게시글이 수정되었습니다.');

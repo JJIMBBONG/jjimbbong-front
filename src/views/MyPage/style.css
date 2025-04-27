@@ -1,7 +1,7 @@
 #mypage-main-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 15px;
 
   margin: 0 auto;
   padding-top: 52px;
@@ -13,6 +13,8 @@
   height: 200px;
 
   position: relative;
+
+  background-color: beige;
 }
 
 #mypage-main-wrapper .user-card {
@@ -26,6 +28,8 @@
 
   width: 200px;
   height: 164px;
+
+  background-color: aliceblue;
   
   position: absolute;
   top: 20px;
@@ -230,7 +234,7 @@
   width: 150px;
   height: 150px;
 
-  background-color: antiquewhite;
+  /* background-color: antiquewhite; */
 }
 
 #mypage-main-wrapper .board-info-container {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router';
-import { BOARD_VIEW_ABSOLUTE_PATH, BOARD_WRITE_PATH } from 'src/constants';
+import { ACCESS_TOKEN, BOARD_VIEW_ABSOLUTE_PATH, BOARD_WRITE_PATH } from 'src/constants';
 import { usePagination } from 'src/hooks';
 import { FilteredBoard } from 'src/types/interfaces';
 import { Region } from 'src/types/interfaces';
@@ -12,6 +12,7 @@ import Pagination from 'src/components/Pagination';
 import { useSearchParams } from 'react-router-dom';
 import regionData from 'src/assets/data/regionCodes.json'
 import AddressCategory from 'src/components/AddressCategory';
+import { useCookies } from 'react-cookie';
 
 
 
@@ -84,6 +85,8 @@ export default function BoardMain() {
   const [searchParams] = useSearchParams();
   const navigator = useNavigate();
 
+  const [cookies] = useCookies();
+
   // 로그인 상태 //
   const [isLogin, setIsLogin] = useState(true);
   
@@ -150,7 +153,10 @@ export default function BoardMain() {
 
   // 작성하기 버튼, 로그인이 안되어있으면 로그인을 해달라는 창 꺼내기 //
   const hadleGoWritePage = () => {
-    if(!isLogin) return;
+    if(!cookies[ACCESS_TOKEN]) {
+      alert('로그인이 필요한 서비스입니다.');
+      return;
+    }
     navigator(BOARD_WRITE_PATH);
   }
 

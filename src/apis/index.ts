@@ -27,6 +27,7 @@ const SIGN_IN_URL = `${AUTH_MODULE_URL}/sign-in`;
 export const SNS_SIGN_IN_URL = (sns: 'kakao' | 'naver') => `${AUTH_MODULE_URL}/sns/${sns}`;
 
 const BOARD_MODULE_URL = `${API_DOMAIN}/api/v1/board`;
+const PATCH_BOARD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}`
 const GET_WRITE_DATE_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/write-date`;
 const GET_VIEW_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/view-count`;
 const GET_GOOD_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/good-count`;
@@ -58,8 +59,8 @@ export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessT
 };
 
 // function: 게시글 수정 API 요청 함수 //
-export const patchBoardRequest = async (requestBody: PatchBoardRequestDto, accessToken: string) => {
-    const responseBody = await axios.patch(BOARD_MODULE_URL, requestBody, bearerAuthorization(accessToken))
+export const patchBoardRequest = async (boardNumber: number | string, requestBody: PatchBoardRequestDto, accessToken: string) => {
+    const responseBody = await axios.patch(PATCH_BOARD_URL(boardNumber), requestBody, bearerAuthorization(accessToken))
         .then(responseSuccessHandler)
         .catch(responseErrorHandler);
     return responseBody;
