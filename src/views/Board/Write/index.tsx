@@ -154,11 +154,26 @@ const BoardWrite = () => {
       />
 
       <div className="editor-tools">
-        <img src={ImageIcon} alt="이미지" className="editor-icon" />
+        <label htmlFor="image-upload">
+          <img src={ImageIcon} alt="이미지" className="editor-icon" />
+        </label>
+        <input
+          id="image-upload"
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={handleImageChange}
+        />
         <img src={PaperclipIcon} alt="파일" className="editor-icon" />
         <img src={TypeIcon} alt="텍스트" className="editor-icon" />
         <img src={VideoIcon} alt="비디오" className="editor-icon" />
       </div>
+
+      {previewImage && (
+        <div className="image-preview">
+          <img src={previewImage} alt="미리보기" className="preview-thumbnail" />
+        </div>
+      )}
 
       <div className="input-label">내용을 입력해주세요.</div>
       <textarea
