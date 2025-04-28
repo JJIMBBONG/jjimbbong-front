@@ -1,15 +1,20 @@
 #mypage-main-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 15px;
 
   margin: 0 auto;
   padding-top: 52px;
+  min-width: 800px;
 }
 
 #mypage-main-wrapper .user-container {
   display: flex;
-  height: 220px;
+  height: 200px;
+
+  position: relative;
+
+  background-color: beige;
 }
 
 #mypage-main-wrapper .user-card {
@@ -22,10 +27,12 @@
   border-style: dashed;
 
   width: 200px;
-  height: 150px;
+  height: 164px;
+
+  background-color: aliceblue;
   
   position: absolute;
-  top: 100px;
+  top: 20px;
   right: 100px;
 
   z-index: 80;
@@ -42,10 +49,63 @@
 }
 
 #mypage-main-wrapper .user-box>.user-level-icon {
+  position: relative;
+  
   width: 40px;
   height: 40px;
 
+  background-size: cover;
+  background-position: 50% 50%;
+
   cursor: pointer;
+}
+
+#mypage-main-wrapper .user-box>.user-level-icon::before {
+  position: absolute;
+  top: 0;
+  left: -75%;
+  display: block;
+  content: '';
+  width: 50%;
+  height: 100%;
+  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 100%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 100%);
+  -webkit-transform: skewX(-25deg);
+  transform: skewX(-25deg);
+  opacity: 0;
+}
+
+#mypage-main-wrapper .user-box>.user-level-icon:hover::before {
+  -webkit-animation: shine 1s infinite;
+  animation: shine 1s linear infinite;
+}
+
+@-webkit-keyframes shine {
+  0% {
+    left: -75%;
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    left: 125%;
+    opacity: 0;
+  }
+}
+
+@keyframes shine {
+  0% {
+    left: -75%;
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    left: 125%;
+    opacity: 0;
+  }
 }
 
 #mypage-main-wrapper .user-level-container {
@@ -71,9 +131,14 @@
   flex: 1;
   font-size: 20px;
   font-weight: 500;
+  line-height: 125%;
   
-  text-wrap: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #mypage-main-wrapper .user-button-box {
@@ -104,11 +169,13 @@
   font-size: 16px;
   font-weight: 500;
   line-height: 175%;
+  
+  cursor: pointer;
 }
 
 #mypage-main-wrapper .user-button-box>.info-button:hover {
-  opacity: 0.85;
-  cursor: pointer;
+  background-color: #ccc;
+  transition: 0.5s;
 }
 
 #mypage-main-wrapper .my-board-container {
@@ -146,24 +213,28 @@
   display: flex;
   gap: 25px;
 
-  margin: 2px 30px;
+  margin: 2px 100px;
 
   box-sizing: border-box;
   padding: 10px;
 
   border: 1px solid grey;
   border-radius: 6px;
+
+  cursor: pointer;
 }
 
 #mypage-main-wrapper .board-box:hover {
-  cursor: pointer;
+  background-color: #ebebeb;
+  color: rgb(226, 115, 75);
+  transition: 0.5s;
 }
 
 #mypage-main-wrapper .board-box>.board-image {
   width: 150px;
   height: 150px;
 
-  background-color: antiquewhite;
+  /* background-color: antiquewhite; */
 }
 
 #mypage-main-wrapper .board-info-container {
@@ -205,7 +276,7 @@
 }
 
 #mypage-main-wrapper .sub-box>.good-count {
-  background-image: url(src/assets/images/good_count.png);
+  background-image: url(src/assets/images/good-icon-color.png);
 }
 
 #mypage-main-wrapper .sub-box>.comment-count {
@@ -215,4 +286,6 @@
 #mypage-main-wrapper .my-board-container .pagination-container {
   display: flex;
   justify-content: center;
+
+  margin-bottom: 20px;
 }

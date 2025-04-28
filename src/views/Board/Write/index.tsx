@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { postBoardRequest } from 'src/apis'; // API 호출 파일
+import { fileUploadRequest, postBoardRequest } from 'src/apis'; // API 호출 파일
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { ACCESS_TOKEN } from 'src/constants';
@@ -10,6 +10,8 @@ import ImageIcon from 'src/assets/images/image.png';
 import PaperclipIcon from 'src/assets/images/Paperclip.png';
 import TypeIcon from 'src/assets/images/Type.png';
 import VideoIcon from 'src/assets/images/Video.png';
+
+import RegionSelectModal from 'src/components/RegionSelectModal';
 
 const categories = ['카테고리 1', '카테고리 2', '카테고리 3', '카테고리 4', '카테고리 5'];
 
@@ -26,19 +28,10 @@ const BoardWrite = () => {
     boardImage: '',
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [areaSelected, setAreaSelected] = useState('');
   const [districtSelected, setDistrictSelected] = useState('');
   const [categorySelected, setCategorySelected] = useState('');
-
-  const handleAreaSelect = () => {
-    setAreaSelected('부산광역시');
-    setDistrictSelected('부산진구');
-    setForm((prev) => ({
-      ...prev,
-      boardAddressCategory: '부산광역시',
-      boardAddress: '부산진구',
-    }));
-  };
 
   const handleCategoryClick = (category: string) => {
     setCategorySelected(category);
@@ -50,6 +43,16 @@ const BoardWrite = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleRegionSelect = (region1: string, region2: string) => {
+    setAreaSelected(region1);
+    setDistrictSelected(region2);
+    setForm((prev) => ({
+      ...prev,
+      boardAddressCategory: region1,
+      boardAddress: region2,
+    }));
+  };
+
   const handleSubmit = async () => {
     const accessToken = cookies[ACCESS_TOKEN];
     if (!accessToken) {
@@ -57,24 +60,35 @@ const BoardWrite = () => {
       navigate('/auth');
       return;
     }
-
+  
     if (!areaSelected || !districtSelected) {
       alert('지역을 선택해주세요.');
       return;
     }
-
+  
     if (!categorySelected) {
       alert('카테고리를 선택해주세요.');
       return;
     }
-
+  
     if (!form.boardContent.trim()) {
       alert('내용을 입력해주세요.');
       return;
     }
-
+  
     try {
-      await postBoardRequest(form, accessToken);
+      let imageUrl = '';
+      if (imageFile) {
+        const uploaded = await uploadImage();
+        if (uploaded) imageUrl = uploaded;
+      }
+  
+      const requestData = {
+        ...form,
+        boardImage: imageUrl || '', // 업로드 성공 시 URL, 실패 시 빈 문자열
+      };
+  
+      await postBoardRequest(requestData, accessToken);
       alert('게시글이 작성되었습니다!');
       navigate('/board');
     } catch (error) {
@@ -88,9 +102,30 @@ const BoardWrite = () => {
     }
   };
 
+  const [previewImage, setPreviewImage] = useState<string>(''); // 이미지 미리보기 URL
+  const [imageFile, setImageFile] = useState<File | null>(null); // 실제 업로드할 파일
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    setImageFile(file);
+    const previewUrl = URL.createObjectURL(file);
+    setPreviewImage(previewUrl);
+  };
+
+  const uploadImage = async () => {
+    if (!imageFile) return null;
+    const formData = new FormData();
+    formData.append('file', imageFile);
+  
+    const uploadedImageUrl = await fileUploadRequest(formData);
+    return uploadedImageUrl;
+  };
+
   return (
     <div className="board-write-container">
-      <button className="select-area-button" onClick={handleAreaSelect}>
+      <button className="select-area-button" onClick={() => setIsModalOpen(true)}>
         지역을 선택해주세요
       </button>
 
@@ -102,7 +137,7 @@ const BoardWrite = () => {
         {categories.map((category) => (
           <button
             key={category}
-            className={`category-button ${categorySelected === category ? 'selected' : ''}`}
+            className={`category-button ${categorySelected === category ? 'selected' : 'unselected'}`}
             onClick={() => handleCategoryClick(category)}
           >
             {category}
@@ -137,6 +172,13 @@ const BoardWrite = () => {
         <button className="cancel-button" onClick={handleCancel}>취소</button>
         <button className="submit-button" onClick={handleSubmit}>작성 완료</button>
       </div>
+
+      {isModalOpen && (
+        <RegionSelectModal
+          onClose={() => setIsModalOpen(false)}
+          onSelect={handleRegionSelect}
+        />
+      )}
     </div>
   );
 };

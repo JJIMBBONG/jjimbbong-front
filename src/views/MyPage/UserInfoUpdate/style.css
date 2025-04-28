@@ -116,6 +116,11 @@
   cursor: pointer;
 }
 
+#user-update-container .user-update-row .update-area>.button:hover {
+  background-color: rgba(0, 100, 255, 0.8);
+  transition: 0.5s;
+}
+
 #user-update-container .user-update-row .update-area>.button.disable {
   background-color: grey;
 
@@ -125,10 +130,6 @@
 
 #user-update-container .user-update-row .update-area>.button.disable:hover {
   opacity: 1;
-}
-
-#user-update-container .user-update-row .update-area>.button:hover {
-  opacity: 0.85;
 }
 
 #user-update-container .user-update-row .message {
@@ -175,5 +176,6 @@
 }
 
 #user-update-container .update-button-box>.button:hover {
-  opacity: 0.85;
+  background-color: #ccc;
+  transition: 0.5s;
 }

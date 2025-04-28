@@ -1,7 +1,8 @@
 import { ResponseDto } from './dto/response';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import GetRecommandBoardResponseDto from "./dto/response/board/get-recommand-board.response.dto";
-import { PostBoardRequestDto } from './dto/request/board';
+import { PatchBoardRequestDto, PostBoardRequestDto } from './dto/request/board';
+import GetBoardResponseDto from './dto/response/board/get-board-response.dto';
 
 import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSearchRequestDto, NicknameCheckRequestDto, PasswordResetRequestDto, SignInRequestDto, SignUpRequestDto } from "./dto/request/auth";
 import { SignInResponseDto } from "./dto/response/auth";
@@ -26,6 +27,7 @@ const SIGN_IN_URL = `${AUTH_MODULE_URL}/sign-in`;
 export const SNS_SIGN_IN_URL = (sns: 'kakao' | 'naver') => `${AUTH_MODULE_URL}/sns/${sns}`;
 
 const BOARD_MODULE_URL = `${API_DOMAIN}/api/v1/board`;
+const PATCH_BOARD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}`
 const GET_WRITE_DATE_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/write-date`;
 const GET_VIEW_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/view-count`;
 const GET_GOOD_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/good-count`;
@@ -52,6 +54,32 @@ const multipartFormData = { headers: { 'Content-Type': 'multipart/form-data' } }
 export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessToken: string) => {
     const responseBody = await axios.post(POST_BOARD_URL, requestBody, bearerAuthorization(accessToken))
         .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: 게시글 수정 API 요청 함수 //
+export const patchBoardRequest = async (boardNumber: number | string, requestBody: PatchBoardRequestDto, accessToken: string) => {
+    const responseBody = await axios.patch(PATCH_BOARD_URL(boardNumber), requestBody, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: 게시글 삭제 API 요청 함수 //
+export const deleteBoardRequest = async (boardNumber: number, accessToken: string) => {
+    const url = `${BOARD_MODULE_URL}/${boardNumber}`;
+    const responseBody = await axios.delete(url, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: 게시글 상세 조회 API 요청 함수
+export const getBoardRequest = async (boardNumber: number, accessToken: string) => {
+    const url = `${BOARD_MODULE_URL}/${boardNumber}`;
+    const responseBody = await axios.get(url, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler<GetBoardResponseDto>)
         .catch(responseErrorHandler);
     return responseBody;
 };

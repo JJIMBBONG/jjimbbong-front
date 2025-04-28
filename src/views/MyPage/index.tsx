@@ -5,14 +5,21 @@ import { createPortal } from 'react-dom';
 import Modal from 'src/components/Modal';
 import MyPageUserInfo from './UserInfo';
 import MyPageUserInfoUpdate from './UserInfoUpdate';
-import { getMyLevelRequest, getMyPageBoardRequest } from 'src/apis';
-import { ACCESS_TOKEN, BOARD_VIEW_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH } from 'src/constants';
+import { getMyPageBoardRequest } from 'src/apis';
+import { ACCESS_TOKEN, BOARD_VIEW_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH } from 'src/constants';
 import Pagination from 'src/components/Pagination';
-import { MyPageBoard } from 'src/types/interfaces';
-import { useSignInUserStore } from 'src/stores';
+import { Comment, MyPageBoard } from 'src/types/interfaces';
+import { GetCommentResponseDto, GetGoodResponseDto } from 'src/apis/dto/response/board';
+import { GetMyPageBoardResponseDto } from 'src/apis/dto/response/mypage';
+import { usePasswordReCheckStore, useSignInUserStore } from 'src/stores';
 import { useMyPageInfo, usePagination} from 'src/hooks';
-import { GetMyLevelResponseDto, GetMyPageBoardResponseDto } from 'src/apis/dto/response/mypage';
 import { ResponseDto } from 'src/apis/dto/response';
+import LevelOneIcon from 'src/assets/images/star-LV1-icon.png';
+import LevelTwoIcon from 'src/assets/images/star-LV2-icon.png';
+import LevelThreeIcon from 'src/assets/images/star-LV3-icon.png';
+import LevelFourIcon from 'src/assets/images/star-LV4-icon.png';
+import LevelFiveIcon from 'src/assets/images/star-LV5-icon.png';
+import useGetMyLevel from 'src/hooks/get-my-level.hook';
 
 import './style.css';
 
@@ -22,36 +29,16 @@ function MyLevel() {
   // state: cookie 상태 //
   const [cookies] = useCookies();
 
-  // state: 로그인 유저 등급 상태 //
-  const [userLevel, setUserLevel] = useState<number>(1);
-  // state: 로그인 유저 점수 상태 //
-  const [userScore, setUserScore] = useState<number>(0);
+  // state: 사용자 등급 및 점수 상태 //
+  const { getMyLevel, userLevel, userScore } = useGetMyLevel();
 
   // variable: accessToken //
   const accessToken = cookies[ACCESS_TOKEN];
 
-  // function: get my level response 처리 함수 //
-  const getMyLevelResponse = (responseBody: GetMyLevelResponseDto | ResponseDto | null) => {
-    const message =
-      !responseBody ? '서버에 문제가 있습니다.' :
-      responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' :
-      responseBody.code === 'AF' ? '인증에 실패했습니다.' : '';
-    
-    const isSuccess = responseBody !== null && responseBody.code === 'SU';
-    if (!isSuccess) {
-      alert(message);
-      return;
-    }
-
-    const { userLevel, userScore } = responseBody as GetMyLevelResponseDto;
-    setUserLevel(userLevel);
-    setUserScore(userScore);
-  };
-
   // effect: //
   useEffect(() => {
     if (!accessToken) return;
-    getMyLevelRequest(accessToken).then(getMyLevelResponse);
+    getMyLevel();
   }, []);
 
   // render: 사용자 등급 모달 컴포넌트 렌더링 //
@@ -76,8 +63,50 @@ function TableItem({ myBoards }: TableItemProps) {
   // state: my boards 정보 상태//
   const { boardNumber, boardImage, boardTitle, boardWriteDate, boardViewCount } = myBoards;
 
+  const { getMyLevel, userLevel } = useGetMyLevel();
+
+  // state: Good 사용자 리스트 상태 //
+  const [goods, setGoods] = useState<string[]>([]);
+
+  // state: comment 리스트 상태 //
+  const [comments, setComments] = useState<Comment[]>([]);
+
   // function: 네비게이터 함수 //
   const navigator = useNavigate();
+
+  // function: get good response body 처리 함수 //
+  const getGoodResponse = (responseBody: GetGoodResponseDto | ResponseDto | null) => {
+    const message = 
+      !responseBody ? '서버에 문제가 있습니다.' :
+      responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' : 
+      responseBody.code === 'NB' ? '존재하지 않는 게시글입니다.' : '';
+
+    const isSuccess = responseBody !== null && responseBody.code === 'SU';
+    if (!isSuccess) {
+      alert(message);
+      return;
+    }
+
+    const { goods } = responseBody as GetGoodResponseDto;
+    setGoods(goods);
+  };
+
+  // function: get comment response body 처리 함수 //
+  const getCommentResponse = (responseBody: GetCommentResponseDto | ResponseDto | null) => {
+    const message = 
+      !responseBody ? '서버에 문제가 있습니다.' : 
+      responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' : 
+      responseBody.code === 'NB' ? '존재하지 않는 게시글입니다.' : '';
+
+    const isSuccess = responseBody !== null && responseBody.code === 'SU';
+    if (!isSuccess) {
+      alert(message);
+      return;
+    }
+
+    const { comments } = responseBody as GetCommentResponseDto;
+    setComments(comments);
+  };
 
   // event handler: 레코드 클릭 이벤트 처리 //
   const onClick = () => {
@@ -85,22 +114,31 @@ function TableItem({ myBoards }: TableItemProps) {
     navigator(BOARD_VIEW_ABSOLUTE_PATH(boardNumber));
   };
 
+  // effect: 컴포넌트 로드 시 실행할 함수 //
+  useEffect(() => {
+    getMyLevel();
+    // getGoodRequest(boardNumber).then(getGoodResponse);
+    // getCommentRequest(boardNumber).then(getCommentResponse); 
+  }, []);
+
   // render: 마이페이지 테이블 레코드 컴포넌트 렌더링 //
   return (
-    <div className='board-box' onClick={onClick}>
-      <div className='board-image'>{boardImage}</div>
-      <div className='board-info-container'>
-        <div className='title'>{boardTitle}</div>
-        <div className='write-date'>{boardWriteDate}</div>
-        <div className='sub-container'>
-          <div className='sub-box'>
-            <div className='icon view-count'/> {boardViewCount}
-          </div>
-          <div className='sub-box'>
-            <div className='icon good-count'/> 0
-          </div>
-          <div className='sub-box'>
-            <div className='icon comment-count'/> 0
+    <div>
+      <div className='board-box' onClick={onClick}>
+        <div className='board-image'>{boardImage}</div>
+        <div className='board-info-container'>
+          <div className='title'>{boardTitle}</div>
+          <div className='write-date'>{boardWriteDate} {userLevel}</div>
+          <div className='sub-container'>
+            <div className='sub-box'>
+              <div className='icon view-count'/> {boardViewCount}
+            </div>
+            <div className='sub-box'>
+              <div className='icon good-count'/> {goods.length}
+            </div>
+            <div className='sub-box'>
+              <div className='icon comment-count'/> {comments.length}
+            </div>
           </div>
         </div>
       </div>
@@ -112,7 +150,10 @@ function TableItem({ myBoards }: TableItemProps) {
 export default function MyPageMain() {
 
   // state: 경로 상태 //
-  const pathname = useLocation();
+  const {pathname} = useLocation();
+  
+  // state: 로그인 사용자 비밀번호 재확인 상태 - 마이페이지로 이동시 //
+  const { isVerified } = usePasswordReCheckStore();
 
   // state: cookie 상태 //
   const [cookies] = useCookies();
@@ -127,9 +168,7 @@ export default function MyPageMain() {
   const { userNickname } = useSignInUserStore();
 
   // state: 로그인 유저 등급 상태 //
-  const [userLevel, setUserLevel] = useState<number>(1);
-  // state: 로그인 유저 점수 상태 //
-  const [userScore, setUserScore] = useState<number>(0);
+  const { getMyLevel, userLevel } = useGetMyLevel();
 
   // state: 사용자 등급 모달 오픈 상태 //
   const [isLevelOpen, setLevelOpen] = useState<boolean>(false);
@@ -142,36 +181,17 @@ export default function MyPageMain() {
   const accessToken = cookies[ACCESS_TOKEN];
 
   // variable: 사용자 등급 이미지 스타일 //
-  const userLevelStyle = { backgroundColor: `${
-    userLevel === 5 ? 'red' :
-    userLevel === 4 ? 'orange' : 
-    userLevel === 3 ? 'yellow' :
-    userLevel === 2 ? 'green' : 
-    userLevel === 1 ? 'blue' : 'purple'}` };
+  const userLevelStyle = { backgroundImage: `url(${
+    userLevel === 5 ? LevelFiveIcon : 
+    userLevel === 4 ? LevelFourIcon : 
+    userLevel === 3 ? LevelThreeIcon : 
+    userLevel === 2 ? LevelTwoIcon : LevelOneIcon })` };
 
   // function: 네비게이터 함수 //
   const navigator = useNavigate();
 
   // function: 로그인 사용자 등급 갱신 정보 //
   const updateMyPageInfo = useMyPageInfo();
-
-  // function: get my level response 처리 함수 //
-  const getMyLevelResponse = (responseBody: GetMyLevelResponseDto | ResponseDto | null) => {
-    const message =
-      !responseBody ? '서버에 문제가 있습니다.' :
-      responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' :
-      responseBody.code === 'AF' ? '인증에 실패했습니다.' : '';
-    
-    const isSuccess = responseBody !== null && responseBody.code === 'SU';
-    if (!isSuccess) {
-      alert(message);
-      return;
-    }
-
-    const { userLevel } = responseBody as GetMyLevelResponseDto;
-    setUserLevel(userLevel);
-    setUserScore(userScore);
-  };
 
   // function: get my page board response 처리 함수 //
   const getMyPageBoardResponse = (responseBody: GetMyPageBoardResponseDto | ResponseDto | null) => {
@@ -211,10 +231,15 @@ export default function MyPageMain() {
     if (!accessToken) navigator(MAIN_ABSOLUTE_PATH);
   }, [accessToken, pathname]);
 
+  // effect: 비밀번호 재확인 인증이 없을 시 실행할 함수 //
+  useEffect(() => {
+    if (!isVerified) navigator(MY_PAGE_ABSOLUTE_PATH, { replace: true });
+  }, [isVerified, navigator]);
+
   // effect: 컴포넌트 로드시 실행할 함수 //
   useEffect(() => {
     updateMyPageInfo();
-    getMyLevelRequest(accessToken).then(getMyLevelResponse);
+    getMyLevel();
     getMyPageBoardRequest(accessToken).then(getMyPageBoardResponse);
   }, []);
 
