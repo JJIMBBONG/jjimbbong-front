@@ -76,9 +76,10 @@ export const deleteBoardRequest = async (boardNumber: number, accessToken: strin
 };
 
 // function: 게시글 상세 조회 API 요청 함수
-export const getBoardRequest = async (boardNumber: number, accessToken: string) => {
+export const getBoardRequest = async (boardNumber: number, accessToken?: string) => {
     const url = `${BOARD_MODULE_URL}/${boardNumber}`;
-    const responseBody = await axios.get(url, bearerAuthorization(accessToken))
+    const config = accessToken ? bearerAuthorization(accessToken) : {}; // accessToken이 있을 경우만 Authorization 헤더 포함
+    const responseBody = await axios.get(url, config)
         .then(responseSuccessHandler<GetBoardResponseDto>)
         .catch(responseErrorHandler);
     return responseBody;

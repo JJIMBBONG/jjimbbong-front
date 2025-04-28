@@ -70,8 +70,8 @@ export default function BoardUpdate() {
 
   useEffect(() => {
     if (!accessToken || !boardNumber) return;
-    getBoardRequest(Number(boardNumber), accessToken).then(getBoardResponseHandler);
-  }, [boardNumber, accessToken]);
+    getBoardRequest(Number(boardNumber)).then(getBoardResponseHandler);
+  }, [boardNumber]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

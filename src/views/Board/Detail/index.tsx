@@ -45,7 +45,7 @@ export default function BoardDetail() {
       navigator(BOARD_ABSOLUTE_PATH);
       return;
     }
-    getBoardRequest(Number(boardNumber), accessToken).then(getBoardResponse);
+    getBoardRequest(Number(boardNumber)).then(getBoardResponse);
   }, []);
   return (
     <div id='board-detail-wrapper'>
