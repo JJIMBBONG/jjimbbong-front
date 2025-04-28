@@ -86,9 +86,6 @@ export default function BoardMain() {
   const navigator = useNavigate();
 
   const [cookies] = useCookies();
-
-  // 로그인 상태 //
-  const [isLogin, setIsLogin] = useState(true);
   
   const menuList = ['최신 순', '조회수 순', '좋아요 순'];
   const categoryList = ['맛집', '축제', '팝업 스토어', '교통'];
@@ -126,6 +123,7 @@ export default function BoardMain() {
   };
 
   const areaCodeMap: Record<number, string> = {
+    0: "전체",
     1: "서울특별시",
     2: "인천광역시",
     3: "대전광역시",
@@ -221,7 +219,7 @@ export default function BoardMain() {
     <div id='filterd-board-list-wrapper'>
       <div className='address-category-container'>
         <AddressCategory onSelect={(a1, a2) => {
-          console.log('Selected address:', a1, a2);
+          //console.log('Selected address:', a1, a2);
           setA1(a1);
           setA2(a2);
         }}/>
