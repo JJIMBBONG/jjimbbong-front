@@ -77,18 +77,19 @@ const BoardWrite = () => {
     }
   
     try {
-      let imageUrl = '';
+      //여기: 먼저 이미지 업로드 진행
+      let boardImageUrl = '';
       if (imageFile) {
-        const uploaded = await uploadImage();
-        if (uploaded) imageUrl = uploaded;
+        boardImageUrl = await uploadImage() || '';
       }
   
-      const requestData = {
+      //이후에 게시글 등록
+      const requestBody = {
         ...form,
-        boardImage: imageUrl || '', // 업로드 성공 시 URL, 실패 시 빈 문자열
+        boardImage: boardImageUrl, // 새로 받은 URL로 교체
       };
   
-      await postBoardRequest(requestData, accessToken);
+      await postBoardRequest(requestBody, accessToken);
       alert('게시글이 작성되었습니다!');
       navigate('/board');
     } catch (error) {
@@ -100,7 +101,7 @@ const BoardWrite = () => {
     if (window.confirm('작성을 취소하시겠습니까?')) {
       navigate('/board');
     }
-  };
+  }
 
   const [previewImage, setPreviewImage] = useState<string>(''); // 이미지 미리보기 URL
   const [imageFile, setImageFile] = useState<File | null>(null); // 실제 업로드할 파일
