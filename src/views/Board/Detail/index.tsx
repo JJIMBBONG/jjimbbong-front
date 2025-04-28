@@ -65,7 +65,7 @@ export default function BoardDetail() {
       navigate(BOARD_ABSOLUTE_PATH);
       return;
     }
-    getBoardRequest(Number(boardNumber), accessToken).then(getBoardResponse);
+    getBoardRequest(Number(boardNumber)).then(getBoardResponse);
   }, []);
 
   return (

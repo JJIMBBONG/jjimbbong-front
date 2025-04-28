@@ -4,7 +4,7 @@
   gap: 15px;
 
   margin: 0 auto;
-  padding-top: 52px;
+  padding-top: 60px;
   min-width: 800px;
 }
 
@@ -14,7 +14,7 @@
 
   position: relative;
 
-  background-color: beige;
+  background-color: rgba(226, 115, 76);
 }
 
 #mypage-main-wrapper .user-card {
@@ -22,7 +22,7 @@
   flex-direction: column;
 
   box-sizing: border-box;
-  border: 2px rgba(255, 70, 0, 0.6);
+  border: 2px rgba(226, 115, 76);
   border-radius: 10px;
   border-style: dashed;
 
@@ -193,7 +193,7 @@
 
 #mypage-main-wrapper .my-board-title>.divider {
   margin-top: 10px;
-  border-top: 1px solid;
+  border-top: 2px solid #ccc;
   width: 100%;
 }
 
@@ -213,7 +213,7 @@
   display: flex;
   gap: 25px;
 
-  margin: 2px 100px;
+  margin: 0 100px;
 
   box-sizing: border-box;
   padding: 10px;
@@ -234,18 +234,22 @@
   width: 150px;
   height: 150px;
 
-  /* background-color: antiquewhite; */
+  background-color: antiquewhite;
 }
 
 #mypage-main-wrapper .board-info-container {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  justify-content: space-around;
 }
 
 #mypage-main-wrapper .board-info-container>.title {
   font-size: 20px;
   font-weight: 700;
+}
+
+#mypage-main-wrapper .board-info-container>.title:hover {
+  text-decoration: underline 2px;
 }
 
 #mypage-main-wrapper .board-info-container>.write-date {
