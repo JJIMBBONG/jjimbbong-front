@@ -1,7 +1,7 @@
 import { ResponseDto } from './dto/response';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import GetRecommandBoardResponseDto from "./dto/response/board/get-recommand-board.response.dto";
-import { PatchBoardRequestDto, PostBoardRequestDto } from './dto/request/board';
+import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from './dto/request/board';
 import GetBoardResponseDto from './dto/response/board/get-board-response.dto';
 
 import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSearchRequestDto, NicknameCheckRequestDto, PasswordResetRequestDto, SignInRequestDto, SignUpRequestDto } from "./dto/request/auth";
@@ -10,6 +10,7 @@ import { GetMyLevelResponseDto, GetMyPageBoardResponseDto } from './dto/response
 import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto'
 import { PasswordReCheckRequestDto, PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from './dto/request/mypage';
 import GetFilteredBoardResponseDto from './dto/response/board/get-filtered-board.response';
+import { GetCommentResponseDto } from './dto/response/board';
 
 
 // variable: URL 상수 //
@@ -32,6 +33,8 @@ const GET_WRITE_DATE_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/write-date`;
 const GET_VIEW_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/view-count`;
 const GET_GOOD_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/good-count`;
 const POST_BOARD_URL = `${BOARD_MODULE_URL}`;
+const POST_COMMENT_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment`;
+const GET_COMMENT_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment`;
 
 const MAIN_MODULE_URL = `${API_DOMAIN}/api/v1/main`;
 const GET_RECOMMAND_BOARD_URL = `${MAIN_MODULE_URL}`;
@@ -85,6 +88,22 @@ export const getBoardRequest = async (boardNumber: number, accessToken?: string)
     return responseBody;
 };
 
+// function: post comment API 요청 함수 //
+export const postCommentRequest = async (requestBody: PostCommentRequestDto, boardNumber: number | string, accessToken: string) => {
+    const responseBody = await axios.post(POST_COMMENT_URL(boardNumber), requestBody, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: get comment API 요청 함수 //
+export const getCommentRequest = async (boardNumber: number | string) => {
+    const responseBody = await axios.get(GET_COMMENT_URL(boardNumber))
+        .then(responseSuccessHandler<GetCommentResponseDto>)
+        .catch(responseErrorHandler)
+    return responseBody;
+};
+
 
 // function: Authorization Bearer 헤더 //
 const bearerAuthorization = (accessToken: string) => ({ headers: { 'Authorization': `Bearer ${accessToken}` } })
@@ -102,8 +121,6 @@ const responseErrorHandler = (error: AxiosError<ResponseDto>) => {
     const { data } = error.response;
     return data;
 };
-
-
 
 // function: get filterd board API 요청 함수 //
 export const getWriteDateFilterdBoardRequest = async () => {

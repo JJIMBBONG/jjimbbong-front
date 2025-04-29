@@ -1,7 +1,8 @@
 export default interface Comment {
   commentNumber: number;
-  commentWriterNickname: string;
-  commentWriterLevel : number;
+  commentWriterId : string;
+  userNickname: string;
+  userLevel : number;
   commentWriteDate: string;
   commentContent: string;
 }
