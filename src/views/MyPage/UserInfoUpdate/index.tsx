@@ -239,7 +239,9 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   return (
     <div id='user-update-container'>
       <div className='update-image-box'>
-        <div className='update-image' style={profileImageStyle} onClick={onProfileClickHandler}></div>
+        <div className='update-image' style={profileImageStyle} onClick={onProfileClickHandler}>
+          <div className='update-image-message'>이미지를 클릭하면 수정</div>
+        </div>
         <input ref={fileRef} style={{ display: 'none' }} type='file' accept='image/png, image/jpeg' onChange={onFileChangeHandler} />
       </div>
       <div className='user-update-box'>

@@ -259,13 +259,15 @@
 
 #mypage-main-wrapper .board-box .sub-container {
   display: flex;
-  gap: 20px;
+  gap: 8px;
 }
 
 #mypage-main-wrapper .board-box .sub-container>.sub-box {
   display: flex;
-  justify-content: center;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
+
+  width: 80px;
 }
 
 #mypage-main-wrapper .sub-box>.icon{
