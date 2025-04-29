@@ -97,34 +97,40 @@
   background-image: url(src/assets/images/hate-empty.png);
 }
 
-#board-detail-wrapper .comment-input-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#board-detail-wrapper .comment-input-section .comment-box {
-  display: flex;
-  gap: 20px;
-}
-
-#board-detail-wrapper .comment-input-section textarea {
-  flex: 1;
-
+.comment-input-section textarea {
+  width: 100%;
   height: 80px;
-
-  outline: none;
-  box-sizing: border-box;
-  border: 1px solid black;
-  border-radius: 6px;
+  margin-top: 10px;
+  padding: 10px;
 }
 
-#board-detail-wrapper .comment-btn {
-  cursor: pointer;
+.comment-btn {
+  margin-top: 10px;
 }
 
-#board-detail-wrapper .comment-bot {
+.comment-bot {
   border: 1px solid #ccc;
   padding: 10px;
   margin-top: 10px;
+}
+
+.comment-body{
+  border: 1px black solid;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.comment-info{
+  width: 500px;
+  display: flex;
+  border: 1px black solid;
+}
+
+.comment-info-detail{
+  display: flex;
+}
+
+.comment-delete-btn{
+  display: inline-block;
 }
