@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import './style.css';
-import { getBoardRequest, getCommentRequest, postCommentRequest } from 'src/apis';
-import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH } from 'src/constants';
+import { deleteCommentRequest, getBoardRequest, getCommentRequest, postCommentRequest } from 'src/apis';
+import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, BOARD_VIEW_ABSOLUTE_PATH } from 'src/constants';
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router';
 import { GetBoardResponseDto, GetCommentResponseDto } from 'src/apis/dto/response/board';
@@ -12,16 +12,43 @@ import { PostCommentRequestDto } from 'src/apis/dto/request/board';
 
 interface CommentItemProps {
   comments : Comment;
+  onCommentDeleted : () => void;
 }
 
 // component : 댓글 컴포넌트 //
 
-function CommentItem({comments}:CommentItemProps){
+function CommentItem({comments, onCommentDeleted}:CommentItemProps){
 
+  const { boardNumber } = useParams();
   const {commentNumber, commentContent, commentWriterId, userLevel, userNickname, commentWriteDate} = comments;
   const [cookies] = useCookies();
   const accessToken = cookies[ACCESS_TOKEN];
   const { userId } = useSignInUserStore();
+
+  const onDeleteCommentClickHandler = (commentNumber : number) => {
+    if(!accessToken) return;
+    deleteCommentRequest(commentNumber, accessToken, Number(boardNumber)).then(deleteCommentResponse)
+  }
+
+  // function: delete comment response 처리 함수 //
+  const deleteCommentResponse = (responseBody: ResponseDto | null) => {
+    const message =
+      !responseBody ? 'X' :
+      responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' :
+      responseBody.code === 'AF' ? '인증에 실패했습니다.' : 
+      responseBody.code === 'NC' ? '존재하지 않는 댓글입니다.' : 
+      responseBody.code === 'NP' ? '권한이 없습니다.' : '' ;
+        
+    const isSuccess = responseBody !== null && responseBody.code === 'SU';
+    if (!isSuccess) {
+      alert(message);
+      return;
+    }
+    alert('삭제에 성공했습니다.');
+    // 댓글 삭제 시 바로 갱신
+    onCommentDeleted();
+  };
+
 
   return (
     <div className='comment-body'>
@@ -33,7 +60,7 @@ function CommentItem({comments}:CommentItemProps){
             <div className='comment-write-date'>{commentWriteDate}</div>
           </div>
           {
-            userId === commentWriterId && <div className='comment-delete-btn'>삭제</div>
+            userId === commentWriterId && <div className='comment-delete-btn' onClick={()=>{onDeleteCommentClickHandler(commentNumber)}}>삭제</div>
           }
         </div>
         <div className='comment-content'>{commentContent}</div>
@@ -131,11 +158,12 @@ export default function BoardDetail() {
         alert(message);
         return;
       }
-  
+
       setCommentContent('');
       if (!boardNumber) return;
       getCommentRequest(Number(boardNumber)).then(getCommentResponse);
     };
+
 
     // event handler: 댓글 변경 이벤트 처리 //
     const onCommentChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -149,7 +177,7 @@ export default function BoardDetail() {
       alert('로그인이 필요한 서비스입니다.');
       return;
     }
-    
+
     if(!accessToken || !boardNumber || !commentContent.trim()) return;
 
     const requestBody: PostCommentRequestDto = {
@@ -158,8 +186,13 @@ export default function BoardDetail() {
     postCommentRequest(requestBody, boardNumber, accessToken).then(postCommentResponse);
     //console.log('전송할 댓글 내용:', commentContent);
   };
-  
 
+  // event : 댓글 삭제 시 prop 값으로 넘겨 이벤트 처리 //
+  const refreshComments = () => {
+    if (!boardNumber) return;
+    getCommentRequest(Number(boardNumber)).then(getCommentResponse);
+  };
+  
   useEffect(() => {
     if (!boardNumber) {
       navigate(BOARD_ABSOLUTE_PATH);
@@ -168,6 +201,7 @@ export default function BoardDetail() {
     getBoardRequest(Number(boardNumber)).then(getBoardResponse);
     getCommentRequest(Number(boardNumber)).then(getCommentResponse);
   }, []);
+
 
   return (
     <div id="board-detail-wrapper">
@@ -210,7 +244,7 @@ export default function BoardDetail() {
 
         <div className="comment-list">
         {comments.map((commentItem, index) => 
-            <CommentItem key={index} comments={commentItem} />
+            <CommentItem key={index} comments={commentItem} onCommentDeleted={refreshComments}/>
         )}
         </div>
 
