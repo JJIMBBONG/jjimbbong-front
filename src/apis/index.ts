@@ -4,7 +4,7 @@ import GetRecommandBoardResponseDto from "./dto/response/board/get-recommand-boa
 import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from './dto/request/board';
 import GetBoardResponseDto from './dto/response/board/get-board-response.dto';
 
-import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSearchRequestDto, NicknameCheckRequestDto, PasswordResetRequestDto, SignInRequestDto, SignUpRequestDto } from "./dto/request/auth";
+import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSearchRequestDto, NicknameCheckRequestDto, PasswordResetRequestDto, SignInRequestDto, SignUpRequestDto, SnsSignUpRequestDto } from "./dto/request/auth";
 import { SignInResponseDto } from "./dto/response/auth";
 import { GetMyLevelResponseDto, GetMyPageBoardResponseDto } from './dto/response/mypage';
 import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto'
@@ -27,6 +27,7 @@ const NICKNAME_CHECK_URL = `${AUTH_MODULE_URL}/nickname-check`;
 const PASSWORD_RESET_URL = `${AUTH_MODULE_URL}/password-reset`;
 const SIGN_UP_URL = `${AUTH_MODULE_URL}/sign-up`;
 const SIGN_IN_URL = `${AUTH_MODULE_URL}/sign-in`;
+const SNS_SIGN_UP_URL = `${AUTH_MODULE_URL}/sns-sign-up`;
 export const SNS_SIGN_IN_URL = (sns: 'kakao' | 'naver') => `${AUTH_MODULE_URL}/sns/${sns}`;
 
 const BOARD_MODULE_URL = `${API_DOMAIN}/api/v1/board`;
@@ -37,10 +38,15 @@ const GET_GOOD_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/good-count`;
 const POST_BOARD_URL = `${BOARD_MODULE_URL}`;
 const POST_COMMENT_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment`;
 const GET_COMMENT_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment`;
+
+const DELETE_COMMENT_URL = (commentNumber : number | string, boardNumber : number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment/${commentNumber}`;
+
 const PUT_GOOD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/good`;
 const GET_GOOD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/good`;
 const PUT_HATE_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/hate`;
 const GET_HATE_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/hate`;
+const PUT_BOARD_VIEW_COUNT_URL = (boardNumber : number | string) => `${BOARD_MODULE_URL}/view-count/${boardNumber}`;
+
 
 const MAIN_MODULE_URL = `${API_DOMAIN}/api/v1/main`;
 const GET_RECOMMAND_BOARD_URL = `${MAIN_MODULE_URL}`;
@@ -53,6 +59,7 @@ const GET_MY_LEVEL_URL = `${MY_PAGE_MODULE_URL}/my-main/level`;
 const GET_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main/user-info`;
 const PATCH_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main/user-info`;
 const POST_NICKNAME_CHECK_URL = `${MY_PAGE_MODULE_URL}/my-main/nickname-check`;
+
 
 const FILE_UPLOAD_URL = `${API_DOMAIN}/file/upload`;
 
@@ -93,6 +100,14 @@ export const getBoardRequest = async (boardNumber: number | string, accessToken?
         .catch(responseErrorHandler);
     return responseBody;
 };
+
+// function : delete comment API 요청 함수
+export const deleteCommentRequest = async (commentNumber : number, accessToken : string, boardNumber : number) =>{
+    const responseBody = await axios.delete(DELETE_COMMENT_URL(commentNumber, boardNumber), bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+}
 
 // function: post comment API 요청 함수 //
 export const postCommentRequest = async (requestBody: PostCommentRequestDto, boardNumber: number | string, accessToken: string) => {
@@ -158,6 +173,15 @@ export const getRecommandBoardRequest = async () => {
         .catch(responseErrorHandler)
     return responseBody;
 };
+
+// function : put view count API 요청 함수 //
+
+export const putViewCount = async (boardNumber : number | string) => {
+    const responseBody = await axios.put(PUT_BOARD_VIEW_COUNT_URL(boardNumber))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+}
 
 // function: get good API 요청 함수 //
 export const getGoodRequest = async (boardNumber: number | string) => {
@@ -234,6 +258,14 @@ export const nicknameCheckRequest = async (requestBody: NicknameCheckRequestDto)
 // function: password reset API 요청 함수 //
 export const PasswordResetRequest = async (requestBody: PasswordResetRequestDto) => {
     const responseBody = await axios.post(PASSWORD_RESET_URL, requestBody)
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: sns sign up API 요청 함수 //
+export const SnsSignUpRequest = async (requestBody: SnsSignUpRequestDto) => { 
+    const responseBody = await axios.post(SNS_SIGN_UP_URL, requestBody)
         .then(responseSuccessHandler)
         .catch(responseErrorHandler);
     return responseBody;
