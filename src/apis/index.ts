@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import GetRecommandBoardResponseDto from "./dto/response/board/get-recommand-board.response.dto";
 import { PostBoardRequestDto } from './dto/request/board';
 
-import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSearchRequestDto, NicknameCheckRequestDto, PasswordResetRequestDto, SignInRequestDto, SignUpRequestDto } from "./dto/request/auth";
+import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSearchRequestDto, NicknameCheckRequestDto, PasswordResetRequestDto, SignInRequestDto, SignUpRequestDto, SnsSignUpRequestDto } from "./dto/request/auth";
 import { SignInResponseDto } from "./dto/response/auth";
 import { GetMyLevelResponseDto, GetMyPageBoardResponseDto } from './dto/response/mypage';
 import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto'
@@ -23,6 +23,7 @@ const NICKNAME_CHECK_URL = `${AUTH_MODULE_URL}/nickname-check`;
 const PASSWORD_RESET_URL = `${AUTH_MODULE_URL}/password-reset`;
 const SIGN_UP_URL = `${AUTH_MODULE_URL}/sign-up`;
 const SIGN_IN_URL = `${AUTH_MODULE_URL}/sign-in`;
+const SNS_SIGN_UP_URL = `${AUTH_MODULE_URL}/sns-sign-up`;
 export const SNS_SIGN_IN_URL = (sns: 'kakao' | 'naver') => `${AUTH_MODULE_URL}/sns/${sns}`;
 
 const BOARD_MODULE_URL = `${API_DOMAIN}/api/v1/board`;
@@ -150,6 +151,14 @@ export const nicknameCheckRequest = async (requestBody: NicknameCheckRequestDto)
 // function: password reset API 요청 함수 //
 export const PasswordResetRequest = async (requestBody: PasswordResetRequestDto) => {
     const responseBody = await axios.post(PASSWORD_RESET_URL, requestBody)
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: sns sign up API 요청 함수 //
+export const SnsSignUpRequest = async (requestBody: SnsSignUpRequestDto) => { 
+    const responseBody = await axios.post(SNS_SIGN_UP_URL, requestBody)
         .then(responseSuccessHandler)
         .catch(responseErrorHandler);
     return responseBody;
