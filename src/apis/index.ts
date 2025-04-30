@@ -11,6 +11,8 @@ import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.res
 import { PasswordReCheckRequestDto, PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from './dto/request/mypage';
 import GetFilteredBoardResponseDto from './dto/response/board/get-filtered-board.response';
 import { GetCommentResponseDto } from './dto/response/board';
+import { GetGoodResponseDto } from './dto/response/board';
+import GetHateResponseDto from './dto/response/board/get-hate.response.dto';
 
 
 // variable: URL 상수 //
@@ -28,14 +30,21 @@ const SIGN_IN_URL = `${AUTH_MODULE_URL}/sign-in`;
 export const SNS_SIGN_IN_URL = (sns: 'kakao' | 'naver') => `${AUTH_MODULE_URL}/sns/${sns}`;
 
 const BOARD_MODULE_URL = `${API_DOMAIN}/api/v1/board`;
-const PATCH_BOARD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}`
+const PATCH_BOARD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}`;
 const GET_WRITE_DATE_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/write-date`;
 const GET_VIEW_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/view-count`;
 const GET_GOOD_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/good-count`;
 const POST_BOARD_URL = `${BOARD_MODULE_URL}`;
 const POST_COMMENT_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment`;
 const GET_COMMENT_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment`;
+
 const DELETE_COMMENT_URL = (commentNumber : number | string, boardNumber : number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment/${commentNumber}`;
+
+const PUT_GOOD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/good`;
+const GET_GOOD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/good`;
+const PUT_HATE_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/hate`;
+const GET_HATE_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/hate`;
+
 
 const MAIN_MODULE_URL = `${API_DOMAIN}/api/v1/main`;
 const GET_RECOMMAND_BOARD_URL = `${MAIN_MODULE_URL}`;
@@ -71,7 +80,7 @@ export const patchBoardRequest = async (boardNumber: number | string, requestBod
 };
 
 // function: 게시글 삭제 API 요청 함수 //
-export const deleteBoardRequest = async (boardNumber: number, accessToken: string) => {
+export const deleteBoardRequest = async (boardNumber: number | string, accessToken: string) => {
     const url = `${BOARD_MODULE_URL}/${boardNumber}`;
     const responseBody = await axios.delete(url, bearerAuthorization(accessToken))
         .then(responseSuccessHandler)
@@ -80,7 +89,7 @@ export const deleteBoardRequest = async (boardNumber: number, accessToken: strin
 };
 
 // function: 게시글 상세 조회 API 요청 함수
-export const getBoardRequest = async (boardNumber: number, accessToken?: string) => {
+export const getBoardRequest = async (boardNumber: number | string, accessToken?: string) => {
     const url = `${BOARD_MODULE_URL}/${boardNumber}`;
     const config = accessToken ? bearerAuthorization(accessToken) : {}; // accessToken이 있을 경우만 Authorization 헤더 포함
     const responseBody = await axios.get(url, config)
@@ -159,6 +168,38 @@ export const getRecommandBoardRequest = async () => {
     const responseBody = await axios.get(GET_RECOMMAND_BOARD_URL)
         .then(responseSuccessHandler<GetRecommandBoardResponseDto>)
         .catch(responseErrorHandler)
+    return responseBody;
+};
+
+// function: get good API 요청 함수 //
+export const getGoodRequest = async (boardNumber: number | string) => {
+    const responseBody = await axios.get(GET_GOOD_URL(boardNumber))
+        .then(responseSuccessHandler<GetGoodResponseDto>)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: put good API 요청 함수 //
+export const putGoodRequest = async (boardNumber: number | string, accessToken: string) => {
+    const responseBody = await axios.put(PUT_GOOD_URL(boardNumber), {}, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: get hate API 요청 함수 //
+export const getHateRequest = async (boardNumber: number | string) => {
+    const responseBody = await axios.get(GET_HATE_URL(boardNumber))
+        .then(responseSuccessHandler<GetHateResponseDto>)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: put hate API 요청 함수 //
+export const putHateRequest = async (boardNumber: number | string, accessToken: string) => {
+    const responseBody = await axios.put(PUT_HATE_URL(boardNumber), {}, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
     return responseBody;
 };
 

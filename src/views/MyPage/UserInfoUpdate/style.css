@@ -8,6 +8,8 @@
 #user-update-container .update-image-box {
   display: flex;
   justify-content: center;
+
+  height: 170px;
 }
 
 #user-update-container .update-image-box>.update-image {
@@ -20,6 +22,12 @@
 
   background-size: cover;
   background-position: 50% 50%;
+}
+
+#user-update-container .update-image-box .update-image-message {
+  margin-top: 150px;
+  text-align: center;
+  font-size: 13px;
 }
 
 #user-update-container .user-update-box {
@@ -150,6 +158,8 @@
   justify-content: center;
   align-items: center;
   gap: 45px;
+  
+  margin-bottom: 20px;
 }
 
 #user-update-container .update-button-box>.button {
