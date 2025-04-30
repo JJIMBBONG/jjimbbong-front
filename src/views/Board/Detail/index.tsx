@@ -62,7 +62,7 @@ function CommentItem({comments, onCommentDeleted}:CommentItemProps){
             <div className='comment-write-date'>{commentWriteDate}</div>
           </div>
           {
-            userId === commentWriterId && <div className='comment-delete-btn' onClick={()=>{onDeleteCommentClickHandler(commentNumber)}}>삭제</div>
+            userId === commentWriterId && <div className='comment-delete-btn' onClick={()=>{onDeleteCommentClickHandler(commentNumber)}}>⨉</div>
           }
         </div>
         <div className='comment-content'>{commentContent}</div>
@@ -367,16 +367,20 @@ export default function BoardDetail() {
         </div>
 
         <div className="comment-input-section">
-          <label>댓글 작성란</label>
-          <textarea value={commentContent} placeholder="댓글을 입력하세요" onChange={onCommentChangeHandler} />
-          <button className="comment-btn" onClick={onPostCommentClickHandler}>댓글 작성</button>
+          <div className='comment-input'>
+            <label>댓글 작성란</label>
+            <textarea value={commentContent} placeholder="댓글을 입력하세요" onChange={onCommentChangeHandler} />
+            <button className="comment-btn" onClick={onPostCommentClickHandler}>댓글 작성</button>
+          </div>
+
+          <div className="comment-list">
+            {comments.map((commentItem, index) => 
+                <CommentItem key={index} comments={commentItem} onCommentDeleted={refreshComments}/>
+            )}
+          </div>
         </div>
 
-        <div className="comment-list">
-        {comments.map((commentItem, index) => 
-            <CommentItem key={index} comments={commentItem} onCommentDeleted={refreshComments}/>
-        )}
-        </div>
+        
 
       </div>
     </div>
