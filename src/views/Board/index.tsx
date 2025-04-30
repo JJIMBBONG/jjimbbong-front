@@ -7,7 +7,7 @@ import { Region } from 'src/types/interfaces';
 import './style.css';
 import GetFilteredBoardResponseDto from 'src/apis/dto/response/board/get-filtered-board.response';
 import { ResponseDto } from 'src/apis/dto/response';
-import { getGoodCountFilterdBoardRequest, getViewCountFilterdBoardRequest, getWriteDateFilterdBoardRequest } from 'src/apis';
+import { getGoodCountFilterdBoardRequest, getViewCountFilterdBoardRequest, getWriteDateFilterdBoardRequest, putViewCount } from 'src/apis';
 import Pagination from 'src/components/Pagination';
 import { useSearchParams } from 'react-router-dom';
 import regionData from 'src/assets/data/regionCodes.json'
@@ -41,6 +41,7 @@ function BoardItem({boards}:BoardItemProps){
 
   const onclick = () => {
       navigator(BOARD_VIEW_ABSOLUTE_PATH(boardNumber));
+      putViewCount(boardNumber);
   }
   return (
     <div>
