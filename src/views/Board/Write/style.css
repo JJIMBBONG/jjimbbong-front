@@ -37,21 +37,26 @@
 .category-box {
   display: flex;
   gap: 8px;
-  width: 521px;
+  width: auto; /* 또는 필요에 따른 최대 너비 설정 */
   height: 32px;
   margin-bottom: 20px;
+  flex-wrap: wrap; /* 버튼들이 넘칠 경우 다음 줄로 넘어가도록 처리 (선택 사항) */
 }
 
 .category-button {
-  flex: 1;
-  height: 32px;
+  height: 35px;
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 12px;
   border: 1px solid #ccc;
   background-color: #f0f0f0;
   color: #999;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  display: inline-flex; /* 또는 inline-block */
+  justify-content: center; /* 가로 방향 중앙 정렬 */
+  align-items: center; /* 세로 방향 중앙 정렬 */
+  padding: 0 16px; /* 좌우 패딩을 늘려 여백 확보 */
 }
 
 .category-button.selected {
