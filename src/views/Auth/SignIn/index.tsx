@@ -32,8 +32,7 @@ export default function SignIn(props: Props) {
   const [userIdMessage, setUserIdMessage] = useState<string>('');
   // state: 유저 비밀번호 메세지 상태 //
   const [userPasswordMessage, setUserPasswordMessage] = useState<string>('');
-  const [snsId, setSnsId] = useState<string>('');
-
+ 
   // function: 네비게이터 함수 //
   const navigator = useNavigate();
 
