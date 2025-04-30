@@ -3,10 +3,13 @@ import {Outlet, useLocation, useNavigate} from 'react-router';
 import NavLogo from 'src/assets/images/small_logo.png'
 
 import './style.css';
-import { ACCESS_TOKEN, AUTH_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH } from 'src/constants';
+import { ACCESS_TOKEN, AUTH_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH, ROOT_PATH } from 'src/constants';
 import { useCookies } from 'react-cookie';
 import { useSignInUser } from 'src/hooks';
+
+import { useSignInUserStore } from 'src/stores';
 import { usePasswordReCheckStore } from 'src/stores';
+
 
 // component : 공통 레이아웃 컴포넌트 //
 export default function Layout() {
@@ -17,12 +20,9 @@ export default function Layout() {
     const { resetVerify } = usePasswordReCheckStore();
 
     // state: cookie 상태 //
-    const [cookies] = useCookies();
+    const [cookies, _, removeCookie] = useCookies();
 
     const navigator = useNavigate();
-
-    // state : 로그인 상태 //
-    const [login, setLogin] = useState<boolean>(true);
 
     // state: My Content 드롭다운 상태 //
     const [showMyContent, setShowMyContent] = useState<boolean>(false);
@@ -30,12 +30,14 @@ export default function Layout() {
     // function: 로그인 유저 정보 불러오기 함수 //
     const getSignInUser = useSignInUser();
 
+    const { resetSignInUser } = useSignInUserStore();
+
     // event handler: 홈 클릭 이벤트 처리 //
     const onHomeClickHandler = () => {
         navigator(MAIN_ABSOLUTE_PATH);
     };
 
-    // event handler : 지도 클릭 이벤트 처리 //
+    // event handler: 지도 클릭 이벤트 처리 //
     const onMapClickHandler = () => {
         navigator(MAP_ABSOLUTE_PATH);
     }
@@ -52,7 +54,8 @@ export default function Layout() {
 
     // event handler : 로그아웃 클릭 이벤트 처리 //
     const onSignOutClickHandler = () => {
-        setLogin(false);
+        removeCookie(ACCESS_TOKEN, { path: ROOT_PATH });
+        resetSignInUser();
     }
 
     // event handler : 로그인 이벤트 처리 //
@@ -160,7 +163,7 @@ export default function Layout() {
                     <div className='navigation-list'>
                         <img className='nav-logo' src={NavLogo} width='50px' onClick={onHomeClickHandler}/>
                         
-                                { login ? 
+                                { cookies[ACCESS_TOKEN] ? 
                                     <div className='nav-right-content'>
                                         <div className='map-logo' onClick={onMapClickHandler}>Map</div>
                                         <div className='my-content' onClick={onMyContentClickHandler}>

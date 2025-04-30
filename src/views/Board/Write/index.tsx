@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { postBoardRequest } from 'src/apis'; // API 호출 파일
+import { fileUploadRequest, postBoardRequest } from 'src/apis'; // API 호출 파일
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { ACCESS_TOKEN } from 'src/constants';
@@ -60,24 +60,36 @@ const BoardWrite = () => {
       navigate('/auth');
       return;
     }
-
+  
     if (!areaSelected || !districtSelected) {
       alert('지역을 선택해주세요.');
       return;
     }
-
+  
     if (!categorySelected) {
       alert('카테고리를 선택해주세요.');
       return;
     }
-
+  
     if (!form.boardContent.trim()) {
       alert('내용을 입력해주세요.');
       return;
     }
-
+  
     try {
-      await postBoardRequest(form, accessToken);
+      //여기: 먼저 이미지 업로드 진행
+      let boardImageUrl = '';
+      if (imageFile) {
+        boardImageUrl = await uploadImage() || '';
+      }
+  
+      //이후에 게시글 등록
+      const requestBody = {
+        ...form,
+        boardImage: boardImageUrl, // 새로 받은 URL로 교체
+      };
+  
+      await postBoardRequest(requestBody, accessToken);
       alert('게시글이 작성되었습니다!');
       navigate('/board');
     } catch (error) {
@@ -89,6 +101,27 @@ const BoardWrite = () => {
     if (window.confirm('작성을 취소하시겠습니까?')) {
       navigate('/board');
     }
+  }
+
+  const [previewImage, setPreviewImage] = useState<string>(''); // 이미지 미리보기 URL
+  const [imageFile, setImageFile] = useState<File | null>(null); // 실제 업로드할 파일
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    setImageFile(file);
+    const previewUrl = URL.createObjectURL(file);
+    setPreviewImage(previewUrl);
+  };
+
+  const uploadImage = async () => {
+    if (!imageFile) return null;
+    const formData = new FormData();
+    formData.append('file', imageFile);
+  
+    const uploadedImageUrl = await fileUploadRequest(formData);
+    return uploadedImageUrl;
   };
 
   return (
@@ -122,11 +155,26 @@ const BoardWrite = () => {
       />
 
       <div className="editor-tools">
-        <img src={ImageIcon} alt="이미지" className="editor-icon" />
+        <label htmlFor="image-upload">
+          <img src={ImageIcon} alt="이미지" className="editor-icon" />
+        </label>
+        <input
+          id="image-upload"
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={handleImageChange}
+        />
         <img src={PaperclipIcon} alt="파일" className="editor-icon" />
         <img src={TypeIcon} alt="텍스트" className="editor-icon" />
         <img src={VideoIcon} alt="비디오" className="editor-icon" />
       </div>
+
+      {previewImage && (
+        <div className="image-preview">
+          <img src={previewImage} alt="미리보기" className="preview-thumbnail" />
+        </div>
+      )}
 
       <div className="input-label">내용을 입력해주세요.</div>
       <textarea
