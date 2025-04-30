@@ -37,10 +37,14 @@ const GET_GOOD_COUNT_SORTED_BOARD_URL = `${BOARD_MODULE_URL}/good-count`;
 const POST_BOARD_URL = `${BOARD_MODULE_URL}`;
 const POST_COMMENT_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment`;
 const GET_COMMENT_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment`;
+
+const DELETE_COMMENT_URL = (commentNumber : number | string, boardNumber : number | string) => `${BOARD_MODULE_URL}/${boardNumber}/comment/${commentNumber}`;
+
 const PUT_GOOD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/good`;
 const GET_GOOD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/good`;
 const PUT_HATE_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/hate`;
 const GET_HATE_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/hate`;
+
 
 const MAIN_MODULE_URL = `${API_DOMAIN}/api/v1/main`;
 const GET_RECOMMAND_BOARD_URL = `${MAIN_MODULE_URL}`;
@@ -93,6 +97,14 @@ export const getBoardRequest = async (boardNumber: number | string, accessToken?
         .catch(responseErrorHandler);
     return responseBody;
 };
+
+// function : delete comment API 요청 함수
+export const deleteCommentRequest = async (commentNumber : number, accessToken : string, boardNumber : number) =>{
+    const responseBody = await axios.delete(DELETE_COMMENT_URL(commentNumber, boardNumber), bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+}
 
 // function: post comment API 요청 함수 //
 export const postCommentRequest = async (requestBody: PostCommentRequestDto, boardNumber: number | string, accessToken: string) => {
