@@ -1,3 +1,4 @@
+import JoinType from 'src/types/aliases/join-type.alias';
 import { create } from 'zustand';
 
 // interface: 로그인 유저 정보 상태 구조 //
@@ -11,6 +12,7 @@ interface SignInUserStore {
   detailAddress: string | null;
   gender: string;
   profileImage: string | null;
+  joinType: JoinType;
 
   setUserId: (userId: string) => void;
   setUserNickname: (userNickname: string) => void;
@@ -21,6 +23,7 @@ interface SignInUserStore {
   setDetailAddress: (detailAddress: string | null) => void;
   setGender: (gender: string) => void;
   setProfileImage: (profileImage: string | null) => void;
+  setJoinType: (JoinType: JoinType) => void;
 
   resetSignInUser: () => void;
 }
@@ -36,6 +39,7 @@ const useStore = create<SignInUserStore>(set => ({
   detailAddress: null,
   gender: '',
   profileImage: null,
+  joinType: 'NORMAL',
 
   setUserId: (userId: string) => set(state => ({ ...state, userId })),
   setUserNickname: (userNickname: string) => set(state => ({ ...state, userNickname })),
@@ -46,6 +50,7 @@ const useStore = create<SignInUserStore>(set => ({
   setDetailAddress: (detailAddress: string | null) => set(state => ({ ...state, detailAddress })),
   setGender: (gender: string) => set(state => ({ ...state, gender })),
   setProfileImage: (profileImage: string | null) => set(state => ({ ...state, profileImage })),
+  setJoinType: (joinType: JoinType) => set(state => ({ ...state, joinType })),
 
   resetSignInUser: () => set(state => ({
     ...state,
@@ -57,7 +62,8 @@ const useStore = create<SignInUserStore>(set => ({
     address: '',
     detailAddress: null,
     gender: '',
-    profileImage: null
+    profileImage: null,
+    joinType: 'NORMAL'
   }))
 }));
 
