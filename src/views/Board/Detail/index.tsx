@@ -266,12 +266,6 @@ export default function BoardDetail() {
       getHateRequest(boardNumber).then(getHateResponse);
   };
 
-  // event handler: 댓글 변경 이벤트 처리 //
-  const onCommentChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = event.target;
-    setCommentContent(value);
-  };
-
   // event handler: 댓글 작성 클릭 이벤트 처리 //
   const onPostCommentClickHandler = () => {
     if(!accessToken) {
