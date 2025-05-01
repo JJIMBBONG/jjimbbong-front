@@ -7,11 +7,11 @@ import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto,  Nick
 import { EmailAuthCheckRequest, EmailAuthRequest, idCheckRequest, nicknameCheckRequest, signUpRequest, SNS_SIGN_IN_URL } from '../../../apis';
 import { ResponseDto } from '../../../apis/dto/response';
 import { useCookies } from 'react-cookie';
-import { JOIN_TYPE, ROOT_PATH, SNS_ID } from '../../../constants';
+import { ACCESS_TOKEN, JOIN_TYPE, MAIN_ABSOLUTE_PATH, ROOT_PATH, SNS_ID } from '../../../constants';
 import JoinType from 'src/types/aliases/join-type.alias';
 import axios from 'axios';
 import { IdSearchResponseDto } from 'src/apis/dto/response/auth';
-
+import { useNavigate } from 'react-router-dom';
 
 // interface: sns 회원가입 컴포넌트 속성 //
 interface Props {
@@ -28,8 +28,10 @@ export default function SnsSignUp(props: Props) {
     timeout: 1000, // 기본 타임아웃 설정 (필요시)
   });
 
+  const navigate = useNavigate();
+
   // state: cookie 상태 //
-  const [cookies, _, removeCookie] = useCookies();
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   // state: 이메일 전송중 상태 //
   const [isLoadingEmailSend, setIsLoadingEmailSend] = useState(false); 
@@ -231,18 +233,7 @@ export default function SnsSignUp(props: Props) {
     open({ onComplete: daumPostCompleteHandler });
   };
 
-  // // effect: 컴포넌트 로드시 실행할 함수 //
-  // useEffect(() => {
-  //   if (cookies[JOIN_TYPE]) setJoinType(cookies[JOIN_TYPE]);
-  //   if (cookies[SNS_ID]) setSnsId(cookies[SNS_ID]);
-  
-  //   // 쿠키 없으면 로그인 페이지로 강제 이동
-  //   if (!cookies[JOIN_TYPE] || !cookies[SNS_ID]) {
-  //     alert('SNS 인증 정보가 없습니다. 다시 로그인해주세요.');
-  //     onPageChange('sign-in');
-  //   }
-  // }, []);
-
+  // effect: 컴포넌트 로드시 실행할 함수 //
   useEffect(() => {
     const joinType = cookies[JOIN_TYPE];
     const snsId = cookies[SNS_ID];
@@ -351,6 +342,8 @@ export default function SnsSignUp(props: Props) {
       return;
     }
 
+    const ACCESS_TOKEN = 'accessToken';
+
     const requestBody: SnsSignUpRequestDto = {
       userNickname, name: userName, userEmail, userLevel, authNumber, gender: gender!,
       address: userAddress, detailAddress: userDetailAddress, joinType: cookieJoinType.toUpperCase(), snsId: cookieSnsId,
@@ -363,11 +356,23 @@ export default function SnsSignUp(props: Props) {
     })
     .then((response) => {
       console.log('회원가입 응답:', response.data);
+      
       if (response.data.code === 'SU') {
+        const { accessToken, expiration } = response.data;
+
+        // 로그인 처리: accessToken을 로컬 스토리지에 저장
+        const expires = new Date(Date.now() + expiration * 1000); 
+        // 쿠키에 저장
+        setCookie(ACCESS_TOKEN, accessToken, { path: ROOT_PATH, expires }); 
+        
         removeCookie(JOIN_TYPE, { path: ROOT_PATH });
         removeCookie(SNS_ID, { path: ROOT_PATH });
+    
         alert('회원가입이 완료되었습니다.');
-        onPageChange('main');
+    
+        setTimeout(() => {
+          navigate(MAIN_ABSOLUTE_PATH); // 실제 페이지 이동
+        }, 0);        
       } else {
         alert(`회원가입 실패: ${response.data.message}`);
       }
