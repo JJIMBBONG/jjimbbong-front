@@ -46,6 +46,7 @@ const GET_GOOD_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${bo
 const PUT_HATE_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/hate`;
 const GET_HATE_URL = (boardNumber: number | string) => `${BOARD_MODULE_URL}/${boardNumber}/hate`;
 const PUT_BOARD_VIEW_COUNT_URL = (boardNumber : number | string) => `${BOARD_MODULE_URL}/view-count/${boardNumber}`;
+const PUT_BOARD_SCORE_URL = (boardNumber : number | string) => `${BOARD_MODULE_URL}/board-score/${boardNumber}`;
 
 
 const MAIN_MODULE_URL = `${API_DOMAIN}/api/v1/main`;
@@ -182,6 +183,14 @@ export const putViewCount = async (boardNumber : number | string) => {
         .catch(responseErrorHandler);
     return responseBody;
 }
+
+// function: put board score API  요청 함수 //
+export const putBoardScore = async (boardNumber: number | string) => {
+    const responseBody = await axios.put(PUT_BOARD_SCORE_URL(boardNumber))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
 
 // function: get good API 요청 함수 //
 export const getGoodRequest = async (boardNumber: number | string) => {

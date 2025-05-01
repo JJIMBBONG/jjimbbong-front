@@ -1,4 +1,5 @@
 import {ResponseDto} from 'src/apis/dto/response';
+import JoinType from 'src/types/aliases/join-type.alias';
 
 // interface: get sign in user response body DTO //
 export default interface GetSignInUserResponseDto extends ResponseDto {
@@ -10,5 +11,6 @@ export default interface GetSignInUserResponseDto extends ResponseDto {
   address: string,
   detailAddress: string | null,
   gender: string,
-  profileImage: string | null
+  profileImage: string | null,
+  joinType: JoinType
 }

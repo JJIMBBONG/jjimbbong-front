@@ -24,7 +24,7 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
   const [cookies] = useCookies();
 
   // state: 로그인 사용자 정보 상태 //
-  const { profileImage, userId, userNickname, name, address, detailAddress } = useSignInUserStore();
+  const { profileImage, userId, userNickname, name, address, detailAddress, joinType } = useSignInUserStore();
 
   // state: 파일 인풋 참조 상태 //
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -260,16 +260,20 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
           <div className='message error'>{updateNicknameMessage}</div>
           }
         </div>
+        {joinType === 'NORMAL' ?
         <div className='user-update-row'>
           <div className='title'>비밀번호</div>
           <input type='password' value={updatePassword} onChange={onPasswordChangeHandler} />
           <div className='message error'>{updatePasswordMessage}</div>
         </div>
+        : '' }
+        {joinType === 'NORMAL' ?
         <div className='user-update-row'>
           <div className='title'>비밀번호 확인</div>
           <input type='password' value={updatePasswordCheck} onChange={onPasswordCheckChangeHandler}/>
           <div className='message error'>{updatePasswordCheckMessage}</div>
         </div>
+        : '' }
         <div className='user-update-row'>
           <div className='title'>이름</div>
           <div className='content'>{name}</div>
