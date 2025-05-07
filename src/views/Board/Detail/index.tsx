@@ -470,7 +470,7 @@ export default function BoardDetail() {
         <div className='button-container'>
           <div className='go-list' onClick={onGoListClickHandler}>목록으로</div>
           {isWriter && (
-          <div className="board-action-buttons">
+          <div className="button-group">
             <button className="edit-button" onClick={onEditClickHandler}>수정</button>
             <button className="delete-button" onClick={onDeleteClickHandler}>삭제하기</button>
           </div>
@@ -497,4 +497,3 @@ export default function BoardDetail() {
     </div>
   );
 }
-
