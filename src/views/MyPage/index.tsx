@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import Modal from 'src/components/Modal';
 import MyPageUserInfo from './UserInfo';
 import MyPageUserInfoUpdate from './UserInfoUpdate';
-import { getGoodRequest, getMyPageBoardRequest } from 'src/apis';
+import { getCommentRequest, getGoodRequest, getMyPageBoardRequest } from 'src/apis';
 import { ACCESS_TOKEN, BOARD_VIEW_ABSOLUTE_PATH, MAIN_ABSOLUTE_PATH, MY_PAGE_ABSOLUTE_PATH } from 'src/constants';
 import Pagination from 'src/components/Pagination';
 import { Comment, MyPageBoard } from 'src/types/interfaces';
@@ -123,7 +123,7 @@ function TableItem({ myBoards }: TableItemProps) {
   // effect: 컴포넌트 로드 시 실행할 함수 //
   useEffect(() => {
     getGoodRequest(boardNumber).then(getGoodResponse);
-    // getCommentRequest(boardNumber, accessToken).then(getCommentResponse); 
+    getCommentRequest(boardNumber).then(getCommentResponse); 
   }, []);
 
   // render: 마이페이지 테이블 레코드 컴포넌트 렌더링 //

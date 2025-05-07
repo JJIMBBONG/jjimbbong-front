@@ -42,6 +42,9 @@
 }
 
 #board-detail-wrapper .post-content {
+  border-top: solid 1px gray;
+  border-bottom: solid 1px gray;
+  min-height: 100vh;
   margin: 20px 0;
   font-size: 16px;
 }
@@ -97,15 +100,45 @@
   background-image: url(src/assets/images/hate-empty.png);
 }
 
-.comment-input-section textarea {
+.comment-input-section{
+  width: 1000px;
+  margin: auto;
+}
+
+.comment-input{
+  width: 100%;
+  height: 200px;
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 10px;
+}
+
+.comment-input textarea {
   width: 100%;
   height: 80px;
   margin-top: 10px;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 5px 0px 5px 5px;
 }
 
-.comment-btn {
-  margin-top: 10px;
+.comment-input .comment-btn {
+  margin: 10px;
+  float: right;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 120px;
+  height: 50px;
+  font-size: 1.1rem;
+  box-sizing: border-box;
+}
+
+.comment-btn:hover{
+  transition: 0.5s;
+  background-color: white;
+  color: rgb(226, 115, 75);
+  border: rgb(226, 115, 75) 1px solid;
 }
 
 .comment-bot {
@@ -114,23 +147,64 @@
   margin-top: 10px;
 }
 
+.comment-list{
+  border-top: 1px solid #ccc;
+  padding-top: 50px;
+  width: 1000px;
+}
+
 .comment-body{
-  border: 1px black solid;
-  margin: 10px;
+  border: 1px gray solid;
+  width: 100%;
   display: flex;
   align-items: center;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.comment-info-wrapper{
+  width: 100%;
+}
+
+.comment-writer-level{
+  width: 80px;
+  height: 80px;
+  background-color: lightgray;
+  margin: 5px;
 }
 
 .comment-info{
-  width: 500px;
   display: flex;
-  border: 1px black solid;
+  justify-content: space-between;
+  padding: 8px;
 }
 
 .comment-info-detail{
   display: flex;
+  width: 800px;
+}
+
+.comment-writer-nickname{
+  font-size: 1.2rem;
+}
+
+.comment-write-date{
+  padding-left: 8px;
+  color: #ccc;
 }
 
 .comment-delete-btn{
-  display: inline-block;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.comment-delete-btn:hover{
+  color: rgb(226, 115, 75);
+  transition: 0.5s;
+}
+
+.comment-content{
+  padding: 8px;
 }
