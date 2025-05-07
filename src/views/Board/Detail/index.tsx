@@ -16,6 +16,7 @@ import GetHateResponseDto from 'src/apis/dto/response/board/get-hate.response.dt
 import regionData from 'src/assets/data/regionCodes.json';
 import { Region } from 'src/types/interfaces';
 
+
 interface CommentItemProps {
   comments : Comment;
   onCommentDeleted : () => void;
@@ -382,11 +383,12 @@ export default function BoardDetail() {
     getHateRequest(boardNumber).then(getHateResponse);
   }, []);
 
+  // 게시글 수정
   const onEditClickHandler = () => {
-    if (!boardNumber) return;
-    navigate(`/board/update/${boardNumber}`);
+    navigate(`/board/${boardNumber}/update`);
   };
 
+  // 게시글 삭제
   const onDeleteClickHandler = async () => {
     if (!boardNumber || !accessToken) return;
   
@@ -450,7 +452,7 @@ export default function BoardDetail() {
         </div>
 
         {isWriter && (
-          <div className="board-action-buttons">
+          <div className="button-group">
             <button className="edit-button" onClick={onEditClickHandler}>수정</button>
             <button className="delete-button" onClick={onDeleteClickHandler}>삭제하기</button>
           </div>

@@ -209,7 +209,7 @@
   padding: 8px;
 }
 
-.board-action-buttons {
+.button-group {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
