@@ -11,7 +11,7 @@ import PaperclipIcon from 'src/assets/images/Paperclip.png';
 
 import RegionSelectModal from 'src/components/RegionSelectModal';
 
-const categories = ['맛집', '축제', '팝업스토어', '교통', '시설'];
+const categories = ['맛집', '축제', '팝업 스토어', '교통', '시설'];
 
 const BoardWrite = () => {
   const [cookies] = useCookies();
