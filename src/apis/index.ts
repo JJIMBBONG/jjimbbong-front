@@ -8,7 +8,7 @@ import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, IdSea
 import { SignInResponseDto } from "./dto/response/auth";
 import { GetMyLevelResponseDto, GetMyPageBoardResponseDto } from './dto/response/mypage';
 import GetSignInUserResponseDto from './dto/response/mypage/get-sign.in.user.response.dto'
-import { PasswordReCheckRequestDto, PatchSignInUserRequestDto, PostNicknameCheckRequestDto } from './dto/request/mypage';
+import { PasswordReCheckRequestDto, PatchSignInUserRequestDto, PatchSNSSignInUserRequestDto, PostNicknameCheckRequestDto } from './dto/request/mypage';
 import GetFilteredBoardResponseDto from './dto/response/board/get-filtered-board.response';
 import { GetCommentResponseDto } from './dto/response/board';
 import { GetGoodResponseDto } from './dto/response/board';
@@ -60,6 +60,7 @@ const GET_MY_LEVEL_URL = `${MY_PAGE_MODULE_URL}/my-main/level`;
 const GET_MY_PAGE_BOARD_URL = `${MY_PAGE_MODULE_URL}/my-main/my-boards`;
 const GET_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main/user-info`;
 const PATCH_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main/user-info`;
+const PATCH_SNS_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main/sns-user-info`;
 
 const FILE_UPLOAD_URL = `${API_DOMAIN}/file/upload`;
 
@@ -346,6 +347,14 @@ export const getSignInUserRequest = async (accessToken: string) => {
 // function: patch sign in user API 요청 함수 //
 export const patchSignInUserRequest = async (requestBody: PatchSignInUserRequestDto, accessToken: string) => {
     const responseBody = await axios.patch(PATCH_SIGN_IN_USER_URL, requestBody, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
+    return responseBody;
+};
+
+// function: patch sns sign in user API 요청 함수 //
+export const patchSNSSignInUserRequest = async (requestBody: PatchSNSSignInUserRequestDto, accessToken: string) => {
+    const responseBody = await axios.patch(PATCH_SNS_SIGN_IN_USER_URL, requestBody, bearerAuthorization(accessToken))
         .then(responseSuccessHandler)
         .catch(responseErrorHandler);
     return responseBody;
