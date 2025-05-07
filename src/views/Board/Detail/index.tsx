@@ -399,11 +399,12 @@ export default function BoardDetail() {
     getHateRequest(boardNumber).then(getHateResponse);
   }, []);
 
+  // 게시글 수정
   const onEditClickHandler = () => {
-    if (!boardNumber) return;
-    navigate(`/board/update/${boardNumber}`);
+    navigate(`/board/${boardNumber}/update`);
   };
 
+  // 게시글 삭제
   const onDeleteClickHandler = async () => {
     if (!boardNumber || !accessToken) return;
   
@@ -468,7 +469,6 @@ export default function BoardDetail() {
 
         <div className='button-container'>
           <div className='go-list' onClick={onGoListClickHandler}>목록으로</div>
-
           {isWriter && (
           <div className="board-action-buttons">
             <button className="edit-button" onClick={onEditClickHandler}>수정</button>
