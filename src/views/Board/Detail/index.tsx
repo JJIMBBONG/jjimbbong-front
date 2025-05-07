@@ -375,7 +375,7 @@ export default function BoardDetail() {
 
   // 게시글 수정
   const onEditClickHandler = () => {
-    navigate(`/board/update/${boardNumber}`);
+    navigate(`/board/${boardNumber}/update`);
   };
 
   // 게시글 삭제
@@ -442,7 +442,7 @@ export default function BoardDetail() {
         </div>
 
         {isWriter && (
-          <div className="board-action-buttons">
+          <div className="button-group">
             <button className="edit-button" onClick={onEditClickHandler}>수정</button>
             <button className="delete-button" onClick={onDeleteClickHandler}>삭제하기</button>
           </div>
