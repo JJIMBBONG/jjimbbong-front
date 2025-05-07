@@ -2,14 +2,16 @@
 import { useEffect, useState } from "react";
 import regionCodes from "./regionCodes.json";
 import "./NaverMap.css";
+import { useNavigate } from "react-router";
 
 function NaverMap() {
+  const navigate = useNavigate();
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionData, setRegionData] = useState(null);
-  const [showCheck, setShowCheck] = useState(false);
 
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxd2VyMTIzNCIsImlhdCI6MTc0NTg4NDY2MSwiZXhwIjoxNzQ1OTE3MDYxfQ.HW4Z3P3ZTzaNHcL9Cl9Sn1RLvs_Vz71n8_i2K7JKfQc';
-  localStorage.setItem('authToken', token);
+  const handlerCheckButtonClick = () => {
+    navigate("/board");
+  }
 
   const formatDate = (dateStr) => {
     if (!dateStr || dateStr.length !== 8) return dateStr;
@@ -22,19 +24,24 @@ function NaverMap() {
         .replace(/시|군|구/g, "")
         .trim();
 
-  const fetchFestivals = async (areaCode, sigunguCode) => {
-    try {
-      const res = await fetch(`http://localhost:4000/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error("축제 데이터 가져오기 실패");
-      const data = await res.json();
-      return Array.isArray(data) ? data : [];
-    } catch (err) {
-      console.error(err);
-      return [];
-    }
-  };
+  // const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxd2VyMTIzNCIsImlhdCI6MTc0NjU3OTczMiwiZXhwIjoxNzQ2NjEyMTMyfQ.Q10bADrJkEVrNkX98ivrjK7bnrDmgdgVaxmfa1zhibY';
+  // localStorage.setItem('authToken', token);
+
+        const fetchFestivals = async (areaCode, sigunguCode) => {
+          try {
+            const res = await fetch(`http://localhost:4000/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`
+            //   , {
+            //   headers: { 'Authorization': `Bearer ${token}` },
+            // }
+          );
+            if (!res.ok) throw new Error("축제 데이터 가져오기 실패");
+            const data = await res.json();
+            return Array.isArray(data) ? data : [];
+          } catch (err) {
+            console.error(err);
+            return [];
+          }
+        };
 
   const fetchPopups = async (admSectCode) => {
     const res = await fetch(`http://localhost:4000/popup-stores?region=${admSectCode}`);
@@ -160,12 +167,9 @@ function NaverMap() {
         {selectedRegion && regionData ? (
           <>
             <div className="card">
-              <button className="toggle-header" onClick={() => setShowCheck(!showCheck)}>
-                📍 Check! 여기 가봤어? <span>{showCheck ? "▲" : "▼"}</span>
+              <button className="action-button" onClick={handlerCheckButtonClick}>
+                📍 Check! 여기 가봤어?
               </button>
-              {showCheck && (
-                <button className="action-button">게시글 보러가기</button>
-              )}
             </div>
 
             <div className="card">

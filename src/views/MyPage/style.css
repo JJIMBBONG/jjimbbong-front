@@ -296,6 +296,10 @@
   background-image: url(src/assets/images/comment.png);
 }
 
+#mypage-main-wrapper .my-board-container{
+  min-height: 100vh;
+}
+
 #mypage-main-wrapper .my-board-container .pagination-container {
   display: flex;
   justify-content: center;
