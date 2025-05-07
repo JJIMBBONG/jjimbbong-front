@@ -178,6 +178,7 @@ export default function BoardDetail() {
     setBoardImage(boardImage);
   };
 
+
     // function: get comment response 처리 함수 //
     const getCommentResponse = (responseBody: GetCommentResponseDto | ResponseDto | null) => {
       const message =
@@ -334,18 +335,25 @@ export default function BoardDetail() {
   };
 
 
-  const getRegionKeyByName = (regionName : string) => {
-    const region = regionData.find(r => r.regionName === regionName);
-    if (!region) return null;
+  const getRegionKeyByName = (region2 : string) => {
+    const selectedRegion2 = regionData.find(r => r.regionName === region2);
+    if (!selectedRegion2) return null;
     return {
-      areaCode: region.areaCode,
-      sigunguCode: region.sigunguCode
+      areaCode: selectedRegion2.areaCode,
+      sigunguCode: selectedRegion2.sigunguCode
     };
   }
 
     const handleSearch = async () => {
-      const address1 = getRegionKeyByName(boardAddress)?.areaCode ?? '';
-      const address2 = getRegionKeyByName(boardAddress)?.sigunguCode ?? '';
+      // 문자열 값으로부터 코드 번호 (key)를 역으로 찾기
+      // Object.entries() : 객체의 key-value 쌍을 배열 형태로 반환하는 메서드. 값으로부터 key를 찾을 때 유용하게 사용
+      // Object.entries(obj)
+      // obj: key-value로 구성된 객체
+      // 반환값: [[key1, value1], [key2, value2], ...] 형태의 배열
+      const [region1, region2] = boardAddressCategory.split(" ");
+      const areaCode = Object.entries(areaCodeMap).find(([key, value]) => value === region1)?.[0];
+      const address1 = areaCode ?? '';
+      const address2 = getRegionKeyByName(region2)?.sigunguCode ?? '';
       navigate(`${MAP_ABSOLUTE_PATH}?addressCategory1=${address1}&addressCategory2=${address2}`);
     };
 
@@ -366,7 +374,7 @@ export default function BoardDetail() {
     <div id="board-detail-wrapper">
       <div className="detail-container">
         <div className="location-path">
-          <span>{boardAddressCategory} &gt; {boardDetailCategory}</span>
+          <span>{boardAddressCategory} &gt; {boardAddress} &gt; {boardDetailCategory}</span>
         </div>
 
         <div className="post-meta">
