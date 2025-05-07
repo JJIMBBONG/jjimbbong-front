@@ -13,6 +13,11 @@ import { PostCommentRequestDto } from 'src/apis/dto/request/board';
 import GetHateResponseDto from 'src/apis/dto/response/board/get-hate.response.dto';
 import regionData from 'src/assets/data/regionCodes.json';
 import { Region } from 'src/types/interfaces';
+import LevelOneIcon from 'src/assets/images/star-LV1-icon.png';
+import LevelTwoIcon from 'src/assets/images/star-LV2-icon.png';
+import LevelThreeIcon from 'src/assets/images/star-LV3-icon.png';
+import LevelFourIcon from 'src/assets/images/star-LV4-icon.png';
+import LevelFiveIcon from 'src/assets/images/star-LV5-icon.png';
 
 interface CommentItemProps {
   comments : Comment;
@@ -118,6 +123,13 @@ export default function BoardDetail() {
   const isHates = hates.includes(userId);
   // variable: 싫어요 클래스 //
   const hateClass = isHates ? 'icon hate' : 'icon hate-empty';
+
+  // variable: 사용자 등급 이미지 스타일 //
+  const userLevelStyle = { backgroundImage: `url(${
+    userLevel === 5 ? LevelFiveIcon : 
+    userLevel === 4 ? LevelFourIcon : 
+    userLevel === 3 ? LevelThreeIcon : 
+    userLevel === 2 ? LevelTwoIcon : LevelOneIcon })` };
   
   // function: 네비게이터 함수 //
   const navigate = useNavigate();
@@ -375,7 +387,7 @@ export default function BoardDetail() {
             <span className="post-date">{boardWriteDate}</span>
           </div>
           <div className="right">
-            <span className="badge">{userLevel}</span>
+            <div className="badge" style={userLevelStyle}></div>
             <span className="nickname">{userNickname}</span>
             <button className="location-btn" onClick={handleSearch}>위치</button>
           </div>
