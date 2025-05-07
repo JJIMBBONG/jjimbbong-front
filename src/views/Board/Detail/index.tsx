@@ -3,7 +3,7 @@ import './style.css';
 
 
 import { deleteCommentRequest, getBoardRequest, getCommentRequest, postCommentRequest, getGoodRequest, getHateRequest, putGoodRequest, putHateRequest, deleteBoardRequest } from 'src/apis';
-import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, BOARD_VIEW_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH } from 'src/constants';
+import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, BOARD_UPDATE_ABSOLUTE_PATH, BOARD_VIEW_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH } from 'src/constants';
 
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router';
@@ -382,6 +382,11 @@ export default function BoardDetail() {
       navigate(`${MAP_ABSOLUTE_PATH}?addressCategory1=${address1}&addressCategory2=${address2}`);
     };
 
+  // event handler: 목록으로 버튼 클릭 이벤트 처리 //
+  const onGoListClickHandler = () => {
+    navigate(BOARD_ABSOLUTE_PATH);
+  };
+
   // effect: 컴포넌트 로드 시 실행할 함수 //
   useEffect(() => {
     if (!boardNumber) {
@@ -461,12 +466,16 @@ export default function BoardDetail() {
           </div>
         </div>
 
-        {isWriter && (
+        <div className='button-container'>
+          <div className='go-list' onClick={onGoListClickHandler}>목록으로</div>
+
+          {isWriter && (
           <div className="board-action-buttons">
             <button className="edit-button" onClick={onEditClickHandler}>수정</button>
             <button className="delete-button" onClick={onDeleteClickHandler}>삭제하기</button>
           </div>
-        )}
+          )}
+        </div>
 
         <div className="comment-input-section">
           <div className='comment-input'>

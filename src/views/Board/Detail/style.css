@@ -220,6 +220,26 @@
   padding: 8px;
 }
 
+
+#board-detail-wrapper .button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+#board-detail-wrapper .go-list {
+  display: flex;
+  cursor: pointer;
+
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  font-family: Arial;
+  margin: 20px 0;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
 .board-action-buttons {
   display: flex;
   justify-content: flex-end;
