@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import './style.css';
 
 import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, BOARD_VIEW_ABSOLUTE_PATH } from 'src/constants';
-import { deleteCommentRequest, getBoardRequest, getCommentRequest, postCommentRequest, getGoodRequest, getHateRequest, putGoodRequest, putHateRequest } from 'src/apis';
+import { deleteCommentRequest, getBoardRequest, getCommentRequest, postCommentRequest, getGoodRequest, getHateRequest, putGoodRequest, putHateRequest, deleteBoardRequest } from 'src/apis';
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router';
 import { GetBoardResponseDto, GetCommentResponseDto, GetGoodResponseDto } from 'src/apis/dto/response/board';
@@ -120,6 +120,14 @@ export default function BoardDetail() {
   // function: 네비게이터 함수 //
   const navigate = useNavigate();
   
+  // state: 작성자 ID 저장용
+  const [writerId, setWriterId] = useState('');
+
+  // 게시글 작성자인지 여부
+  const isWriter = writerId === userId;
+
+  // ---------------- getBoardResponse 함수 내부 ----------------
+
   // function: get board response 처리 함수 //
   const getBoardResponse = (responseBody: GetBoardResponseDto | ResponseDto | null) => {
     const message = 
@@ -127,19 +135,22 @@ export default function BoardDetail() {
       responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' :
       responseBody.code === 'AF' ? '인증에 실패했습니다.' :
       responseBody.code === 'NB' ? '게시글이 존재하지 않습니다.' : '';
-
+  
     const isSuccess = responseBody !== null && responseBody.code === 'SU';
     if (!isSuccess) {
       alert(message);
       navigate(BOARD_ABSOLUTE_PATH);
       return;
     }
-
+  
     const {
+      userId: boardWriterId,
       boardTitle, boardContent, boardAddressCategory, boardDetailCategory, boardAddress,
-      userNickname, userLevel, boardWriteDate, boardViewCount, boardImage
+      userNickname, userLevel, boardWriteDate, boardViewCount, boardImage, textFileUrl
     } = responseBody as GetBoardResponseDto;
-
+  
+    // set 상태로 작성자 ID 저장
+    setWriterId(boardWriterId);
     setBoardTitle(boardTitle);
     setBoardContent(boardContent);
     setBoardAddressCategory(boardAddressCategory);
@@ -319,6 +330,26 @@ export default function BoardDetail() {
     getHateRequest(boardNumber).then(getHateResponse);
   }, []);
 
+  const onEditClickHandler = () => {
+    if (!boardNumber) return;
+    navigate(`/board/update/${boardNumber}`);
+  };
+
+  const onDeleteClickHandler = async () => {
+    if (!boardNumber || !accessToken) return;
+  
+    const confirmDelete = window.confirm('정말로 이 게시글을 삭제하시겠습니까?');
+    if (!confirmDelete) return;
+  
+    const response = await deleteBoardRequest(boardNumber, accessToken);
+    if (!response || response.code !== 'SU') {
+      alert('게시글 삭제에 실패했습니다.');
+      return;
+    }
+  
+    alert('게시글이 삭제되었습니다.');
+    navigate(BOARD_ABSOLUTE_PATH);
+  };
 
   return (
     <div id="board-detail-wrapper">
@@ -365,6 +396,13 @@ export default function BoardDetail() {
             </div>
           </div>
         </div>
+
+        {isWriter && (
+          <div className="board-action-buttons">
+            <button className="edit-button" onClick={onEditClickHandler}>수정</button>
+            <button className="delete-button" onClick={onDeleteClickHandler}>삭제하기</button>
+          </div>
+        )}
 
         <div className="comment-input-section">
           <div className='comment-input'>
