@@ -3,14 +3,15 @@ import { useEffect, useState } from "react";
 import regionCodes from "./regionCodes.json";
 import "./NaverMap.css";
 import { useNavigate } from "react-router";
+import { BOARD_ABSOLUTE_PATH } from "src/constants";
 
 function NaverMap() {
   const navigate = useNavigate();
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionData, setRegionData] = useState(null);
 
-  const handlerCheckButtonClick = () => {
-    navigate("/board");
+  const handlerCheckButtonClick = (areaCode, sigunguCode) => {
+    navigate(`${BOARD_ABSOLUTE_PATH}?addressCategory1=${areaCode}&addressCategory2=${sigunguCode}&detailCategory=`);
   }
 
   const formatDate = (dateStr) => {
@@ -81,6 +82,7 @@ function NaverMap() {
     );
 
     setRegionData({ festivals: filteredFestivals, popups, restaurants });
+    return region;
   };
 
 
@@ -151,10 +153,35 @@ function NaverMap() {
 
           naver.maps.Event.addListener(polygon, "mouseout", () => {
             polygon.setOptions({ fillColor: "#b4e2d5", fillOpacity: 0.4 });
-            regionLabel.close();
+            //regionLabel.close();
           });
 
-          naver.maps.Event.addListener(polygon, "click", () => handlePolygonClick(feature));
+          naver.maps.Event.addListener(polygon, "click", () => {
+            handlePolygonClick(feature).then((region) => {
+
+              const bounds = polygon.getBounds();
+              const center = bounds.getCenter();
+              regionLabel.setContent(
+                `<div style="
+                  background: rgba(51,51,51, 0.85);
+                  color: #fff;
+                  padding: 4px 10px;
+                  border-radius: 6px;
+                  font-size: 14px
+                  ">${feature.properties.SGG_NM}</div>
+                  <button id="navigate-button">버튼</button>`
+              );
+              regionLabel.setPosition(center);
+              regionLabel.open(map);
+              
+              setTimeout(() => {
+                const btn = document.getElementById("navigate-button");
+                if (btn && region) {
+                  btn.onclick = () => handlerCheckButtonClick(region.areaCode, region.sigunguCode);
+                }
+              }, 0);
+            });
+          });
         });
       });
   }, []);
