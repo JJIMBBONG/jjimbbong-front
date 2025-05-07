@@ -13,8 +13,7 @@ import { Comment } from 'src/types/interfaces';
 import { useSignInUserStore } from 'src/stores';
 import { PostCommentRequestDto } from 'src/apis/dto/request/board';
 import GetHateResponseDto from 'src/apis/dto/response/board/get-hate.response.dto';
-import regionData from 'src/assets/data/regionCodes.json';
-import { Region } from 'src/types/interfaces';
+import regionData from 'src/map/regionCodes.json';
 import LevelOneIcon from 'src/assets/images/star-LV1-icon.png';
 import LevelTwoIcon from 'src/assets/images/star-LV2-icon.png';
 import LevelThreeIcon from 'src/assets/images/star-LV3-icon.png';
@@ -135,8 +134,6 @@ export default function BoardDetail() {
   
   // function: 네비게이터 함수 //
   const navigate = useNavigate();
-
-  const regions: Region[] = regionData;
 
   const areaCodeMap: Record<number, string> = {
     0: "전체",
@@ -360,12 +357,13 @@ export default function BoardDetail() {
   };
 
 
-  const getRegionKeyByName = (region2 : string) => {
-    const selectedRegion2 = regionData.find(r => r.regionName === region2);
-    if (!selectedRegion2) return null;
+  const getRegionKeyByName = (areaCode:number, region : string) => {
+    const selectedRegion = regionData.find(r => r.regionName === region && r.areaCode === areaCode);
+    if (!selectedRegion) return null;
     return {
-      areaCode: selectedRegion2.areaCode,
-      sigunguCode: selectedRegion2.sigunguCode
+      areaCode: selectedRegion.areaCode,
+      sigunguCode: selectedRegion.sigunguCode,
+      ADM_SECT_C : selectedRegion.ADM_SECT_C
     };
   }
 
@@ -376,10 +374,9 @@ export default function BoardDetail() {
       // obj: key-value로 구성된 객체
       // 반환값: [[key1, value1], [key2, value2], ...] 형태의 배열
       const [region1, region2] = boardAddressCategory.split(" ");
-      const areaCode = Object.entries(areaCodeMap).find(([key, value]) => value === region1)?.[0];
-      const address1 = areaCode ?? '';
-      const address2 = getRegionKeyByName(region2)?.sigunguCode ?? '';
-      navigate(`${MAP_ABSOLUTE_PATH}?addressCategory1=${address1}&addressCategory2=${address2}`);
+      const areaCode = Number(Object.entries(areaCodeMap).find(([key, value]) => value === region1)?.[0]);
+      const address = getRegionKeyByName(areaCode, region2)?.ADM_SECT_C ?? '';
+      navigate(`${MAP_ABSOLUTE_PATH}?addressCategory=${address}`);
     };
 
   // event handler: 목록으로 버튼 클릭 이벤트 처리 //
