@@ -162,9 +162,23 @@
     transition: opacity 0.8s ease;
 } */
 
-#footer {
-    
-    min-height: 100px;
-    background-color: black;
-    color: white;
+#footer.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 0;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+#footer.default-footer {
+    padding: 16px 0;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+    color: #888;
 }

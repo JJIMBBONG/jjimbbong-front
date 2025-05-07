@@ -63,6 +63,10 @@ export default function Layout() {
         navigator(AUTH_ABSOLUTE_PATH);
     }
 
+    const isMapPage = location.pathname.startsWith('/map')
+    const isNotMapPage = !location.pathname.startsWith('/map');
+
+
     // effect: cookie의 accessToken이 변경될 시 실행할 함수 //
     useEffect(() => {
         if(!cookies[ACCESS_TOKEN]) return;
@@ -191,9 +195,9 @@ export default function Layout() {
                 <Outlet />
             </div>
             <div id='go-top-btn'><div>TOP</div></div>
-            <div id='footer'>
+            <div id='footer' className={ isMapPage ? 'fixed-footer' : 'default-footer' } >
                 <div>
-                    footer 내용
+                👣 Copyright 2025 © 찜뽕! All Rights Reserved.
                 </div>
             </div>
         </div>
