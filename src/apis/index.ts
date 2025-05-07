@@ -54,13 +54,12 @@ const GET_RECOMMAND_BOARD_URL = `${MAIN_MODULE_URL}`;
 
 const MY_PAGE_MODULE_URL = `${API_DOMAIN}/api/v1/my-page`;
 const PASSWORD_RECHECK_URL = `${MY_PAGE_MODULE_URL}`;
-const GET_MY_PAGE_BOARD_URL = `${MY_PAGE_MODULE_URL}/my-main/my-boards`;
+const POST_NICKNAME_CHECK_URL = `${MY_PAGE_MODULE_URL}/my-main/nickname-check`;
 const PUT_MY_PAGE_INFO_URL = `${MY_PAGE_MODULE_URL}/my-main`;
 const GET_MY_LEVEL_URL = `${MY_PAGE_MODULE_URL}/my-main/level`;
+const GET_MY_PAGE_BOARD_URL = `${MY_PAGE_MODULE_URL}/my-main/my-boards`;
 const GET_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main/user-info`;
 const PATCH_SIGN_IN_USER_URL = `${MY_PAGE_MODULE_URL}/my-main/user-info`;
-const POST_NICKNAME_CHECK_URL = `${MY_PAGE_MODULE_URL}/my-main/nickname-check`;
-
 
 const FILE_UPLOAD_URL = `${API_DOMAIN}/file/upload`;
 
@@ -304,15 +303,15 @@ export const passwordReCheckRequest = async (requestBody: PasswordReCheckRequest
     return responseBody;
 };
 
-// function: get my page board API 요청 함수 //
-export const getMyPageBoardRequest = async (accessToken: string) => {
-    const responseBody = await axios.get(GET_MY_PAGE_BOARD_URL, bearerAuthorization(accessToken))
-    .then(responseSuccessHandler<GetMyPageBoardResponseDto>)
-    .catch(responseErrorHandler);
+// function: post(update) nickname check API 요청 함수 //
+export const updateNicknameCheckRequest = async (requestBody: PostNicknameCheckRequestDto, accessToken: string) => {
+    const responseBody = await axios.post(POST_NICKNAME_CHECK_URL, requestBody, bearerAuthorization(accessToken))
+        .then(responseSuccessHandler)
+        .catch(responseErrorHandler);
     return responseBody;
 };
 
-// function: put my page info API 요청 함수 //
+// function: put(update) my page info API 요청 함수 //
 export const updateMyPageInfoRequest = async (accessToken: string) => {
     const responseBody = await axios.put(PUT_MY_PAGE_INFO_URL, {}, bearerAuthorization(accessToken))
         .then(responseSuccessHandler)
@@ -328,6 +327,14 @@ export const getMyLevelRequest = async (accessToken: string) => {
     return responseBody;
 };
 
+// function: get my page board API 요청 함수 //
+export const getMyPageBoardRequest = async (accessToken: string) => {
+    const responseBody = await axios.get(GET_MY_PAGE_BOARD_URL, bearerAuthorization(accessToken))
+    .then(responseSuccessHandler<GetMyPageBoardResponseDto>)
+    .catch(responseErrorHandler);
+    return responseBody;
+};
+
 // function: get sign in user API 요청 함수 //
 export const getSignInUserRequest = async (accessToken: string) => {
     const responseBody = await axios.get(GET_SIGN_IN_USER_URL, bearerAuthorization(accessToken))
@@ -336,17 +343,9 @@ export const getSignInUserRequest = async (accessToken: string) => {
     return responseBody;
 };
 
-// function: patch user API 요청 함수 //
+// function: patch sign in user API 요청 함수 //
 export const patchSignInUserRequest = async (requestBody: PatchSignInUserRequestDto, accessToken: string) => {
     const responseBody = await axios.patch(PATCH_SIGN_IN_USER_URL, requestBody, bearerAuthorization(accessToken))
-        .then(responseSuccessHandler)
-        .catch(responseErrorHandler);
-    return responseBody;
-};
-
-// function: post nickname check API 요청 함수 //
-export const updateNicknameCheckRequest = async (requestBody: PostNicknameCheckRequestDto, accessToken: string) => {
-    const responseBody = await axios.post(POST_NICKNAME_CHECK_URL, requestBody, bearerAuthorization(accessToken))
         .then(responseSuccessHandler)
         .catch(responseErrorHandler);
     return responseBody;
