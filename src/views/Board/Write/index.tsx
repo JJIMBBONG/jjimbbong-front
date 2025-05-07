@@ -51,8 +51,7 @@ const BoardWrite = () => {
     setDistrictSelected(region2);
     setForm((prev) => ({
       ...prev,
-      boardAddressCategory: region1,
-      boardAddress: region2,
+      boardAddressCategory: `${region1} ${region2}`
     }));
   };
 

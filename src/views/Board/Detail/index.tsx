@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import './style.css';
 
-import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, BOARD_VIEW_ABSOLUTE_PATH } from 'src/constants';
+import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH } from 'src/constants';
 import { deleteCommentRequest, getBoardRequest, getCommentRequest, postCommentRequest, getGoodRequest, getHateRequest, putGoodRequest, putHateRequest, deleteBoardRequest } from 'src/apis';
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router';
@@ -11,6 +11,9 @@ import { Comment } from 'src/types/interfaces';
 import { useSignInUserStore } from 'src/stores';
 import { PostCommentRequestDto } from 'src/apis/dto/request/board';
 import GetHateResponseDto from 'src/apis/dto/response/board/get-hate.response.dto';
+import regionData from 'src/assets/data/regionCodes.json';
+import { Region } from 'src/types/interfaces';
+
 
 interface CommentItemProps {
   comments : Comment;
@@ -26,7 +29,7 @@ function CommentItem({comments, onCommentDeleted}:CommentItemProps){
   const [cookies] = useCookies();
   const accessToken = cookies[ACCESS_TOKEN];
   const { userId } = useSignInUserStore();
-
+  
   const onDeleteCommentClickHandler = (commentNumber : number) => {
     if(!accessToken) return;
     deleteCommentRequest(commentNumber, accessToken, Number(boardNumber)).then(deleteCommentResponse)
@@ -119,6 +122,30 @@ export default function BoardDetail() {
   
   // function: 네비게이터 함수 //
   const navigate = useNavigate();
+
+  const regions: Region[] = regionData;
+
+  const areaCodeMap: Record<number, string> = {
+    0: "전체",
+    1: "서울특별시",
+    2: "인천광역시",
+    3: "대전광역시",
+    4: "대구광역시",
+    5: "광주광역시",
+    6: "부산광역시",
+    7: "울산광역시",
+    8: "세종특별자치시",
+    31: "경기도",
+    32: "강원도",
+    33: "충청북도",
+    34: "충청남도",
+    35: "경상북도",
+    36: "경상남도",
+    37: "전라북도",
+    38: "전라남도",
+    39: "제주특별자치도",
+};
+
   
   // state: 작성자 ID 저장용
   const [writerId, setWriterId] = useState('');
@@ -318,6 +345,22 @@ export default function BoardDetail() {
     putHateRequest(boardNumber, accessToken).then(putHateResponse);
   };
 
+
+  const getRegionKeyByName = (regionName : string) => {
+    const region = regionData.find(r => r.regionName === regionName);
+    if (!region) return null;
+    return {
+      areaCode: region.areaCode,
+      sigunguCode: region.sigunguCode
+    };
+  }
+
+    const handleSearch = async () => {
+      const address1 = getRegionKeyByName(boardAddress)?.areaCode ?? '';
+      const address2 = getRegionKeyByName(boardAddress)?.sigunguCode ?? '';
+      navigate(`${MAP_ABSOLUTE_PATH}?addressCategory1=${address1}&addressCategory2=${address2}`);
+    };
+
   // effect: 컴포넌트 로드 시 실행할 함수 //
   useEffect(() => {
     if (!boardNumber) {
@@ -330,11 +373,12 @@ export default function BoardDetail() {
     getHateRequest(boardNumber).then(getHateResponse);
   }, []);
 
+  // 게시글 수정
   const onEditClickHandler = () => {
-    if (!boardNumber) return;
     navigate(`/board/update/${boardNumber}`);
   };
 
+  // 게시글 삭제
   const onDeleteClickHandler = async () => {
     if (!boardNumber || !accessToken) return;
   
@@ -355,7 +399,7 @@ export default function BoardDetail() {
     <div id="board-detail-wrapper">
       <div className="detail-container">
         <div className="location-path">
-          <span>{boardAddressCategory} &gt; {boardAddress} &gt; {boardDetailCategory}</span>
+          <span>{boardAddressCategory} &gt; {boardDetailCategory}</span>
         </div>
 
         <div className="post-meta">
@@ -366,7 +410,7 @@ export default function BoardDetail() {
           <div className="right">
             <span className="badge">{userLevel}</span>
             <span className="nickname">{userNickname}</span>
-            <button className="location-btn">위치</button>
+            <button className="location-btn" onClick={handleSearch}>위치</button>
           </div>
         </div>
 
