@@ -409,8 +409,25 @@ export default function SnsSignUp(props: Props) {
       // 페이지 새로고침
       window.location.reload();
     };
+
+    useEffect(() => {
+      const handleBeforeUnload = () => {
+        // 페이지를 떠날 때 쿠키 삭제
+        removeCookie(JOIN_TYPE, { path: '/' });
+        removeCookie(SNS_ID, { path: '/' });
   
- 
+        // 페이지가 떠날 때 로그인 페이지로 리디렉션
+        window.location.reload();
+      };
+  
+      // beforeunload 이벤트 리스너 등록
+      window.addEventListener('beforeunload', handleBeforeUnload);
+  
+      // 컴포넌트가 언마운트될 때 이벤트 리스너 정리
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }, []);
 
   // render: sns 회원가입 컴포넌트 렌더링 //
   return (
