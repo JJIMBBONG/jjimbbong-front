@@ -4,11 +4,20 @@ import regionCodes from "./regionCodes.json";
 import "./NaverMap.css";
 import { useNavigate } from "react-router";
 import { BOARD_ABSOLUTE_PATH } from "src/constants";
+import { useLocation } from "react-router-dom";
 
 function NaverMap() {
   const navigate = useNavigate();
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionData, setRegionData] = useState(null);
+
+  const useQuery = () => {
+    const { search } = useLocation();
+    return new URLSearchParams(search);
+  };
+
+  const query = useQuery();
+  const addressCategoryParam = query.get("addressCategory");
 
   const handlerCheckButtonClick = (areaCode, sigunguCode) => {
     navigate(`${BOARD_ABSOLUTE_PATH}?addressCategory1=${areaCode}&addressCategory2=${sigunguCode}&detailCategory=`);
@@ -87,6 +96,8 @@ function NaverMap() {
 
 
   useEffect(() => {
+    
+
     if (!window.naver || !window.naver.maps) return;
 
     const map = new naver.maps.Map("map", {
@@ -99,6 +110,7 @@ function NaverMap() {
         new naver.maps.LatLng(39.5, 132.0)
       ),
     });
+
 
     // 마우스 오버시 지역명 출력
     const regionLabel = new naver.maps.InfoWindow({
@@ -132,6 +144,29 @@ function NaverMap() {
             fillOpacity: 0.4,
           });
 
+          // 게시글 위치 버튼 클릭 시 param으로 넘겨진 게시글의 주소 카테고리와 동일한 코드를 가진 지역의 폴리곤을 클릭한 채로 map 렌더링
+          if (feature.properties.ADM_SECT_C === addressCategoryParam) {
+            // 강제로 polygon 클릭과 같은 동작 수행
+            handlePolygonClick(feature).then((region) => {
+              const bounds = polygon.getBounds();
+              const center = bounds.getCenter();
+          
+              regionLabel.setContent(`
+                <div style="
+                  background: rgba(51,51,51, 0.85);
+                  color: #fff;
+                  padding: 4px 10px;
+                  border-radius: 6px;
+                  font-size: 14px
+                  ">${feature.properties.SGG_NM}</div>
+              `);
+              regionLabel.setPosition(center);
+              regionLabel.open(map);
+              map.setCenter(center);
+              map.setZoom(10); 
+            });
+          }
+
           naver.maps.Event.addListener(polygon, "mouseover", () => {
             polygon.setOptions({ fillColor: "#fca5a5", fillOpacity: 0.6 });
 
@@ -163,13 +198,24 @@ function NaverMap() {
               const center = bounds.getCenter();
               regionLabel.setContent(
                 `<div style="
-                  background: rgba(51,51,51, 0.85);
-                  color: #fff;
-                  padding: 4px 10px;
-                  border-radius: 6px;
+                  width : 100px;
+                  height : 50px;
+                  text-align : center;
+                  background: white;
+                  color: black;
+                  padding: 10px;
+                  border : solid 1px black;
                   font-size: 14px
-                  ">${feature.properties.SGG_NM}</div>
-                  <button id="navigate-button">버튼</button>`
+                  ">${feature.properties.SGG_NM}
+                  <button style="
+                  background: black;
+                  color : white;
+                  box-sizing: border-box;
+                  padding : 8px;
+                  border-radius : 5px
+                  " id="navigate-button">지역 정보</button>
+                  </div>
+                `
               );
               regionLabel.setPosition(center);
               regionLabel.open(map);
