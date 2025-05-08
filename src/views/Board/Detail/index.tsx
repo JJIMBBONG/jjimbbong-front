@@ -3,7 +3,7 @@ import './style.css';
 
 
 import { deleteCommentRequest, getBoardRequest, getCommentRequest, postCommentRequest, getGoodRequest, getHateRequest, putGoodRequest, putHateRequest, deleteBoardRequest } from 'src/apis';
-import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, BOARD_VIEW_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH } from 'src/constants';
+import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, BOARD_UPDATE_ABSOLUTE_PATH, BOARD_VIEW_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH } from 'src/constants';
 
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router';
@@ -14,8 +14,11 @@ import { useSignInUserStore } from 'src/stores';
 import { PostCommentRequestDto } from 'src/apis/dto/request/board';
 import GetHateResponseDto from 'src/apis/dto/response/board/get-hate.response.dto';
 import regionData from 'src/map/regionCodes.json';
-
-
+import LevelOneIcon from 'src/assets/images/star-LV1-icon.png';
+import LevelTwoIcon from 'src/assets/images/star-LV2-icon.png';
+import LevelThreeIcon from 'src/assets/images/star-LV3-icon.png';
+import LevelFourIcon from 'src/assets/images/star-LV4-icon.png';
+import LevelFiveIcon from 'src/assets/images/star-LV5-icon.png';
 
 interface CommentItemProps {
   comments : Comment;
@@ -121,6 +124,13 @@ export default function BoardDetail() {
   const isHates = hates.includes(userId);
   // variable: 싫어요 클래스 //
   const hateClass = isHates ? 'icon hate' : 'icon hate-empty';
+
+  // variable: 사용자 등급 이미지 스타일 //
+  const userLevelStyle = { backgroundImage: `url(${
+    userLevel === 5 ? LevelFiveIcon : 
+    userLevel === 4 ? LevelFourIcon : 
+    userLevel === 3 ? LevelThreeIcon : 
+    userLevel === 2 ? LevelTwoIcon : LevelOneIcon })` };
   
   // function: 네비게이터 함수 //
   const navigate = useNavigate();
@@ -369,6 +379,11 @@ export default function BoardDetail() {
       navigate(`${MAP_ABSOLUTE_PATH}?addressCategory=${address}`);
     };
 
+  // event handler: 목록으로 버튼 클릭 이벤트 처리 //
+  const onGoListClickHandler = () => {
+    navigate(BOARD_ABSOLUTE_PATH);
+  };
+
   // effect: 컴포넌트 로드 시 실행할 함수 //
   useEffect(() => {
     if (!boardNumber) {
@@ -416,7 +431,7 @@ export default function BoardDetail() {
             <span className="post-date">{boardWriteDate}</span>
           </div>
           <div className="right">
-            <span className="badge">{userLevel}</span>
+            <div className="badge" style={userLevelStyle}></div>
             <span className="nickname">{userNickname}</span>
             <button className="location-btn" onClick={handleSearch}>위치</button>
           </div>
@@ -449,12 +464,15 @@ export default function BoardDetail() {
           </div>
         </div>
 
-        {isWriter && (
+        <div className='button-container'>
+          <div className='go-list' onClick={onGoListClickHandler}>목록으로</div>
+          {isWriter && (
           <div className="button-group">
             <button className="edit-button" onClick={onEditClickHandler}>수정</button>
             <button className="delete-button" onClick={onDeleteClickHandler}>삭제하기</button>
           </div>
-        )}
+          )}
+        </div>
 
         <div className="comment-input-section">
           <div className='comment-input'>
@@ -476,4 +494,3 @@ export default function BoardDetail() {
     </div>
   );
 }
-
