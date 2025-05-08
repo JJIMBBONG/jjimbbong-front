@@ -225,18 +225,33 @@ export default function IdSearch(props: Props) {
     axios.post('http://127.0.0.1:4000/api/v1/auth/id-search', requestBody)
     .then((response) => {
       console.log('아이디 찾기 응답:', response.data);
-      if (response.data.code === 'SU') {
-        alert(`아이디: ${response.data.userId}`);
+      
+      const { code, userId, message } = response.data;
+  
+      if (code === 'SU') {
+        alert(`아이디: ${userId}`);
         onPageChange('sign-in');
+  
+      } else if (code === 'SNF') {
+        // SNS 사용자 (SNS Not Found)
+        alert('SNS 사용자는 아이디 찾기를 지원하지 않습니다.');
+        onPageChange('sign-in');
+  
+      } else if (code === 'NEU') {
+        // Not Exist User
+        alert('해당 이름과 이메일로 가입된 사용자가 없습니다.');
+        onPageChange('sign-in');
+  
       } else {
-        alert(`아이디 찾기 실패: ${response.data.message}`);
+        // 기타 예외
+        alert(`아이디 찾기 실패: ${message}`);
       }
     })
     .catch(error => {
-        alert('인증번호 확인에 실패했습니다. 다시 시도해주세요.');
-        console.error("회원가입 중 오류 발생:", error.response ? error.response.data : error);
-      });
-  };
+      alert('서버 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.error("아이디 찾기 중 오류 발생:", error.response ? error.response.data : error);
+    });
+  }
 
   // render: 아이디 찾기 컴포넌트 렌더링 //
   return (
