@@ -61,7 +61,7 @@ export default function BoardUpdate() {
       boardDetailCategory,
       boardAddress,
       boardWriteDate,
-      boardViewCount,
+      boardViewCount, 
       boardScore,
       boardImage: boardImage ?? '',
       textFileUrl: textFileUrl ?? '',
@@ -245,7 +245,7 @@ export default function BoardUpdate() {
             </button>
           </div>
         ) : null}
-        <label htmlFor="text-upload" className="editor-icon-label" style={{ marginLeft: '10px' }}>
+        {/* <label htmlFor="text-upload" className="editor-icon-label" style={{ marginLeft: '10px' }}>
           <img src={PaperclipIcon} alt="파일 첨부" className="editor-icon" />
         </label>
         <input
@@ -254,7 +254,7 @@ export default function BoardUpdate() {
           style={{ display: 'none' }}
           onChange={handleFileChange}
           id="text-upload"
-        />
+        /> */}
         {attachedFile && (
           <div className="file-control-container attached-file-name">
             <span style={{ marginRight: '5px' }}>{attachedFile?.name}</span>

@@ -129,8 +129,6 @@ export default function AddressCategory({ onSelect }: Props) {
                     }
                 </div>
             </div>
-            
-        
     </div>
     )
 }
