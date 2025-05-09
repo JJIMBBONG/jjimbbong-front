@@ -17,7 +17,9 @@ function NaverMap() {
   };
 
   const query = useQuery();
-  const addressCategoryParam = query.get("addressCategory");
+  const addressCategoryParam1 = query.get("addressCategory1");
+  const addressCategoryParam2 = query.get("addressCategory2");
+
 
   const handlerCheckButtonClick = (areaCode, sigunguCode) => {
     navigate(`${BOARD_ABSOLUTE_PATH}?addressCategory1=${areaCode}&addressCategory2=${sigunguCode}&detailCategory=`);
@@ -141,6 +143,7 @@ function NaverMap() {
             fillColor: "#b4e2d5",
             fillOpacity: 0.4,
           });
+          
 
           function setRegionLabelContent(regionName, withButton = false) {
             let content = `
