@@ -154,10 +154,10 @@ const BoardWrite = () => {
         </label>
         <input id="image-upload" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageChange} />
 
-        <label htmlFor="text-upload">
+        {/* <label htmlFor="text-upload">
           <img src={PaperclipIcon} alt="텍스트 파일" className="editor-icon" />
         </label>
-        <input id="text-upload" type="file" accept=".txt,.pdf" style={{ display: 'none' }} onChange={handleFileChange} />
+        <input id="text-upload" type="file" accept=".txt,.pdf" style={{ display: 'none' }} onChange={handleFileChange} /> */}
       </div>
 
       {previewImage && (
