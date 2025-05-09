@@ -10,16 +10,9 @@ function NaverMap() {
   const navigate = useNavigate();
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionData, setRegionData] = useState(null);
-
-  const useQuery = () => {
-    const { search } = useLocation();
-    return new URLSearchParams(search);
-  };
-
-  const query = useQuery();
-  const addressCategoryParam1 = query.get("addressCategory1");
-  const addressCategoryParam2 = query.get("addressCategory2");
-
+  const location = useLocation(); 
+  const query = new URLSearchParams(location.search); 
+  const addressCategoryParam = query.get("addressCategory");
 
   const handlerCheckButtonClick = (areaCode, sigunguCode) => {
     navigate(`${BOARD_ABSOLUTE_PATH}?addressCategory1=${areaCode}&addressCategory2=${sigunguCode}&detailCategory=`);
