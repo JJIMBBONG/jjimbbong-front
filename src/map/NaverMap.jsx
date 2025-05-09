@@ -19,7 +19,6 @@ function NaverMap() {
   const query = useQuery();
   const addressCategoryParam = query.get("addressCategory");
 
-
   const handlerCheckButtonClick = (areaCode, sigunguCode) => {
     navigate(`${BOARD_ABSOLUTE_PATH}?addressCategory1=${areaCode}&addressCategory2=${sigunguCode}&detailCategory=`);
   }
