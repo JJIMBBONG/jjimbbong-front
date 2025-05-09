@@ -19,6 +19,7 @@ function NaverMap() {
   const query = useQuery();
   const addressCategoryParam = query.get("addressCategory");
 
+
   const handlerCheckButtonClick = (areaCode, sigunguCode) => {
     navigate(`${BOARD_ABSOLUTE_PATH}?addressCategory1=${areaCode}&addressCategory2=${sigunguCode}&detailCategory=`);
   }
@@ -27,19 +28,23 @@ function NaverMap() {
     if (!dateStr || dateStr.length !== 8) return dateStr;
     return `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}`;
   };
+  
+  const REGION_PREFIX_REGEX = /^(서울특별시|부산광역시|대구광역시|인천광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|경기도|강원도|충청북도|충청남도|전라북도|전라남도|경상북도|경상남도|제주특별자치도)\s*/;
 
   const normalizeName = (name) =>
-    name.replace(/^(서울특별시|부산광역시|대구광역시|인천광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|경기도|강원도|충청북도|충청남도|전라북도|전라남도|경상북도|경상남도|제주특별자치도)\s*/, "")
+    name.replace(REGION_PREFIX_REGEX, "")
         .replace(/\s/g, "")
         .replace(/시|군|구/g, "")
         .trim();
 
+        //TODO: 축제 API 인증 후 출력 원할 시 활성화
   // const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxd2VyMTIzNCIsImlhdCI6MTc0NjU3OTczMiwiZXhwIjoxNzQ2NjEyMTMyfQ.Q10bADrJkEVrNkX98ivrjK7bnrDmgdgVaxmfa1zhibY';
   // localStorage.setItem('authToken', token);
 
         const fetchFestivals = async (areaCode, sigunguCode) => {
           try {
             const res = await fetch(`http://localhost:4000/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`
+            //TODO: 축제 API 인증 후 출력 원할 시 활성화
             //   , {
             //   headers: { 'Authorization': `Bearer ${token}` },
             // }
@@ -142,6 +147,8 @@ function NaverMap() {
             fillOpacity: 0.4,
           });
 
+          
+
           function setRegionLabelContent(regionName, withButton = false) {
             let content = `
               <div style="
@@ -171,6 +178,20 @@ function NaverMap() {
             }
             content += `</div>`
             return content;
+          }
+
+           // 게시글 위치 버튼 클릭 시 param으로 넘겨진 게시글의 주소 카테고리와 동일한 코드를 가진 지역의 폴리곤을 클릭한 채로 map 렌더링
+          if (feature.properties.ADM_SECT_C === addressCategoryParam) {
+            // 강제로 polygon 클릭과 같은 동작 수행
+            handlePolygonClick(feature).then((region) => {
+              const bounds = polygon.getBounds();
+              const center = bounds.getCenter();
+
+              regionLabel.setPosition(center);
+              regionLabel.open(map);
+              map.setCenter(center);
+              map.setZoom(10); 
+            });
           }
 
           naver.maps.Event.addListener(polygon, "mouseover", () => {
