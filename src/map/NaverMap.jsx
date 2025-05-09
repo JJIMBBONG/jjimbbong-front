@@ -96,8 +96,6 @@ function NaverMap() {
 
 
   useEffect(() => {
-    
-
     if (!window.naver || !window.naver.maps) return;
 
     const map = new naver.maps.Map("map", {
@@ -144,44 +142,42 @@ function NaverMap() {
             fillOpacity: 0.4,
           });
 
-          // 게시글 위치 버튼 클릭 시 param으로 넘겨진 게시글의 주소 카테고리와 동일한 코드를 가진 지역의 폴리곤을 클릭한 채로 map 렌더링
-          if (feature.properties.ADM_SECT_C === addressCategoryParam) {
-            // 강제로 polygon 클릭과 같은 동작 수행
-            handlePolygonClick(feature).then((region) => {
-              const bounds = polygon.getBounds();
-              const center = bounds.getCenter();
-          
-              regionLabel.setContent(`
-                <div style="
-                  background: rgba(51,51,51, 0.85);
-                  color: #fff;
-                  padding: 4px 10px;
-                  border-radius: 6px;
-                  font-size: 14px
-                  ">${feature.properties.SGG_NM}</div>
-              `);
-              regionLabel.setPosition(center);
-              regionLabel.open(map);
-              map.setCenter(center);
-              map.setZoom(10); 
-            });
+          function setRegionLabelContent(regionName, withButton = false) {
+            let content = `
+              <div style="
+              backgroundColor: rgba(51,51,51,0.85);
+              color: #fff;
+              padding: 8px 12px;
+              border-radius: 8px;
+              font-size: 14px;
+              text-align: center;
+              "> ${regionName}
+            `;
+
+            if (withButton) {
+              content += `
+                <div style="margin-top: 6px">
+                  <button id="navigate-button"
+                    style="
+                      background: #fca5a5;
+                      border: none;
+                      border-radius: 4px;
+                      padding: 6px 12px;
+                      color: #fff;
+                      cursor: pointer;
+                    ">${regionName} 게시물</button>
+                    </div>
+              `;
+            }
+            content += `</div>`
+            return content;
           }
 
           naver.maps.Event.addListener(polygon, "mouseover", () => {
             polygon.setOptions({ fillColor: "#fca5a5", fillOpacity: 0.6 });
-
-            // 마우스 오버시 지역명 출력
             const bounds = polygon.getBounds();
             const center = bounds.getCenter();
-            regionLabel.setContent(
-              `<div style="
-                background: rgba(51,51,51, 0.85);
-                color: #fff;
-                padding: 4px 10px;
-                border-radius: 6px;
-                font-size: 14px
-                ">${feature.properties.SGG_NM}</div>`
-            );
+            regionLabel.setContent(setRegionLabelContent(feature.properties.SGG_NM));
             regionLabel.setPosition(center);
             regionLabel.open(map);
           });
@@ -193,33 +189,8 @@ function NaverMap() {
 
           naver.maps.Event.addListener(polygon, "click", () => {
             handlePolygonClick(feature).then((region) => {
+              regionLabel.setContent(setRegionLabelContent(feature.properties.SGG_NM, true));
 
-              const bounds = polygon.getBounds();
-              const center = bounds.getCenter();
-              regionLabel.setContent(
-                `<div style="
-                  width : 100px;
-                  height : 50px;
-                  text-align : center;
-                  background: white;
-                  color: black;
-                  padding: 10px;
-                  border : solid 1px black;
-                  font-size: 14px
-                  ">${feature.properties.SGG_NM}
-                  <button style="
-                  background: black;
-                  color : white;
-                  box-sizing: border-box;
-                  padding : 8px;
-                  border-radius : 5px
-                  " id="navigate-button">지역 정보</button>
-                  </div>
-                `
-              );
-              regionLabel.setPosition(center);
-              regionLabel.open(map);
-              
               setTimeout(() => {
                 const btn = document.getElementById("navigate-button");
                 if (btn && region) {
