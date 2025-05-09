@@ -86,7 +86,8 @@ export default function MyPageUserInfoUpdate({onModalViewChange}: UserInfoUpdate
     const message = 
       !responseBody ? '서버에 문제가 있습니다.' :
       responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' : 
-      responseBody.code === 'EU' ? '이미 사용중인 닉네임입니다.' : '사용 가능한 닉네임입니다.';
+      responseBody.code === 'EU' ? '이미 사용중인 닉네임입니다.' : 
+      responseBody.code === 'VF' ? '공백을 포함할 수 없습니다.' : '사용 가능한 닉네임입니다.';
 
     const isSuccess = responseBody !== null && responseBody.code === 'SU';
     setUpdateNicknameMessage(message);
