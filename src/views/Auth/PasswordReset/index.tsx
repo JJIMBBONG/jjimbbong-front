@@ -215,7 +215,7 @@ export default function PasswordReset(props: Props) {
 
   // event handler: 비밀번호 찾기 버튼 클릭 이벤트 처리 //
   const onPasswordResetClickHandler = () => {
-    if (!userId) setUserIdMessage('이름을 입력해주세요');
+    if (!userId) setUserIdMessage('아이디를 입력해주세요');
     if (!isUserEmailChecked) {
       setUserEmailMessage('인증번호를 전송해주세요');
       setUserEmailMessageError(true);
