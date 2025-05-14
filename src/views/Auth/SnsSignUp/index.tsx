@@ -22,11 +22,13 @@ export default function SnsSignUp(props: Props) {
 
   const { onPageChange } = props;
 
-  // Axios 인스턴스 생성
-  const api = axios.create({
-    baseURL: 'http://127.0.0.1:4000', // 기본 URL을 4000 포트로 설정
-    timeout: 1000, // 기본 타임아웃 설정 (필요시)
-  });
+  // variable: URL 상수 //
+  const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
+
+  const AUTH_MODULE_URL = `${API_DOMAIN}/api/v1/auth`;
+  const EMAIL_AUTH_URL = `${AUTH_MODULE_URL}/email-auth`;
+  const EMAIL_AUTH_CHECK_URL = `${AUTH_MODULE_URL}/email-auth-check`;
+  const SNS_SIGN_UP_URL = `${AUTH_MODULE_URL}/sns-sign-up`;
 
   const navigate = useNavigate();
 
@@ -269,7 +271,7 @@ export default function SnsSignUp(props: Props) {
   };
 
   // 이메일 중복 확인 후 인증번호 전송
-  axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth', requestBody)
+  axios.post(EMAIL_AUTH_URL, requestBody)
     .then(response => {
       console.log('Server Response:', response.data); 
       if (response.data.code) {
@@ -302,7 +304,7 @@ export default function SnsSignUp(props: Props) {
       authNumber: authNumber.trim()
     };
   
-    axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth-check', requestBody)
+    axios.post(EMAIL_AUTH_CHECK_URL, requestBody)
       .then(response => {
         emailAuthCheckResponse(response.data);
       })
@@ -349,7 +351,7 @@ export default function SnsSignUp(props: Props) {
       address: userAddress, detailAddress: userDetailAddress, joinType: cookieJoinType.toUpperCase(), snsId: cookieSnsId,
     };
 
-    axios.post('http://127.0.0.1:4000/api/v1/auth/sns-sign-up', requestBody, {
+    axios.post(SNS_SIGN_UP_URL, requestBody, {
       headers: {
         'Content-Type': 'application/json',
       },

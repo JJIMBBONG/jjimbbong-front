@@ -108,7 +108,7 @@
     display: none;
     z-index: 10;
     right: 15px;
-    bottom: 15px;
+    bottom: 45px;
     background-color: rgb(225,115,75);
     color: white;
     width: 100px;
@@ -182,7 +182,7 @@
     text-align: center;
     color: #6b7280;
     font-size: 14px;
-  }
+}
 
 #footer {
     position: fixed;

@@ -1,24 +1,21 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import './style.css';
-
-
-import { deleteCommentRequest, getBoardRequest, getCommentRequest, postCommentRequest, getGoodRequest, getHateRequest, putGoodRequest, putHateRequest, deleteBoardRequest } from 'src/apis';
-import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, BOARD_UPDATE_ABSOLUTE_PATH, BOARD_VIEW_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH } from 'src/constants';
-
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router';
-import { GetBoardResponseDto, GetCommentResponseDto, GetGoodResponseDto } from 'src/apis/dto/response/board';
+import { ACCESS_TOKEN, BOARD_ABSOLUTE_PATH, MAP_ABSOLUTE_PATH } from 'src/constants';
+import { deleteCommentRequest, getBoardRequest, getCommentRequest, postCommentRequest, getGoodRequest, getHateRequest, putGoodRequest, putHateRequest, deleteBoardRequest } from 'src/apis';
+import { GetBoardResponseDto, GetCommentResponseDto, GetGoodResponseDto, GetHateResponseDto } from 'src/apis/dto/response/board';
 import { ResponseDto } from 'src/apis/dto/response';
 import { Comment } from 'src/types/interfaces';
 import { useSignInUserStore } from 'src/stores';
 import { PostCommentRequestDto } from 'src/apis/dto/request/board';
-import GetHateResponseDto from 'src/apis/dto/response/board/get-hate.response.dto';
 import regionData from 'src/map/regionCodes.json';
 import LevelOneIcon from 'src/assets/images/star-LV1-icon.png';
 import LevelTwoIcon from 'src/assets/images/star-LV2-icon.png';
 import LevelThreeIcon from 'src/assets/images/star-LV3-icon.png';
 import LevelFourIcon from 'src/assets/images/star-LV4-icon.png';
 import LevelFiveIcon from 'src/assets/images/star-LV5-icon.png';
+
+import './style.css';
 
 interface CommentItemProps {
   comments : Comment;
@@ -35,6 +32,13 @@ function CommentItem({comments, onCommentDeleted}:CommentItemProps){
   const accessToken = cookies[ACCESS_TOKEN];
   const { userId } = useSignInUserStore();
   
+  // variable: 사용자 등급 이미지 스타일 //
+  const userLevelStyle = { backgroundImage: `url(${
+    userLevel === 5 ? LevelFiveIcon : 
+    userLevel === 4 ? LevelFourIcon : 
+    userLevel === 3 ? LevelThreeIcon : 
+    userLevel === 2 ? LevelTwoIcon : LevelOneIcon })` };
+
   const onDeleteCommentClickHandler = (commentNumber : number) => {
     if(!accessToken) return;
     deleteCommentRequest(commentNumber, accessToken, Number(boardNumber)).then(deleteCommentResponse)
@@ -62,7 +66,7 @@ function CommentItem({comments, onCommentDeleted}:CommentItemProps){
 
   return (
     <div className='comment-body'>
-      <div className='comment-writer-level'>레벨 : {userLevel}</div>
+      <div className='comment-writer-level' style={userLevelStyle}></div>
       <div className='comment-info-wrapper'>
         <div className='comment-info'>
           <div className='comment-info-detail'>
