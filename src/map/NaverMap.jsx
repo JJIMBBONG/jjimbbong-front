@@ -38,7 +38,7 @@ function NaverMap() {
 
         const fetchFestivals = async (areaCode, sigunguCode) => {
           try {
-            const res = await fetch(`http://localhost:4000/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`
+            const res = await fetch(`${API_URL}/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`
             //TODO: 축제 API 인증 후 출력 원할 시 활성화
             //   , {
             //   headers: { 'Authorization': `Bearer ${token}` },
@@ -54,12 +54,12 @@ function NaverMap() {
         };
 
   const fetchPopups = async (admSectCode) => {
-    const res = await fetch(`http://localhost:4000/popup-stores?region=${admSectCode}`);
+    const res = await fetch(`${API_URL}/popup-stores?region=${admSectCode}`);
     return await res.json();
   };
 
   const fetchRestaurants = async (admSectCode) => {
-    const res = await fetch(`http://localhost:4000/restaurants?region=${admSectCode}`);
+    const res = await fetch(`${API_URL}/restaurants?region=${admSectCode}`);
     return await res.json();
   };
 
