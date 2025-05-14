@@ -10,16 +10,9 @@ function NaverMap() {
   const navigate = useNavigate();
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionData, setRegionData] = useState(null);
-
-  const useQuery = () => {
-    const { search } = useLocation();
-    return new URLSearchParams(search);
-  };
-
-  const query = useQuery();
-  const addressCategoryParam1 = query.get("addressCategory1");
-  const addressCategoryParam2 = query.get("addressCategory2");
-
+  const location = useLocation(); 
+  const query = new URLSearchParams(location.search); 
+  const addressCategoryParam = query.get("addressCategory");
 
   const handlerCheckButtonClick = (areaCode, sigunguCode) => {
     navigate(`${BOARD_ABSOLUTE_PATH}?addressCategory1=${areaCode}&addressCategory2=${sigunguCode}&detailCategory=`);
@@ -39,7 +32,7 @@ function NaverMap() {
         .trim();
 
         //TODO: 축제 API 인증 후 출력 원할 시 활성화
-  // const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxd2VyMTIzNCIsImlhdCI6MTc0NjU3OTczMiwiZXhwIjoxNzQ2NjEyMTMyfQ.Q10bADrJkEVrNkX98ivrjK7bnrDmgdgVaxmfa1zhibY';
+  // const token = 'token 발급받은 토큰';
   // localStorage.setItem('authToken', token);
 
         const fetchFestivals = async (areaCode, sigunguCode) => {
