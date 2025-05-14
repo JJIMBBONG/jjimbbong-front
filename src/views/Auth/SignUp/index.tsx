@@ -22,11 +22,13 @@ export default function SignUp(props: Props) {
 
   const { onPageChange } = props;
 
-  // Axios 인스턴스 생성
-  const api = axios.create({
-    baseURL: 'http://127.0.0.1:4000', // 기본 URL을 4000 포트로 설정
-    timeout: 1000, // 기본 타임아웃 설정 (필요시)
-  });
+  // variable: URL 상수 //
+  const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
+
+  const AUTH_MODULE_URL = `${API_DOMAIN}/api/v1/auth`;
+  const EMAIL_AUTH_URL = `${AUTH_MODULE_URL}/email-auth`;
+  const EMAIL_AUTH_CHECK_URL = `${AUTH_MODULE_URL}/email-auth-check`;
+  const SIGN_UP_URL = `${AUTH_MODULE_URL}/sign-up`;
 
   // state: cookie 상태 //
   const [cookies, _, removeCookie] = useCookies();
@@ -198,6 +200,21 @@ export default function SignUp(props: Props) {
     setAuthNumberMessage(message);
     setAuthNumberMessageError(!isSuccess);
     setAuthNumberChecked(isSuccess);
+  };
+
+  const emailAuthResponse = (responseBody: ResponseDto | null) => {
+    const isSuccess = responseBody !== null && responseBody.code === 'SU';
+    
+    const message = 
+      !responseBody ? '서버에 문제가 있습니다' :
+      responseBody.code === 'DBE' ? '서버에 문제가 있습니다' :
+      responseBody.code === 'EU' ? '인증번호가 틀렸습니다' :
+      responseBody.code === 'VF' ? '인증번호를 입력하세요' :
+      '인증번호를 전송하였습니다.';
+  
+    setUserEmailMessage(message);
+    setUserEmailMessageError(!isSuccess);
+    setUserEmailChecked(isSuccess);
   };
 
   // function: sign up response 처리 함수 //
@@ -407,7 +424,7 @@ const onCheckUserEmailClickHandler = () => {
   };
 
   // 이메일 중복 확인 후 인증번호 전송
-  axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth', requestBody)
+  axios.post(EMAIL_AUTH_URL, requestBody)
     .then(response => {
       console.log('Server Response:', response.data); 
       if (response.data.code) {
@@ -440,7 +457,7 @@ const onCheckUserEmailClickHandler = () => {
       authNumber: authNumber.trim()
     };
   
-    axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth-check', requestBody)
+    axios.post(EMAIL_AUTH_CHECK_URL, requestBody)
       .then(response => {
         emailAuthCheckResponse(response.data);
       })
@@ -483,8 +500,7 @@ const onCheckUserEmailClickHandler = () => {
       userId, userNickname, userPassword, name: userName, userEmail, userLevel, authNumber, gender: gender!,
       address: userAddress, detailAddress: userDetailAddress, joinType, snsId
     };
-
-    axios.post('http://127.0.0.1:4000/api/v1/auth/sign-up', requestBody)
+    axios.post(SIGN_UP_URL, requestBody)
     .then((response) => {
       console.log('회원가입 응답:', response.data);
       if (response.data.code === 'SU') {
