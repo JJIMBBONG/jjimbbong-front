@@ -37,6 +37,9 @@ function BoardItem({boards}:BoardItemProps){
           commentCount
         } = boards;
 
+  // variable: 프로필 이미지 스타일 //
+  const boardImageStyle = { backgroundImage: `url(${boardImage ?  boardImage : ''})` }; 
+
   const navigator = useNavigate();
 
   const onclick = () => {
@@ -48,7 +51,7 @@ function BoardItem({boards}:BoardItemProps){
     <div>
       <div className='board-body' onClick={onclick}>
       <div className='board-image-container'>
-        <div className='board-image'></div>
+        <div className='board-image' style={boardImageStyle} ></div>
       </div>
       <div className='board-information-container'>
         <div className='board-title'>{boardTitle}</div>
