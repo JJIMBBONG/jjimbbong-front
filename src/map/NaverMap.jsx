@@ -7,6 +7,7 @@ import { BOARD_ABSOLUTE_PATH } from "src/constants";
 import { useLocation } from "react-router-dom";
 
 function NaverMap() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionData, setRegionData] = useState(null);
@@ -32,12 +33,12 @@ function NaverMap() {
         .trim();
 
         //TODO: 축제 API 인증 후 출력 원할 시 활성화
-  // const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxd2VyMTIzNCIsImlhdCI6MTc0NjU3OTczMiwiZXhwIjoxNzQ2NjEyMTMyfQ.Q10bADrJkEVrNkX98ivrjK7bnrDmgdgVaxmfa1zhibY';
+  // const token = 'token 발급받은 토큰';
   // localStorage.setItem('authToken', token);
 
         const fetchFestivals = async (areaCode, sigunguCode) => {
           try {
-            const res = await fetch(`http://localhost:4000/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`
+            const res = await fetch(`${API_URL}/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`
             //TODO: 축제 API 인증 후 출력 원할 시 활성화
             //   , {
             //   headers: { 'Authorization': `Bearer ${token}` },
@@ -53,12 +54,12 @@ function NaverMap() {
         };
 
   const fetchPopups = async (admSectCode) => {
-    const res = await fetch(`http://localhost:4000/popup-stores?region=${admSectCode}`);
+    const res = await fetch(`${API_URL}/popup-stores?region=${admSectCode}`);
     return await res.json();
   };
 
   const fetchRestaurants = async (admSectCode) => {
-    const res = await fetch(`http://localhost:4000/restaurants?region=${admSectCode}`);
+    const res = await fetch(`${API_URL}/restaurants?region=${admSectCode}`);
     return await res.json();
   };
 

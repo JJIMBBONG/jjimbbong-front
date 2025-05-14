@@ -1,7 +1,12 @@
-# Getting Started with Create React App
+# JJimppong! - *여행 후기 커뮤니티*
+<div align="center">
+<h3>여행 후기 커뮤니티 서비스</h3>
+</div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![alt text](README.png)
 
+## 프로젝트 개요
+**JJimppong!** Front-End
 ## Available Scripts
 
 In the project directory, you can run:
@@ -45,3 +50,4 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 # jjimppong-front
+
