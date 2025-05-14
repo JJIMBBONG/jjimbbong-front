@@ -19,11 +19,12 @@ export default function IdSearch(props: Props) {
 
   const { onPageChange } = props;
 
-  // Axios 인스턴스 생성
-  const api = axios.create({
-    baseURL: 'http://127.0.0.1:4000', // 기본 URL을 4000 포트로 설정
-    timeout: 1000, // 기본 타임아웃 설정 (필요시)
-  });
+  // variable: URL 상수 //
+  const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
+  const AUTH_MODULE_URL = `${API_DOMAIN}/api/v1/auth`;
+  const ID_SEARCH_URL = `${AUTH_MODULE_URL}/id-search`;
+  const EMAIL_AUTH_ID_URL = `${AUTH_MODULE_URL}/email-auth-id`;
+  const EMAIL_AUTH_CHECK_URL = `${AUTH_MODULE_URL}/email-auth-check`;
 
   // state: 사용자 이름 상태 //
   const [userName, setUserName] = useState<string>('');
@@ -165,7 +166,7 @@ export default function IdSearch(props: Props) {
   
     const requestBody = { userEmail };
   
-    axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth-id', requestBody)
+    axios.post(EMAIL_AUTH_ID_URL, requestBody)
       .then(response => {
         if (response.data.code) {
           alert('인증번호를 전송했습니다.');
@@ -195,7 +196,7 @@ export default function IdSearch(props: Props) {
       authNumber: authNumber.trim()
     };
   
-    axios.post('http://127.0.0.1:4000/api/v1/auth/email-auth-check', requestBody)
+    axios.post(EMAIL_AUTH_CHECK_URL, requestBody)
       .then(response => {
         emailAuthCheckResponse(response.data);
       })
@@ -222,7 +223,7 @@ export default function IdSearch(props: Props) {
       name: userName, userEmail, authNumber
     };
 
-    axios.post('http://127.0.0.1:4000/api/v1/auth/id-search', requestBody)
+    axios.post(ID_SEARCH_URL, requestBody)
     .then((response) => {
       console.log('아이디 찾기 응답:', response.data);
       
