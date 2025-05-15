@@ -38,6 +38,9 @@ function NaverMap() {
 
         const fetchFestivals = async (areaCode, sigunguCode) => {
           try {
+            // 내컴퓨터로 확인할때 URL
+            // const res = await fetch(`http://localhost:4000/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`
+            // 배포용
             const res = await fetch(`${API_URL}/api/festivals?areaCode=${areaCode}&sigunguCode=${sigunguCode}`
             //TODO: 축제 API 인증 후 출력 원할 시 활성화
             //   , {
