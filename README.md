@@ -1,53 +1,70 @@
-# JJimppong! - *여행 후기 커뮤니티*
+# 📌 JJimppong! - *여행 후기 커뮤니티*
 <div align="center">
-<h3>여행 후기 커뮤니티 서비스</h3>
+<h3>찜뽕 여행 후기 커뮤니티 서비스</h3>
 </div>
 
 ![alt text](README.png)
 
-## 프로젝트 개요
-**JJimppong!** Front-End
-## Available Scripts
+<div align="center">
+<h3><a href="http://13.124.81.10:3000/" target="_blank">배포 링크 - http://13.124.81.10:3000/</a></h3></div>
 
-In the project directory, you can run:
 
-### `npm start`
+## 📖 프로젝트 개요
+지역 주민들의 생생한 여행·지역 정보를 공유하는 커뮤니티 서비스.  
+계정 등급 시스템으로 활발한 정보 갱신을 유도하고, 지도 API로 게시글과 지역 정보를 연동해 직관적인 정보 탐색 제공.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## ✨ 주요 기능
+- 회원가입, 로그인
+- 카카오, 네이버 로그인
+- 여행 후기 게시글 작성, 수정, 삭제
+- 여행 후기 좋아요, 싫어요, 조회수 조회
+- 지도 페이지 지역별 축제, 팝업스토어, 맛집 리스트 정보 제공
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🖥️ 기술 스택
+- React.js
+- TypeScript
+- React Router DOM
+- React Daum Postcode
+- Naver Maps JavaScript API v3
+- Axios
+- fetch API
+- dotenv
+- GeoJSON
 
-### `npm test`
+## ✈️ 프로젝트 실행 방법
+```bash
+# 1. 클론 및 폴더 이동
+git clone https://github.com/JJIMBBONG/jjimbbong-front.git
+cd jjimbbong-front
+```
+```bash
+# 2. 패키지 설치
+npm install
+```
+```bash
+# 3. 개발 서버 실행
+npm run start
+```
+```bash
+# 4. 빌드
+npm run build
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📦 환경 변수 설정
+```bash
+# .env 파일
+REACT_APP_API_DOMAIN=http://localhost:4000
+REACT_APP_API_URL=http://localhost:3000
+REACT_APP_NAVER_CLIENT_ID=zgdo8rbm3b
+```
 
-### `npm run build`
+## 🗂️ 폴더 구조
+📂 jjimbbong-front  
+├─ 📂 src/ # React 소스 코드 파일들   
+├─ 📂 public/ # 정적 파일(HTML, 이미지, data)  
+├─ 📃 .env/ # 환경 변수 파일 
+├─ 📃 package.json/ # 프로젝트 설정 및 의존성 정보  
+└─ 📃 tsconfig.json/ # TypeScript 설정 파일  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-# jjimppong-front
-
+## 📄 라이센스
+### Copyright (c) <2025> jjimppong
